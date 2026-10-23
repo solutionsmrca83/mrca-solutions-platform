@@ -1,0 +1,5 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  [build.environment]
+    SECRETS_SCAN_OMIT_KEYS = "SUPABASE_SERVICE_ROLE_KEY,ENCRYPTION_KEY,DATABASE_URL,STEALTH_PARTNER_KEY,STEALTH_PARTNER_EMAIL"
