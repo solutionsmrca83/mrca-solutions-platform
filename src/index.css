@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #0b1229;
+  --color-surface-dim: #0b1229;
+  --color-surface-bright: #323851;
+  --color-surface-container-lowest: #060d24;
+  --color-surface-container-low: #141a32;
+  --color-surface-container: #181e36;
+  --color-surface-container-high: #222941;
+  --color-surface-container-highest: #2d344c;
+  --color-on-surface: #dce1ff;
+  --color-on-surface-variant: #bac9cc;
+  --color-inverse-surface: #dce1ff;
+  --color-inverse-on-surface: #292f48;
+  --color-outline: #849396;
+  --color-outline-variant: #3b494c;
+  --color-surface-tint: #00daf3;
+  --color-primary: #c3f5ff;
+  --color-on-primary: #00363d;
+  --color-primary-container: #00e5ff;
+  --color-on-primary-container: #00626e;
+  --color-inverse-primary: #006875;
+  --color-secondary: #ebffe6;
+  --color-on-secondary: #003911;
+  --color-secondary-container: #00fe66;
+  --color-on-secondary-container: #007128;
+  --color-secondary-fixed: #6bff83;
+  --color-secondary-fixed-dim: #00e55b;
+  --color-tertiary: #edeaff;
+  --color-tertiary-container: #ccccff;
+  --color-tertiary-fixed: #e1e0ff;
+  --color-tertiary-fixed-dim: #c0c1ff;
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-primary-fixed: #9cf0ff;
+  --color-primary-fixed-dim: #00daf3;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-code: "JetBrains Mono", monospace;
+}
+
+:root {
+  /* ========================================================================== */
+  /* CSS PLACEHOLDER FOR MCRA SOLUTIONS BRANDING & LOGO WATERMARK               */
+  /* ========================================================================== */
+  --mcra-logo-watermark-path: url('/assets/images/mcra-watermark.svg');
+}
+
+@layer base {
+  html, body, #root {
+    margin: 0;
+    padding: 0;
+    background-color: #0a1128;
+    color: #dce1ff;
+    font-family: "Inter", sans-serif;
+  }
+  
+  /* Cyber WebKit Scrollbar: Thin (5px), Midnight Blue Track, Tech Cyan Thumb */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0a1128;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #00e5ff;
+    border-radius: 9999px;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #5affff;
+    box-shadow: 0 0 16px rgba(0, 229, 255, 0.8);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #00e5ff #0a1128;
+  }
+}
+
+/* ========================================================================== */
+/* SUBTLE FIXED WATERMARK (10-15% LOW-OPACITY) FOR PRIVATE CLIENT & ADMIN     */
+/* ========================================================================== */
+.bg-watermark-cyber {
+  position: relative;
+}
+
+.bg-watermark-cyber::before {
+  content: "";
+  display: none;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.font-display-lg {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 56px;
+  line-height: 64px;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+.font-display-lg-mobile {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.font-headline-xl {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+.font-headline-xl-mobile {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.font-headline-lg {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.font-headline-md {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 22px;
+  line-height: 30px;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+.font-headline-sm {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}
+
+.font-body-lg {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  line-height: 26px;
+  letter-spacing: -0.005em;
+  font-weight: 400;
+}
+
+.font-body-md {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0em;
+  font-weight: 400;
+}
+
+.font-body-sm {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+.font-code-md {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0em;
+  font-weight: 400;
+}
+
+.font-label-md {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.font-label-xs {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
