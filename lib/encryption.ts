@@ -9,14 +9,14 @@ import crypto from 'crypto';
  * persisting in Supabase or external storage.
  */
 
-// 256-bit encryption key derivation (32 bytes required for AES-256-CBC)
-const DEFAULT_FALLBACK_KEY = 'mcra_enterprise_sec_key_32bytes!';
-
 function getEncryptionKey(): Buffer {
   const envKey =
     (typeof process !== 'undefined' && process.env?.ENCRYPTION_KEY) ||
-    (typeof process !== 'undefined' && process.env?.AES_SECRET_KEY) ||
-    DEFAULT_FALLBACK_KEY;
+    (typeof process !== 'undefined' && process.env?.AES_SECRET_KEY);
+
+  if (!envKey) {
+    throw new Error('[CRITICAL SECURITY ERROR] ENCRYPTION_KEY is not defined in server environment variables.');
+  }
 
   if (typeof envKey === 'string' && envKey.length === 64 && /^[0-9a-fA-F]+$/.test(envKey)) {
     return Buffer.from(envKey, 'hex');

@@ -27,13 +27,11 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const key = searchParams.get('key');
 
-  const expectedKey =
-    process.env.STEALTH_PARTNER_KEY || 'mcra_sec_stealth_e8d1a93b45cf7201948ba02ef';
-  const partnerEmail =
-    process.env.STEALTH_PARTNER_EMAIL || 'socio@mcrasolutions.com';
+  const expectedKey = process.env.STEALTH_PARTNER_KEY;
+  const partnerEmail = process.env.STEALTH_PARTNER_EMAIL;
 
-  // 1. Opaque denial if parameter is absent
-  if (!key || typeof key !== 'string') {
+  // 1. Opaque denial if parameter is absent or server environment is unconfigured
+  if (!key || typeof key !== 'string' || !expectedKey || !partnerEmail) {
     return new NextResponse('Not Found', { status: 404 });
   }
 
