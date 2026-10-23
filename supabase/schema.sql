@@ -416,7 +416,7 @@ CREATE POLICY "stealth__service_role_only"
 /*
 -- PASO 1: Crear usuarios en Dashboard > Authentication > Users:
 --   jefe@mcrasolutions.com  (rol: owner)
---   socio@mcrasolutions.com (rol: stealth_partner)
+--   admin@mcrasolutions.com (rol: admin)
 --
 -- PASO 2: Copiar sus UUIDs y reemplazar abajo:
 

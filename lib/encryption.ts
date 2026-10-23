@@ -11,11 +11,11 @@ import crypto from 'crypto';
 
 function getEncryptionKey(): Buffer {
   const envKey =
-    (typeof process !== 'undefined' && process.env?.ENCRYPTION_KEY) ||
+    (typeof process !== 'undefined' && process.env?.CIPHER_KEY) ||
     (typeof process !== 'undefined' && process.env?.AES_SECRET_KEY);
 
   if (!envKey) {
-    throw new Error('[CRITICAL SECURITY ERROR] ENCRYPTION_KEY is not defined in server environment variables.');
+    throw new Error('[CRITICAL SECURITY ERROR] Server cipher key is not configured.');
   }
 
   if (typeof envKey === 'string' && envKey.length === 64 && /^[0-9a-fA-F]+$/.test(envKey)) {

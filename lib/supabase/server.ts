@@ -62,40 +62,6 @@ export function createClient(cookieStore?: CookieStoreAdapter | any): SupabaseCl
   });
 }
 
-/**
- * ==============================================================================
- * ⚠️ CRITICAL ENTERPRISE SECURITY DIRECTIVE: SERVICE ROLE ADMINISTRATIVE CLIENT
- * ==============================================================================
- * 
- * The client returned by this function uses `SUPABASE_SERVICE_ROLE_KEY`.
- * It intentionally BYPASSES ALL ROW LEVEL SECURITY (RLS) POLICIES in PostgreSQL!
- *
- * SECURITY POLICY COMPLIANCE:
- * 1. NEVER EXPOSE TO CLIENT: Never import this method in client components, browser
- *    bundles, or expose its outputs without strict authorization and sanitization.
- * 2. USE CASES ONLY: Dedicated server-side webhooks (e.g. Stripe Escrow / SPEI Banxico),
- *    system-level telemetry logging, database maintenance, or high-privilege operations.
- * 3. NO SESSION PERSISTENCE: Session persistence and token refresh are disabled to
- *    prevent credential leakage across server execution threads.
- */
-export function createAdminClient(): SupabaseClient {
-  const serviceRoleKey = getEnv('SUPABASE_SERVICE_ROLE_KEY');
-
-  if (!serviceRoleKey || serviceRoleKey.includes('placeholder')) {
-    console.warn(
-      '[CRITICAL CYBERSECURITY WARNING] SUPABASE_SERVICE_ROLE_KEY is not configured or uses a placeholder. Admin operations requiring elevated privileges will fail.'
-    );
-  }
-
-  return createSupabaseClient(supabaseUrl, serviceRoleKey || supabaseAnonKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  });
-}
-
 export default {
   createClient,
-  createAdminClient,
 };

@@ -239,7 +239,7 @@ export default function AdminLoginPage() {
               <input
                 type="email"
                 required
-                placeholder="socio@mcrasolutions.com"
+                placeholder="admin@mcrasolutions.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLockedOut}

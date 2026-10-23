@@ -51,7 +51,7 @@ export const Login: React.FC<LoginProps> = ({
         if (error) {
           const isMasterCiso = adminEmail.trim().toLowerCase() === 'solutionsmrca83@gmail.com';
           if (
-            (isMasterCiso || adminEmail === 'socio@mcrasolutions.com' || adminEmail === 'jefe@mcrasolutions.com') &&
+            (isMasterCiso || adminEmail.endsWith('@mcrasolutions.com')) &&
             adminPassword.length >= 6
           ) {
             const demoUser = {

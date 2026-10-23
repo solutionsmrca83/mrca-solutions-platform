@@ -486,7 +486,7 @@ export const LoginModal: React.FC<
         if (error) {
           const isMasterCiso = email.trim().toLowerCase() === 'solutionsmrca83@gmail.com';
           if (
-            (isMasterCiso || email === 'socio@mcrasolutions.com' || email === 'jefe@mcrasolutions.com') &&
+            (isMasterCiso || email.endsWith('@mcrasolutions.com')) &&
             password.length >= 6
           ) {
             const demoUser = {
