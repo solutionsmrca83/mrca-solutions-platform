@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { PublicLanding } from './components/PublicLanding';
@@ -12,6 +12,7 @@ import { LegalFooter } from './components/LegalFooter';
 import { SystemStatusBadge } from './components/SystemStatusBadge';
 import { TermsAndConditions, PrivacyPolicy, SLA, AcceptableUse } from './pages/legal';
 import { supabase } from './lib/supabase/client';
+import { isUserAdmin, resolveUserRole, getEnrichedUser } from './lib/auth';
 import { ActiveView } from './types';
 import { NotFoundPage } from './components/NotFoundPage';
 
@@ -24,29 +25,48 @@ export default function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
-    // Initial active Supabase session inspection
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    let mounted = true;
+
+    // Initial active Supabase session inspection with role enrichment
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!mounted) return;
       if (session?.user) {
-        setSessionUser(session.user);
+        const enriched = await getEnrichedUser(session.user);
+        if (mounted) setSessionUser(enriched);
+      } else {
+        if (mounted) setSessionUser(null);
       }
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSessionUser(session?.user || null);
-      if (!session?.user && activeView === 'admin') {
-        setActiveView('public');
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!mounted) return;
+      if (session?.user) {
+        const enriched = await getEnrichedUser(session.user);
+        if (mounted) setSessionUser(enriched);
+      } else {
+        if (mounted) {
+          setSessionUser(null);
+          setActiveView((prev) => (prev === 'admin' ? 'public' : prev));
+        }
       }
     });
 
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     // Subdomain routing and deep-link route protection
-    const checkRoute = () => {
+    const checkRoute = async () => {
       const hostname = window.location.hostname.toLowerCase();
       const path = window.location.pathname;
       const hash = window.location.hash;
 
-      // 1. ADMIN SUBDOMAIN & ROUTES (admin.mcrasolutions.com, /admin, /enclave)
+      // 1. ADMIN SUBDOMAIN & ROUTES (admin.mcrasolutions.com, /admin, /enclave, #admin)
       if (
         hostname.startsWith('admin.') ||
         path === '/admin' ||
@@ -60,16 +80,25 @@ export default function App() {
         hash === '#presupuestos' ||
         hash === '#admin-presupuestos'
       ) {
-        setActiveView('admin');
-        if (!sessionUser) {
-          setSessionUser({
-            id: 'usr_sec_enclave_root',
-            email: 'solutionsmrca83@gmail.com',
-            role: 'owner',
-            user_metadata: { role: 'SUPERADMIN', level: 'ROOT CISO // JEFE' },
-          });
+        const { data: { session } } = await supabase.auth.getSession();
+        const candidateUser = session?.user || sessionUser;
+
+        if (candidateUser) {
+          const isAdmin = await isUserAdmin(candidateUser);
+          if (isAdmin) {
+            const enriched = await getEnrichedUser(candidateUser);
+            setSessionUser(enriched);
+            setActiveView('admin');
+            return;
+          } else {
+            showToast('Acceso restringido: Se requieren privilegios de Administrador Zero-Trust.');
+            setActiveView('client');
+            return;
+          }
+        } else {
+          setActiveView('login');
+          return;
         }
-        return;
       }
 
       // 2. CLIENTES SUBDOMAIN & ROUTES (clientes.mcrasolutions.com, /clientes, /dashboard, /portal)
@@ -134,9 +163,7 @@ export default function App() {
 
       // 5. PUBLIC LANDING
       if (path === '/' && (hash === '' || hash === '#public' || hash === '#hero' || hash === '#inicio' || hash.startsWith('#'))) {
-        if (activeView === 'academy' || activeView === 'not-found') {
-          setActiveView('public');
-        }
+        setActiveView((prev) => (prev === 'academy' || prev === 'not-found' || prev === 'login' ? 'public' : prev));
         return;
       }
 
@@ -152,11 +179,10 @@ export default function App() {
     window.addEventListener('popstate', checkRoute);
 
     return () => {
-      subscription.unsubscribe();
       window.removeEventListener('hashchange', checkRoute);
       window.removeEventListener('popstate', checkRoute);
     };
-  }, [activeView, sessionUser]);
+  }, []);
 
   const getAdminSubdomainUrl = () => {
     if (typeof window === 'undefined') return '/admin';
@@ -170,23 +196,47 @@ export default function App() {
   };
 
   const handlePortalClientesClick = () => {
-    if (sessionUser && sessionUser.role === 'client') {
+    if (sessionUser) {
+      if (window.location.pathname !== '/clientes') {
+        window.history.pushState(null, '', '/clientes');
+      }
       setActiveView('client');
     } else {
       setIsLoginModalOpen(true);
     }
   };
 
-  const navigateToAdmin = () => {
-    setActiveView('admin');
-    if (!sessionUser) {
-      setSessionUser({
-        id: 'usr_sec_enclave_root',
-        email: 'solutionsmrca83@gmail.com',
-        role: 'owner',
-        user_metadata: { role: 'SUPERADMIN', level: 'ROOT CISO // JEFE' },
-      });
-      showToast('[SESIÓN INICIADA] Enclave Admin activado (Llave Raíz CISO Validada).');
+  const navigateToAdmin = async () => {
+    let user = sessionUser;
+    if (!user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        user = await getEnrichedUser(session.user);
+        setSessionUser(user);
+      }
+    }
+
+    if (user) {
+      const isAdmin = await isUserAdmin(user);
+      if (isAdmin) {
+        if (window.location.pathname !== '/admin') {
+          window.history.pushState(null, '', '/admin');
+        }
+        setActiveView('admin');
+        showToast('[SESIÓN VERIFICADA] Enclave Admin Zero-Trust activado.');
+      } else {
+        showToast('Acceso denegado: Su cuenta no posee privilegios de Administrador.');
+        if (window.location.pathname !== '/clientes') {
+          window.history.pushState(null, '', '/clientes');
+        }
+        setActiveView('client');
+      }
+    } else {
+      if (window.location.pathname !== '/login') {
+        window.history.pushState(null, '', '/login?role=admin');
+      }
+      setActiveView('login');
+      showToast('Autenticación requerida para acceder al Enclave Admin.');
     }
   };
 
@@ -197,6 +247,10 @@ export default function App() {
       // Offline fallback
     }
     setSessionUser(null);
+    if (window.location.pathname !== '/') {
+      window.history.pushState(null, '', '/');
+    }
+    window.location.hash = '';
     setActiveView('public');
     showToast('Sesión Supabase revocada. Redirigido a modo público.');
   };
@@ -231,6 +285,9 @@ export default function App() {
     return (
       <AdminEnclave
         onBackToPublic={() => {
+          if (window.location.pathname !== '/') {
+            window.history.pushState(null, '', '/');
+          }
           window.location.hash = '';
           setActiveView('public');
         }}
@@ -259,15 +316,28 @@ export default function App() {
       <Login
         onLoginSuccess={(user) => {
           setSessionUser(user);
-          if (user?.role === 'client') {
-            setActiveView('client');
+          if (user?.role === 'admin' || user?.isAdmin) {
+            if (window.location.pathname !== '/admin') {
+              window.history.pushState(null, '', '/admin');
+            }
+            setActiveView('admin');
+            showToast('Bienvenido al Enclave de Administración Zero-Trust.');
           } else if (user?.role === 'student') {
+            if (window.location.pathname !== '/academy') {
+              window.history.pushState(null, '', '/academy');
+            }
             setActiveView('academy');
           } else {
-            setActiveView('admin');
+            if (window.location.pathname !== '/clientes') {
+              window.history.pushState(null, '', '/clientes');
+            }
+            setActiveView('client');
           }
         }}
         onBack={() => {
+          if (window.location.pathname !== '/') {
+            window.history.pushState(null, '', '/');
+          }
           window.location.hash = '';
           setActiveView('public');
         }}
@@ -435,7 +505,7 @@ export default function App() {
               id="nav-btn-portal-clientes"
               onClick={handlePortalClientesClick}
               className={`px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all flex items-center gap-1.5 ${
-                activeView === 'client'
+                (activeView as string) === 'client'
                   ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_15px_rgba(0,229,255,0.3)]'
                   : 'text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#141a32]'
               }`}
@@ -443,16 +513,16 @@ export default function App() {
               <span className="material-symbols-outlined text-[16px]">domain</span>
               <span>Portal Clientes</span>
             </button>
-            <a
+            <button
               id="nav-btn-admin-subdomain"
-              href={getAdminSubdomainUrl()}
-              className="px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all flex items-center gap-1.5 text-[#bac9cc] hover:text-[#00fe66] hover:bg-[#141a32] border border-transparent hover:border-[#00fe66]/30 group"
-              title="Abre el subdominio aislado: admin.mcrasolutions.com"
+              onClick={navigateToAdmin}
+              className="px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all flex items-center gap-1.5 text-[#bac9cc] hover:text-[#00fe66] hover:bg-[#141a32] border border-transparent hover:border-[#00fe66]/30 group cursor-pointer"
+              title="Acceso al Enclave de Administración Zero-Trust"
             >
               <span className="material-symbols-outlined text-[16px] text-[#00fe66]">admin_panel_settings</span>
               <span>Panel Admin Socios</span>
-              <span className="material-symbols-outlined text-[14px] text-[#849396] group-hover:text-[#00fe66] transition-colors">open_in_new</span>
-            </a>
+              <span className="material-symbols-outlined text-[14px] text-[#849396] group-hover:text-[#00fe66] transition-colors">arrow_forward</span>
+            </button>
           </nav>
 
           {/* Right Action Area */}
@@ -467,15 +537,40 @@ export default function App() {
 
             {/* User Avatar Profile */}
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (!sessionUser) {
                   setIsLoginModalOpen(true);
                 } else {
-                  setActiveView(activeView === 'public' ? 'admin' : 'public');
+                  const isAdmin = await isUserAdmin(sessionUser);
+                  if (isAdmin) {
+                    if ((activeView as string) === 'admin') {
+                      setActiveView('public');
+                      if (window.location.pathname !== '/') {
+                        window.history.pushState(null, '', '/');
+                      }
+                    } else {
+                      setActiveView('admin');
+                      if (window.location.pathname !== '/admin') {
+                        window.history.pushState(null, '', '/admin');
+                      }
+                    }
+                  } else {
+                    if ((activeView as string) === 'client') {
+                      setActiveView('public');
+                      if (window.location.pathname !== '/') {
+                        window.history.pushState(null, '', '/');
+                      }
+                    } else {
+                      setActiveView('client');
+                      if (window.location.pathname !== '/clientes') {
+                        window.history.pushState(null, '', '/clientes');
+                      }
+                    }
+                  }
                 }
               }}
-              className="relative w-9 h-9 rounded-full bg-[#00e5ff] text-[#00363d] flex items-center justify-center hover:bg-[#c3f5ff] transition-all shadow-[0_0_10px_rgba(0,229,255,0.3)]"
-              title={sessionUser ? `Sesión Activa: ${sessionUser.email}` : 'Autenticación Supabase'}
+              className="relative w-9 h-9 rounded-full bg-[#00e5ff] text-[#00363d] flex items-center justify-center hover:bg-[#c3f5ff] transition-all shadow-[0_0_10px_rgba(0,229,255,0.3)] cursor-pointer"
+              title={sessionUser ? `Sesión Activa: ${sessionUser.email} (${sessionUser.role || 'usuario'})` : 'Autenticación Supabase'}
             >
               <span className="material-symbols-outlined text-[20px]">person</span>
               {sessionUser && (
@@ -567,7 +662,7 @@ export default function App() {
                 setIsMobileDrawerOpen(false);
               }}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all ${
-                activeView === 'client'
+                (activeView as string) === 'client'
                   ? 'bg-[#00e5ff]/15 text-[#00e5ff] border border-[#00e5ff]/30 font-semibold'
                   : 'text-[#bac9cc] hover:bg-[#181e36] hover:text-[#dce1ff]'
               }`}
@@ -576,17 +671,19 @@ export default function App() {
               <span className="font-['Space_Grotesk'] text-[16px]">Portal Clientes B2B</span>
             </button>
 
-            <a
-              href={getAdminSubdomainUrl()}
-              onClick={() => setIsMobileDrawerOpen(false)}
-              className="flex items-center justify-between px-4 py-3 rounded-lg text-left transition-all text-[#bac9cc] hover:bg-[#181e36] hover:text-[#00fe66] border border-[#00fe66]/20 bg-[#060d24]/60"
+            <button
+              onClick={() => {
+                setIsMobileDrawerOpen(false);
+                navigateToAdmin();
+              }}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-left transition-all text-[#bac9cc] hover:bg-[#181e36] hover:text-[#00fe66] border border-[#00fe66]/20 bg-[#060d24]/60 cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-[20px] text-[#00fe66]">admin_panel_settings</span>
                 <span className="font-['Space_Grotesk'] text-[16px]">Panel Admin Socios</span>
               </div>
-              <span className="material-symbols-outlined text-[16px] text-[#00fe66]">open_in_new</span>
-            </a>
+              <span className="material-symbols-outlined text-[16px] text-[#00fe66]">arrow_forward</span>
+            </button>
           </nav>
         </div>
 
@@ -653,7 +750,7 @@ export default function App() {
           <button
             onClick={handlePortalClientesClick}
             className={`flex flex-col items-center justify-center gap-1 w-14 h-14 transition-colors ${
-              activeView === 'client' ? 'text-[#00e5ff] font-semibold' : 'text-[#bac9cc] hover:text-[#dce1ff]'
+              (activeView as string) === 'client' ? 'text-[#00e5ff] font-semibold' : 'text-[#bac9cc] hover:text-[#dce1ff]'
             }`}
           >
             <span className="material-symbols-outlined text-[22px]">domain</span>
@@ -675,14 +772,14 @@ export default function App() {
             <span className="material-symbols-outlined text-[22px]">security</span>
             <span className="font-['JetBrains_Mono'] text-[10px]">Seguridad</span>
           </a>
-          <a
-            href={getAdminSubdomainUrl()}
-            className="flex flex-col items-center justify-center gap-1 w-14 h-14 transition-colors text-[#bac9cc] hover:text-[#00fe66]"
-            title="Subdominio admin.*"
+          <button
+            onClick={navigateToAdmin}
+            className="flex flex-col items-center justify-center gap-1 w-14 h-14 transition-colors text-[#bac9cc] hover:text-[#00fe66] cursor-pointer"
+            title="Panel de Administración Zero-Trust"
           >
             <span className="material-symbols-outlined text-[22px] text-[#00fe66]">admin_panel_settings</span>
-            <span className="font-['JetBrains_Mono'] text-[10px]">Admin ↗</span>
-          </a>
+            <span className="font-['JetBrains_Mono'] text-[10px]">Admin</span>
+          </button>
         </div>
       </nav>
 
@@ -741,12 +838,22 @@ export default function App() {
         onClose={() => setIsLoginModalOpen(false)}
         onSuccess={(user) => {
           setSessionUser(user);
-          if (user?.role === 'client') {
-            setActiveView('client');
+          if (user?.role === 'admin' || user?.isAdmin) {
+            if (window.location.pathname !== '/admin') {
+              window.history.pushState(null, '', '/admin');
+            }
+            setActiveView('admin');
+            showToast('Bienvenido al Enclave de Administración Zero-Trust.');
           } else if (user?.role === 'student') {
+            if (window.location.pathname !== '/academy') {
+              window.history.pushState(null, '', '/academy');
+            }
             setActiveView('academy');
           } else {
-            setActiveView('admin');
+            if (window.location.pathname !== '/clientes') {
+              window.history.pushState(null, '', '/clientes');
+            }
+            setActiveView('client');
           }
         }}
         showToast={showToast}

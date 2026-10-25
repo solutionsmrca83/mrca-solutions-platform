@@ -80,17 +80,10 @@ export default function AdminLoginPage() {
 
         // Verify role of authenticated user
         if (data.user) {
-          const role = data.user.user_metadata?.role;
-          const userEmail = data.user.email?.toLowerCase() || '';
-          const isAuthorizedRole =
-            role === 'owner' ||
-            role === 'stealth_partner' ||
-            role === 'employee' ||
-            userEmail.includes('jefe') ||
-            userEmail.includes('socio') ||
-            userEmail.includes('empleado');
+          const { isUserAdmin } = await import('@/src/lib/auth');
+          const isAuthorized = await isUserAdmin(data.user);
 
-          if (!isAuthorizedRole) {
+          if (!isAuthorized) {
             await supabase.auth.signOut();
             window.location.href = '/forbidden';
             return;

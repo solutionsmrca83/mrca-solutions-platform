@@ -53,7 +53,7 @@ export async function loginClient(formData: FormData) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -63,6 +63,14 @@ export async function loginClient(formData: FormData) {
       redirect('/portal/client');
     }
     return { error: error.message };
+  }
+
+  const metaRole = (data?.user?.user_metadata?.role || data?.user?.app_metadata?.role)?.toString().toLowerCase();
+  const lowerEmail = email.toLowerCase().trim();
+  const isFounder = ['solutionsmrca83@gmail.com', 'jefe@mcrasolutions.com', 'admin@mcrasolutions.com'].includes(lowerEmail) || lowerEmail.endsWith('@mcrasolutions.com');
+
+  if (isFounder || ['admin', 'owner', 'superadmin', 'stealth_partner'].includes(metaRole || '')) {
+    redirect('/admin/dashboard');
   }
 
   redirect('/portal/client');

@@ -507,8 +507,10 @@ export const LoginModal: React.FC<
         }
 
         if (data.user) {
+          const { getEnrichedUser } = await import('../lib/auth');
+          const enrichedUser = await getEnrichedUser(data.user);
           showToast(`Autenticado exitosamente como ${data.user.email}`);
-          onSuccess(data.user);
+          onSuccess(enrichedUser);
           onClose();
         }
       }
@@ -608,8 +610,10 @@ export const LoginModal: React.FC<
           <div className="w-full">
             <ClientAuthModule
               initialMode={initialMode}
-              onLoginSuccess={(user) => {
-                onSuccess(user);
+              onLoginSuccess={async (user) => {
+                const { getEnrichedUser } = await import('../lib/auth');
+                const enriched = await getEnrichedUser(user);
+                onSuccess(enriched);
                 onClose();
               }}
               onRegisterSubmitted={() => {
@@ -624,8 +628,10 @@ export const LoginModal: React.FC<
         {authTarget === 'student' && (
           <div className="w-full">
             <StudentAuthModule
-              onSuccess={(user) => {
-                onSuccess(user);
+              onSuccess={async (user) => {
+                const { getEnrichedUser } = await import('../lib/auth');
+                const enriched = await getEnrichedUser(user);
+                onSuccess(enriched);
                 onClose();
               }}
               onExploreTemplates={() => {

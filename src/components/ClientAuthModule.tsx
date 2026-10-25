@@ -140,7 +140,9 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
       if (data.user) {
         setFailedAttempts(0);
         if (showToast) showToast(`[AUTENTICADO] Bienvenido ${data.user.email}`);
-        if (onLoginSuccess) onLoginSuccess(data.user);
+        const { getEnrichedUser } = await import('../lib/auth');
+        const enriched = await getEnrichedUser(data.user);
+        if (onLoginSuccess) onLoginSuccess(enriched);
       }
     } catch (err: any) {
       const nextFailures = failedAttempts + 1;

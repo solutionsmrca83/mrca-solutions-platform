@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Code,
-  Timeline,
   Key,
   DollarSign,
   LifeBuoy,

@@ -8,17 +8,10 @@ export default function AdminDomainRootPage() {
   const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
-        const role = session.user.user_metadata?.role;
-        const email = session.user.email?.toLowerCase() || '';
-        const isPrivileged =
-          role === 'owner' ||
-          role === 'stealth_partner' ||
-          role === 'employee' ||
-          email.includes('jefe') ||
-          email.includes('socio') ||
-          email.includes('empleado');
+        const { isUserAdmin } = await import('@/src/lib/auth');
+        const isPrivileged = await isUserAdmin(session.user);
 
         if (isPrivileged) {
           router.replace('/dashboard');

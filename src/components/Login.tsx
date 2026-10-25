@@ -10,14 +10,27 @@ interface LoginProps {
   onLoginSuccess?: (user: any) => void;
   onBack?: () => void;
   showToast?: (msg: string) => void;
+  initialRole?: 'client' | 'student' | 'admin';
 }
 
 export const Login: React.FC<LoginProps> = ({
   onLoginSuccess,
   onBack,
   showToast = (msg) => console.log(msg),
+  initialRole = 'client',
 }) => {
-  const [authRole, setAuthRole] = useState<'client' | 'student' | 'admin'>('client');
+  const [authRole, setAuthRole] = useState<'client' | 'student' | 'admin'>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const roleParam = params.get('role');
+      if (roleParam === 'admin' || roleParam === 'student' || roleParam === 'client') {
+        return roleParam;
+      }
+      if (window.location.hash === '#admin') return 'admin';
+      if (window.location.pathname.startsWith('/admin')) return 'admin';
+    }
+    return initialRole;
+  });
   const [adminEmail, setAdminEmail] = useState('solutionsmrca83@gmail.com');
   const [adminPassword, setAdminPassword] = useState('');
   const [showAdminPassword, setShowAdminPassword] = useState(false);
@@ -71,8 +84,10 @@ export const Login: React.FC<LoginProps> = ({
         }
 
         if (data.user) {
+          const { getEnrichedUser } = await import('../lib/auth');
+          const enrichedUser = await getEnrichedUser(data.user);
           showToast(`Autenticado como ${data.user.email}`);
-          if (onLoginSuccess) onLoginSuccess(data.user);
+          if (onLoginSuccess) onLoginSuccess(enrichedUser);
         }
       }
     } catch (err: any) {
@@ -204,7 +219,11 @@ export const Login: React.FC<LoginProps> = ({
                 className="w-full"
               >
                 <ClientAuthModule
-                  onLoginSuccess={onLoginSuccess}
+                  onLoginSuccess={async (user) => {
+                    const { getEnrichedUser } = await import('../lib/auth');
+                    const enriched = await getEnrichedUser(user);
+                    if (onLoginSuccess) onLoginSuccess(enriched);
+                  }}
                   showToast={showToast}
                 />
               </motion.div>
@@ -221,7 +240,11 @@ export const Login: React.FC<LoginProps> = ({
                 className="w-full rounded-3xl bg-[#0a1128]/95 border border-[#00FF66]/30 p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
               >
                 <StudentAuthModule
-                  onSuccess={onLoginSuccess}
+                  onSuccess={async (user) => {
+                    const { getEnrichedUser } = await import('../lib/auth');
+                    const enriched = await getEnrichedUser(user);
+                    if (onLoginSuccess) onLoginSuccess(enriched);
+                  }}
                   showToast={showToast}
                   onExploreTemplates={() => {
                     if (typeof window !== 'undefined') {

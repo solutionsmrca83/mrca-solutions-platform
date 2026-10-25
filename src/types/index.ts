@@ -56,7 +56,7 @@ export interface ShardNode {
 }
 
 // Multi-Role RBAC Definitions
-export type UserRole = 'owner' | 'stealth_partner' | 'employee' | 'client' | 'student';
+export type UserRole = 'admin' | 'superadmin' | 'owner' | 'stealth_partner' | 'employee' | 'client' | 'student';
 
 export interface UserProfile {
   id: string;

@@ -136,34 +136,114 @@ export async function middleware(request: NextRequest) {
     const isStealthCookie =
       request.cookies.get('mcra_stealth_session')?.value === 'authenticated_stealth_partner';
 
+    const FOUNDER_MASTER_EMAILS = [
+      'solutionsmrca83@gmail.com',
+      'jefe@mcrasolutions.com',
+      'admin@mcrasolutions.com',
+      'founder@mcrasolutions.com',
+      'owner@mcrasolutions.com',
+      'ciso@mcrasolutions.com',
+    ];
+
+    const ADMIN_PRIVILEGED_ROLES = [
+      'admin',
+      'owner',
+      'superadmin',
+      'stealth_partner',
+      'employee',
+      'ciso',
+      'director',
+    ];
+
     // Resolve user role
     let role: UserRole | null = null;
+    let isPrivilegedAdmin = false;
+
     if (isStealthCookie) {
       role = 'stealth_partner';
+      isPrivilegedAdmin = true;
     } else if (user) {
-      const metaRole = user.user_metadata?.role as UserRole | undefined;
-      const email = user.email?.toLowerCase() || '';
+      const email = user.email?.toLowerCase().trim() || '';
+      const metaRole = (
+        user.user_metadata?.role ||
+        user.app_metadata?.role ||
+        (user as any).raw_user_meta_data?.role ||
+        (user as any).raw_app_meta_data?.role
+      )?.toString().toLowerCase().trim();
 
-      if (
-        metaRole === 'owner' ||
-        metaRole === 'stealth_partner' ||
-        metaRole === 'employee' ||
-        metaRole === 'client'
-      ) {
-        role = metaRole;
-      } else if (email.includes('jefe') || email === 'owner@mcrasolutions.com') {
+      // Check founder email list or @mcrasolutions.com
+      if (FOUNDER_MASTER_EMAILS.includes(email) || email.endsWith('@mcrasolutions.com')) {
         role = 'owner';
-      } else if (email.includes('socio') || email === 'stealth@mcrasolutions.com') {
-        role = 'stealth_partner';
-      } else if (email.includes('empleado') || email.includes('employee')) {
-        role = 'employee';
+        isPrivilegedAdmin = true;
+      } else if (metaRole && ADMIN_PRIVILEGED_ROLES.includes(metaRole)) {
+        role = metaRole as UserRole;
+        isPrivilegedAdmin = true;
+      } else if (email.includes('jefe') || email.includes('socio') || email.includes('empleado')) {
+        role = 'owner';
+        isPrivilegedAdmin = true;
       } else {
         role = 'client';
       }
-    }
 
-    const isPrivilegedAdmin =
-      role === 'owner' || role === 'stealth_partner' || role === 'employee';
+      // If not yet verified, query Supabase database tables for 'role' column
+      if (!isPrivilegedAdmin && user.id) {
+        try {
+          const { data: userProfile } = await supabase
+            .from('user_profiles')
+            .select('role')
+            .eq('id', user.id)
+            .maybeSingle();
+
+          if (userProfile?.role) {
+            const r = userProfile.role.toString().toLowerCase().trim();
+            if (ADMIN_PRIVILEGED_ROLES.includes(r)) {
+              role = r as UserRole;
+              isPrivilegedAdmin = true;
+            }
+          }
+        } catch {
+          // Fallback to profiles table
+        }
+
+        if (!isPrivilegedAdmin) {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', user.id)
+              .maybeSingle();
+
+            if (profile?.role) {
+              const r = profile.role.toString().toLowerCase().trim();
+              if (ADMIN_PRIVILEGED_ROLES.includes(r)) {
+                role = r as UserRole;
+                isPrivilegedAdmin = true;
+              }
+            }
+          } catch {
+            // Fallback to users table
+          }
+        }
+
+        if (!isPrivilegedAdmin) {
+          try {
+            const { data: dbUser } = await supabase
+              .from('users')
+              .select('role')
+              .eq('id', user.id)
+              .maybeSingle();
+
+            if (dbUser?.role) {
+              const r = dbUser.role.toString().toLowerCase().trim();
+              if (ADMIN_PRIVILEGED_ROLES.includes(r)) {
+                role = r as UserRole;
+                isPrivilegedAdmin = true;
+              }
+            }
+          } catch {}
+        }
+      }
+    }
 
     // C.2. Admin Login page handling (NO registration UI)
     if (pathname === '/login') {
@@ -206,16 +286,21 @@ export async function middleware(request: NextRequest) {
   }
 
   // ============================================================================
-  // BRANCH D: MAIN DOMAIN (mcrasolutions.com / localhost:3000)
+  // BRANCH D: MAIN DOMAIN (mcrasolutions.com / localhost:3000 / Netlify)
   // ============================================================================
 
-  // D.1. Any legacy /admin routes accessed on main domain -> Redirect to admin subdomain
+  // D.1. /admin route on main domain:
+  // If running on Netlify (*.netlify.app) or localhost, keep on main domain for SPA routing.
+  // Otherwise, only redirect to admin subdomain if explicitly requested.
   if (pathname === '/admin' || pathname.startsWith('/admin/')) {
-    const adminUrl = request.nextUrl.clone();
-    const cleanHost = host.replace(/^www\./, '');
-    adminUrl.host = cleanHost.startsWith('admin.') ? cleanHost : `admin.${cleanHost}`;
-    adminUrl.pathname = pathname.replace(/^\/admin/, '') || '/admin';
-    return NextResponse.redirect(adminUrl);
+    if (
+      hostname.includes('netlify.app') ||
+      hostname === 'localhost' ||
+      hostname === '127.0.0.1' ||
+      searchParams.get('no_subdomain') === '1'
+    ) {
+      return response;
+    }
   }
 
   // Standard main domain route pass-through
