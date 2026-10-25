@@ -22,7 +22,7 @@ export default function ClientPortalPage() {
           <div className="flex items-center gap-3">
             <a href="/" className="flex items-center gap-2 group">
               <div className="w-9 h-9 rounded-xl bg-[#181e36] border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff] group-hover:border-[#00e5ff] transition-all">
-                <span className="material-symbols-outlined text-[20px]">hexagon</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[20px]">hexagon</span>
               </div>
 
               {/* Embedded 3D Video Mini Brand Preview */}
@@ -63,7 +63,7 @@ export default function ClientPortalPage() {
                 type="submit"
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#181e36] hover:bg-[#222941] text-[#ffb4ab] border border-[#ffb4ab]/30 font-['JetBrains_Mono'] text-[11px] font-bold transition-all"
               >
-                <span className="material-symbols-outlined text-[15px]">logout</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[15px]">logout</span>
                 <span>CERRAR SESIÓN</span>
               </button>
             </form>
@@ -83,7 +83,7 @@ export default function ClientPortalPage() {
       {/* Floating HUD Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl bg-[#141a32] border border-[#00e5ff]/50 shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center gap-3 animate-bounce">
-          <span className="material-symbols-outlined text-[#00fe66] text-[22px]">check_circle</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[22px]">check_circle</span>
           <span className="font-['JetBrains_Mono'] text-[12px] text-[#dce1ff] font-medium">{toastMessage}</span>
         </div>
       )}

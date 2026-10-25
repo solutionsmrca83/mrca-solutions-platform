@@ -229,7 +229,7 @@ export const HologramCanvas: React.FC<HologramCanvasProps> = ({ className = '' }
       />
       {/* Overlay badges matching exact designs */}
       <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#222941]/90 border border-[#00e5ff]/20 backdrop-blur-md">
-        <span className="material-symbols-outlined text-[#00e5ff] text-[14px]">stream</span>
+        <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[14px]">stream</span>
         <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff] font-semibold tracking-wider">
           CORE_QUANTUM::ONLINE
         </span>
@@ -241,7 +241,7 @@ export const HologramCanvas: React.FC<HologramCanvasProps> = ({ className = '' }
       </div>
       <div className="absolute bottom-3 left-3 z-20">
         <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc] flex items-center gap-1 bg-[#141a32]/70 px-2 py-0.5 rounded backdrop-blur-sm">
-          <span className="material-symbols-outlined text-[12px] text-[#00e5ff]">touch_app</span> Desliza para orbitar núcleo
+          <span translate="no" className="notranslate material-symbols-outlined text-[12px] text-[#00e5ff]">touch_app</span> Desliza para orbitar núcleo
         </span>
       </div>
     </div>

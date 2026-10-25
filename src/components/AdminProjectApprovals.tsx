@@ -218,7 +218,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#222941] gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-[#060d24] border border-[#00e5ff]/40 flex items-center justify-center text-[#00e5ff] shadow-[0_0_15px_rgba(0,229,255,0.3)]">
-              <span className="material-symbols-outlined text-[24px]">assignment_turned_in</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[24px]">assignment_turned_in</span>
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -308,7 +308,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
           </div>
 
           <div className="relative w-full sm:w-64">
-            <span className="absolute left-3 top-2 material-symbols-outlined text-[#849396] text-[16px]">
+            <span translate="no" className="notranslate absolute left-3 top-2 material-symbols-outlined text-[#849396] text-[16px]">
               search
             </span>
             <input
@@ -446,7 +446,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
                     onClick={() => handleAcceptProject(selectedProposal.id)}
                     className="py-3 rounded-xl bg-[#00fe66] hover:bg-[#5aff96] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,254,102,0.4)] hover:shadow-[0_0_30px_rgba(0,254,102,0.6)] flex items-center justify-center gap-1.5"
                   >
-                    <span className="material-symbols-outlined text-[18px]">verified</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[18px]">verified</span>
                     <span>Aceptar Proyecto</span>
                   </button>
 
@@ -456,7 +456,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
                     onClick={() => handlePauseProject(selectedProposal.id)}
                     className="py-3 rounded-xl bg-[#181e36] hover:bg-[#ffb4ab]/20 text-[#ffb4ab] border border-[#ffb4ab]/40 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(255,180,171,0.2)] flex items-center justify-center gap-1.5"
                   >
-                    <span className="material-symbols-outlined text-[18px]">pause_circle</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[18px]">pause_circle</span>
                     <span>Rechazar / Pausar</span>
                   </button>
                 </div>
@@ -468,7 +468,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
               <div className="flex flex-col gap-2.5 pt-2 border-t border-[#181e36]">
                 <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono']">
                   <div className="flex items-center gap-1.5 text-[#00e5ff]">
-                    <span className="material-symbols-outlined text-[15px]">lock</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[15px]">lock</span>
                     <span className="font-bold">CANAL DE RESPUESTA OFICIAL (ADMIN CHAT)</span>
                   </div>
                   <span className="text-[#849396]">FIRMA: {adminSender}</span>
@@ -524,7 +524,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
                         disabled={isSendingReply || !adminReplyText.trim()}
                         className="px-4 py-2 rounded-xl bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center gap-1 disabled:opacity-50"
                       >
-                        <span className="material-symbols-outlined text-[16px]">send</span>
+                        <span translate="no" className="notranslate material-symbols-outlined text-[16px]">send</span>
                         <span>Responder</span>
                       </button>
                     </form>

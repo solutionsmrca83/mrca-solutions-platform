@@ -36,7 +36,7 @@ export const TermsAndConditions: React.FC<TermsProps> = ({ onBack, onNavigate })
       {/* CRITICAL CLAUSE 1: LIMITACIÓN DE RESPONSABILIDAD */}
       <section className="space-y-4 p-5 rounded-2xl bg-cyan-950/20 border border-cyan-500/30">
         <div className="flex items-center gap-2 text-cyan-400">
-          <span className="material-symbols-outlined text-[22px]">gavel</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[22px]">gavel</span>
           <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400">
             2. Limitación de Responsabilidad y Exclusiones de Ciberseguridad
           </h2>

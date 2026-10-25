@@ -35,7 +35,7 @@ export const ReAuthModal: React.FC<ModalProps & { onConfirm: (method: string) =>
             onClick={onClose}
             className="text-[#bac9cc] hover:text-[#dce1ff] transition-colors p-1"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
@@ -48,7 +48,7 @@ export const ReAuthModal: React.FC<ModalProps & { onConfirm: (method: string) =>
             onClick={() => onConfirm('GitHub SSO Enclave')}
             className="flex items-center justify-center gap-2.5 px-4 py-3 rounded-lg bg-[#181e36] hover:bg-[#222941] border border-[#3b494c] text-[#dce1ff] transition-all font-['JetBrains_Mono'] text-[12px] font-medium"
           >
-            <svg className="w-4 h-4 fill-current text-[#dce1ff]" viewBox="0 0 24 24">
+            <svg className="notranslate w-4 h-4 fill-current text-[#dce1ff]" viewBox="0 0 24 24">
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
             </svg>
             <span>Continuar con GitHub SSO (Enclave)</span>
@@ -58,7 +58,7 @@ export const ReAuthModal: React.FC<ModalProps & { onConfirm: (method: string) =>
             onClick={() => onConfirm('Supabase FIDO2')}
             className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold hover:bg-[#c3f5ff] transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)]"
           >
-            <span className="material-symbols-outlined text-[18px]">verified_user</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[18px]">verified_user</span>
             <span>Credencial Corporativa Supabase FIDO2</span>
           </button>
         </div>
@@ -96,7 +96,7 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
             </h3>
           </div>
           <button onClick={onClose} className="text-[#bac9cc] hover:text-[#dce1ff]">
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
@@ -159,7 +159,7 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
           </div>
 
           <div className="p-3 bg-[#0b1229] rounded-lg border border-[#222941] flex items-center gap-2 text-[11px] font-['JetBrains_Mono'] text-[#bac9cc]">
-            <span className="material-symbols-outlined text-[#00fe66] text-[16px]">verified</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">verified</span>
             <span>Certificado de Inmutabilidad SHA-256 generado al enviar</span>
           </div>
 
@@ -209,7 +209,7 @@ export const HardwareTokenModal: React.FC<ModalProps & { onSuccess: () => void }
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/85 backdrop-blur-xl p-4">
       <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/40 shadow-2xl flex flex-col items-center text-center gap-4">
         <div className="w-16 h-16 rounded-full bg-[#181e36] border border-[#00e5ff]/40 flex items-center justify-center text-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.3)]">
-          <span className="material-symbols-outlined text-[32px]">
+          <span translate="no" className="notranslate material-symbols-outlined text-[32px]">
             {step === 'granted' ? 'check_circle' : 'fingerprint'}
           </span>
         </div>
@@ -238,7 +238,7 @@ export const HardwareTokenModal: React.FC<ModalProps & { onSuccess: () => void }
 
         {step === 'verifying' && (
           <div className="flex items-center gap-2 text-[#00fe66] font-['JetBrains_Mono'] text-[12px] animate-pulse">
-            <span className="material-symbols-outlined text-[18px]">sync</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[18px]">sync</span>
             <span>Handshake en proceso (0.82ms)...</span>
           </div>
         )}
@@ -270,7 +270,7 @@ export const InspectContractModal: React.FC<
             <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff]">{title}</h3>
           </div>
           <button onClick={onClose} className="text-[#bac9cc] hover:text-[#dce1ff]">
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
@@ -299,7 +299,7 @@ export const InspectContractModal: React.FC<
             }}
             className="px-4 py-2 rounded-lg bg-[#181e36] hover:bg-[#222941] text-[#00e5ff] text-[12px] font-['JetBrains_Mono'] flex items-center gap-1.5"
           >
-            <span className="material-symbols-outlined text-[16px]">content_copy</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[16px]">content_copy</span>
             Copiar Hash
           </button>
           <button
@@ -339,7 +339,7 @@ export const NewTicketModal: React.FC<ModalProps & { onAdd: (ticket: Partial<Kan
             </h3>
           </div>
           <button onClick={onClose} className="text-[#bac9cc] hover:text-[#dce1ff]">
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
@@ -578,7 +578,7 @@ export const LoginModal: React.FC<
                     : 'text-[#bac9cc] hover:text-[#dce1ff]'
                 }`}
               >
-                <span className="material-symbols-outlined text-[15px]">domain</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[15px]">domain</span>
                 <span>Corporate Client</span>
               </button>
               <button
@@ -590,7 +590,7 @@ export const LoginModal: React.FC<
                     : 'text-[#bac9cc] hover:text-[#dce1ff]'
                 }`}
               >
-                <span className="material-symbols-outlined text-[15px]">school</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[15px]">school</span>
                 <span>Student / Academic</span>
               </button>
             </div>
@@ -601,7 +601,7 @@ export const LoginModal: React.FC<
             className="w-8 h-8 rounded-lg bg-[#141a32] border border-[#222941] flex items-center justify-center text-[#bac9cc] hover:text-[#dce1ff] hover:border-[#00e5ff]/40 transition-all shrink-0 cursor-pointer"
             aria-label="Cerrar modal"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
 
@@ -665,7 +665,7 @@ export const LoginModal: React.FC<
 
             {errorMsg && (
               <div className="p-3 rounded-lg bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#ffb4ab]">
-                <span className="material-symbols-outlined text-[16px]">error</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[16px]">error</span>
                 <span>{errorMsg}</span>
               </div>
             )}
@@ -750,7 +750,7 @@ export const LoginModal: React.FC<
                 disabled={loading}
                 className="w-full py-2.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2 mt-1"
               >
-                <span className="material-symbols-outlined text-[18px]">vpn_key</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[18px]">vpn_key</span>
                 <span>
                   {loading
                     ? 'Validando con Supabase...'
@@ -773,7 +773,7 @@ export const LoginModal: React.FC<
                 onClick={() => handleOAuthLogin('github')}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#181e36] hover:bg-[#222941] border border-[#3b494c] text-[#dce1ff] transition-all font-['JetBrains_Mono'] text-[11px]"
               >
-                <svg className="w-4 h-4 fill-current text-[#dce1ff]" viewBox="0 0 24 24">
+                <svg className="notranslate w-4 h-4 fill-current text-[#dce1ff]" viewBox="0 0 24 24">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                 </svg>
                 <span>GitHub Enterprise SSO (mTLS Enclave)</span>
@@ -784,7 +784,7 @@ export const LoginModal: React.FC<
                 onClick={handleBypassDemo}
                 className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00fe66]/10 hover:bg-[#00fe66]/20 border border-[#00fe66]/30 text-[#00fe66] transition-all font-['JetBrains_Mono'] text-[10px] font-semibold"
               >
-                <span className="material-symbols-outlined text-[14px]">shield</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[14px]">shield</span>
                 <span>Simular Llave Raíz de Desarrollador (Zero-Trust Sandbox)</span>
               </button>
             </div>
@@ -812,7 +812,7 @@ export const LoginModal: React.FC<
               onClick={() => setAuthTarget('admin')}
               className="text-[#849396] hover:text-[#00daf3] transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg hover:bg-[#141a32]/60 cursor-pointer text-[10px]"
             >
-              <span className="material-symbols-outlined text-[13px]">lock</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[13px]">lock</span>
               <span>Partner Enclave (Acceso Socios)</span>
             </button>
           </div>

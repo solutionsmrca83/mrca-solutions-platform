@@ -133,7 +133,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#222941] gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#00e5ff]/10 border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff] shadow-[0_0_15px_rgba(0,229,255,0.3)]">
-            <span className="material-symbols-outlined text-[24px]">enhanced_encryption</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[24px]">enhanced_encryption</span>
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -150,7 +150,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
 
         {/* Client Identity Chip */}
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#060d24] border border-[#222941] font-['JetBrains_Mono'] text-[11px] text-[#bac9cc]">
-          <span className="material-symbols-outlined text-[16px] text-[#00e5ff]">verified_user</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00e5ff]">verified_user</span>
           <span className="truncate max-w-[180px]">{clientEmail}</span>
           <span className="px-1.5 py-0.5 rounded bg-[#00e5ff]/15 text-[#00e5ff] text-[9px] font-bold">CLIENT</span>
         </div>
@@ -166,7 +166,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
               : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#181e36]'
           }`}
         >
-          <span className="material-symbols-outlined text-[16px]">edit_square</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[16px]">edit_square</span>
           <span>Transmitir Payload Cifrado</span>
         </button>
 
@@ -178,7 +178,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
               : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#181e36]'
           }`}
         >
-          <span className="material-symbols-outlined text-[16px]">history</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[16px]">history</span>
           <span>Historial Auditado ({history.length})</span>
         </button>
       </div>
@@ -253,7 +253,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
           {/* Cryptographic Assurance Pill */}
           <div className="p-3 rounded-xl bg-[#060d24] border border-[#222941] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] font-['JetBrains_Mono'] text-[#bac9cc]">
             <div className="flex items-center gap-2 text-[#00fe66]">
-              <span className="material-symbols-outlined text-[16px]">lock</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[16px]">lock</span>
               <span>Protección RLS: El payload cifrado es inaccesible para otros clientes</span>
             </div>
             <span className="text-[#849396]">IV aleatorio de 16 bytes por transmisión</span>
@@ -261,7 +261,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
 
           {errorMsg && (
             <div className="p-3 rounded-lg bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#ffb4ab]">
-              <span className="material-symbols-outlined text-[16px]">error</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[16px]">error</span>
               <span>{errorMsg}</span>
             </div>
           )}
@@ -272,7 +272,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
             disabled={loading}
             className="w-full py-3 rounded-xl bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            <span className="material-symbols-outlined text-[20px]">
+            <span translate="no" className="notranslate material-symbols-outlined text-[20px]">
               {loading ? 'sync' : 'lock_clock'}
             </span>
             <span>
@@ -289,14 +289,14 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
         <div className="p-4 rounded-xl bg-[#00fe66]/10 border border-[#00fe66]/40 flex flex-col gap-2 font-['JetBrains_Mono'] text-[12px] text-[#dce1ff]">
           <div className="flex items-center justify-between text-[#00fe66] font-bold">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">verified</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[18px]">verified</span>
               <span>CONSTANCIA DE CIFRADO INMUTABLE EXPEDIDA</span>
             </div>
             <button
               onClick={() => setReceipt(null)}
               className="text-[#bac9cc] hover:text-[#dce1ff]"
             >
-              <span className="material-symbols-outlined text-[16px]">close</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[16px]">close</span>
             </button>
           </div>
           <div className="flex flex-col gap-1 text-[11px] pt-1">
@@ -326,14 +326,14 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
               disabled={isLoadingHistory}
               className="text-[#00e5ff] hover:underline flex items-center gap-1"
             >
-              <span className="material-symbols-outlined text-[14px]">refresh</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[14px]">refresh</span>
               <span>Actualizar</span>
             </button>
           </div>
 
           {isLoadingHistory ? (
             <div className="py-8 text-center text-[#bac9cc] font-['JetBrains_Mono'] text-[12px] flex items-center justify-center gap-2">
-              <span className="material-symbols-outlined animate-spin text-[18px] text-[#00e5ff]">sync</span>
+              <span translate="no" className="notranslate material-symbols-outlined animate-spin text-[18px] text-[#00e5ff]">sync</span>
               <span>Consultando y descifrando registros autorizados por RLS...</span>
             </div>
           ) : history.length === 0 ? (

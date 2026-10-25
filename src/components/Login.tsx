@@ -185,7 +185,7 @@ export const Login: React.FC<LoginProps> = ({
                     : 'text-[#bac9cc] hover:text-[#dce1ff] bg-transparent'
                 }`}
               >
-                <span className="material-symbols-outlined text-[16px]">domain</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[16px]">domain</span>
                 <span>Corporate Client</span>
               </button>
 
@@ -198,7 +198,7 @@ export const Login: React.FC<LoginProps> = ({
                     : 'text-[#bac9cc] hover:text-[#dce1ff] bg-transparent'
                 }`}
               >
-                <span className="material-symbols-outlined text-[16px]">school</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[16px]">school</span>
                 <span>Student / Academic</span>
               </button>
             </div>
@@ -282,7 +282,7 @@ export const Login: React.FC<LoginProps> = ({
 
                 {adminError && (
                   <div className="p-3 rounded-lg bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#ffb4ab]">
-                    <span className="material-symbols-outlined text-[16px]">error</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[16px]">error</span>
                     <span>{adminError}</span>
                   </div>
                 )}
@@ -353,10 +353,11 @@ export const Login: React.FC<LoginProps> = ({
                         <button
                           type="button"
                           onClick={() => setShowAdminPassword(!showAdminPassword)}
-                          className="absolute right-3 top-2.5 text-[#849396] hover:text-[#00e5ff] transition-colors p-0.5 focus:outline-none"
+                          className="notranslate absolute right-3 top-2.5 text-[#849396] hover:text-[#00e5ff] transition-colors p-0.5 focus:outline-none"
+                          translate="no"
                           aria-label={showAdminPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                         >
-                          {showAdminPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          {showAdminPassword ? <EyeOff className="w-4 h-4 notranslate" /> : <Eye className="w-4 h-4 notranslate" />}
                         </button>
                       </div>
                     </div>
@@ -367,7 +368,7 @@ export const Login: React.FC<LoginProps> = ({
                     disabled={adminLoading}
                     className="w-full py-2.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2 mt-1"
                   >
-                    <span className="material-symbols-outlined text-[18px]">vpn_key</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[18px]">vpn_key</span>
                     <span>
                       {adminLoading
                         ? 'Validando con Supabase...'
@@ -384,7 +385,7 @@ export const Login: React.FC<LoginProps> = ({
                     onClick={handleAdminBypassDemo}
                     className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00fe66]/10 hover:bg-[#00fe66]/20 border border-[#00fe66]/30 text-[#00fe66] transition-all font-['JetBrains_Mono'] text-[10px] font-semibold"
                   >
-                    <span className="material-symbols-outlined text-[14px]">shield</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[14px]">shield</span>
                     <span>Simular Llave Raíz de Desarrollador (Zero-Trust Sandbox)</span>
                   </button>
                 </div>
@@ -414,7 +415,7 @@ export const Login: React.FC<LoginProps> = ({
               onClick={() => setAuthRole('admin')}
               className="text-[#849396] hover:text-[#00daf3] transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg hover:bg-[#141a32]/60 cursor-pointer text-[10px]"
             >
-              <span className="material-symbols-outlined text-[13px]">lock</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[13px]">lock</span>
               <span>Partner Enclave (Acceso Socios)</span>
             </button>
           </div>
@@ -429,7 +430,7 @@ export const Login: React.FC<LoginProps> = ({
           })}
           className="mt-6 font-['JetBrains_Mono'] text-[11px] text-[#849396] hover:text-[#00e5ff] transition-colors flex items-center gap-1.5 cursor-pointer py-1 px-3 rounded-lg hover:bg-[#141a32]/60"
         >
-          <span className="material-symbols-outlined text-[15px]">arrow_back</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[15px]">arrow_back</span>
           <span>Volver a Inicio de MRCA Solutions</span>
         </button>
       </div>

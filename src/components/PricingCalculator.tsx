@@ -650,7 +650,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
             </button>
 
             <div className="flex items-center justify-center gap-2 text-[10px] font-['JetBrains_Mono'] text-[#849396]">
-              <span className="material-symbols-outlined text-[13px] text-[#00fe66]">lock</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[13px] text-[#00fe66]">lock</span>
               <span>Pago cifrado protegido por Stripe Payment Links • Sin cobros ocultos</span>
             </div>
           </div>

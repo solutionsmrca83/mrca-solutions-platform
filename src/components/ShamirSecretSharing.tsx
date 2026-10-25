@@ -36,7 +36,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
     <div className="w-full bg-[#141a32]/80 border border-[#00e5ff]/20 backdrop-blur-xl rounded-2xl p-4 md:p-6 shadow-xl flex flex-col gap-3">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-1 gap-2 border-b border-[#222941]">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#00e5ff] text-[20px]">hub</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[20px]">hub</span>
           <span className="font-['Space_Grotesk'] text-[18px] text-[#dce1ff] font-semibold">
             Shamir's Secret Sharing (k=3, n=5)
           </span>
@@ -68,7 +68,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
 
         {isDesktop ? (
           /* Desktop layout SVG */
-          <svg className="w-full h-auto max-w-xl text-[#dce1ff]" fill="none" stroke="currentColor" viewBox="0 0 540 230">
+          <svg className="notranslate w-full h-auto max-w-xl text-[#dce1ff]" fill="none" stroke="currentColor" viewBox="0 0 540 230">
             {/* Grid background subtle lines */}
             <line stroke="#181e36" strokeDasharray="4 4" strokeWidth="1" x1="0" x2="540" y1="110" y2="110" />
             <line stroke="#181e36" strokeDasharray="4 4" strokeWidth="1" x1="270" x2="270" y1="0" y2="220" />
@@ -156,7 +156,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
           </svg>
         ) : (
           /* Mobile layout SVG */
-          <svg className="w-full h-auto max-w-sm text-[#dce1ff]" fill="none" viewBox="0 0 300 135">
+          <svg className="notranslate w-full h-auto max-w-sm text-[#dce1ff]" fill="none" viewBox="0 0 300 135">
             {/* Center Master Secret */}
             <circle
               cx="150"
@@ -233,7 +233,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
 
       <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-[#bac9cc]">
         <span className="flex items-center gap-1 text-[11px]">
-          <span className="material-symbols-outlined text-[13px] text-[#00e5ff]">touch_app</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[13px] text-[#00e5ff]">touch_app</span>
           Haz clic en cualquier fragmento (S1-S5) para simular quórum
         </span>
         <button

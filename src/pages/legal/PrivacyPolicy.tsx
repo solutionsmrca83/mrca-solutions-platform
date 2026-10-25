@@ -31,7 +31,7 @@ export const PrivacyPolicy: React.FC<PrivacyProps> = ({ onBack, onNavigate }) =>
       {/* ZERO TRUST ARCHITECTURE & TELEMETRY */}
       <section className="space-y-4 p-5 rounded-2xl bg-cyan-950/20 border border-cyan-500/30">
         <div className="flex items-center gap-2 text-cyan-400">
-          <span className="material-symbols-outlined text-[22px]">shield_lock</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[22px]">shield_lock</span>
           <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400">
             2. Principios de Seguridad y Arquitectura Zero-Trust
           </h2>
@@ -83,7 +83,7 @@ export const PrivacyPolicy: React.FC<PrivacyProps> = ({ onBack, onNavigate }) =>
       {/* ARCO RIGHTS */}
       <section className="space-y-4 p-5 rounded-2xl bg-[#060d24] border border-cyan-900/60">
         <div className="flex items-center gap-2 text-cyan-400">
-          <span className="material-symbols-outlined text-[22px]">fingerprint</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[22px]">fingerprint</span>
           <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400">
             4. Procedimiento para el Ejercicio de Derechos ARCO
           </h2>

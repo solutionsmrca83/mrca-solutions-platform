@@ -503,7 +503,7 @@ export const McraAcademy: React.FC = () => {
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl bg-[#141d3d] border border-[#00e5ff]/50 shadow-[0_10px_30px_rgba(0,0,0,0.8),0_0_20px_rgba(0,229,255,0.3)] flex items-center gap-3 animate-bounce">
-          <span className="material-symbols-outlined text-[#00fe66] text-[20px]">check_circle</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[20px]">check_circle</span>
           <span className="font-['JetBrains_Mono'] text-[12px] text-[#dce1ff] font-medium">{toastMessage}</span>
         </div>
       )}

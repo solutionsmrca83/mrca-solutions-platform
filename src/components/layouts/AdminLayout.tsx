@@ -111,7 +111,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-[#141a32] border border-[#00e5ff]/40 flex items-center justify-center text-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.25)] shrink-0">
-                <span className="material-symbols-outlined text-[20px]">shield</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[20px]">shield</span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           {/* Center: Cryptographic Hardware Telemetry */}
           <div className="hidden xl:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-[#0e1633] border border-cyan-500/20 text-[11px] font-['JetBrains_Mono']">
             <div className="flex items-center gap-1.5 text-cyan-400">
-              <span className="material-symbols-outlined text-[15px]">encrypted</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">encrypted</span>
               <span>HSM YUBI-V4: LOCKED</span>
             </div>
             <span className="text-slate-600">•</span>
@@ -174,7 +174,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-[#00e5ff] border border-cyan-500/40 text-[11px] font-['JetBrains_Mono'] font-bold transition-all"
                 title="Re-autenticar sesión administrativa"
               >
-                <span className="material-symbols-outlined text-[15px]">lock_reset</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[15px]">lock_reset</span>
                 <span className="hidden lg:inline">RE-AUTH</span>
               </button>
             )}
@@ -278,7 +278,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   <div className="flex items-center justify-between pb-3 border-b border-cyan-900/40">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
-                        <span className="material-symbols-outlined text-[18px]">shield</span>
+                        <span translate="no" className="notranslate material-symbols-outlined text-[18px]">shield</span>
                       </div>
                       <span className="font-['Space_Grotesk'] text-[16px] font-bold text-white">
                         MRCA ENCLAVE

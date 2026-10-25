@@ -226,3 +226,10 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* ========================================================================== */
+/* TRANSLATION SAFEGUARD: Protect visual UI elements from translation engines */
+/* ========================================================================== */
+.notranslate, svg, [class*="icon-"] {
+  translate: none !important;
+}

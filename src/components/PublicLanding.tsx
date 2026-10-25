@@ -132,7 +132,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                 onClick={onNavigateToAdmin}
                 className="px-3 py-1 rounded bg-[#222941] hover:bg-[#00e5ff] hover:text-[#00363d] text-[#00e5ff] border border-[#00e5ff]/40 transition-all flex items-center gap-1 font-semibold"
               >
-                <span className="material-symbols-outlined text-[14px]">key</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[14px]">key</span>
                 <span>Portal Privado</span>
               </button>
             </nav>
@@ -168,14 +168,14 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                   onClick={() => setIsAuditModalOpen(true)}
                   className="min-h-[48px] px-6 py-3 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['Space_Grotesk'] text-[16px] font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(0,229,255,0.4)] active:scale-[0.98] transition-all"
                 >
-                  <span className="material-symbols-outlined text-[20px]">shield_lock</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[20px]">shield_lock</span>
                   <span>Desplegar Auditoría de Seguridad</span>
                 </button>
                 <a
                   href="#tech-stack"
                   className="min-h-[48px] px-6 py-3 rounded-lg bg-[#222941]/80 hover:bg-[#2d344c] border border-[#00e5ff]/20 text-[#c3f5ff] font-['Space_Grotesk'] text-[16px] font-medium flex items-center justify-center gap-2 transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[20px]">account_tree</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[20px]">account_tree</span>
                   <span>Explorar Arquitectura</span>
                 </a>
               </div>
@@ -185,7 +185,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                 <div className="p-3.5 rounded-xl bg-[#181e36]/80 border border-[#222941] backdrop-blur-md flex flex-col gap-0.5">
                   <div className="flex items-center justify-between">
                     <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">VELOCIDAD</span>
-                    <span className="material-symbols-outlined text-[#00e5ff] text-[15px]">bolt</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[15px]">bolt</span>
                   </div>
                   <div className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] text-[#dce1ff] font-bold">42.8M</div>
                   <div className="font-['JetBrains_Mono'] text-[11px] text-[#00e5ff]">OPS/s nominal</div>
@@ -194,7 +194,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                 <div className="p-3.5 rounded-xl bg-[#181e36]/80 border border-[#222941] backdrop-blur-md flex flex-col gap-0.5">
                   <div className="flex items-center justify-between">
                     <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">FAILOVER</span>
-                    <span className="material-symbols-outlined text-[#00fe66] text-[15px]">sync</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[15px]">sync</span>
                   </div>
                   <div className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] text-[#00fe66] font-bold">
                     0.00<span className="text-[14px]">ms</span>
@@ -205,7 +205,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                 <div className="p-3.5 rounded-xl bg-[#181e36]/80 border border-[#222941] backdrop-blur-md flex flex-col gap-0.5">
                   <div className="flex items-center justify-between">
                     <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">CERTIFICACIÓN</span>
-                    <span className="material-symbols-outlined text-[#00e5ff] text-[15px]">verified</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[15px]">verified</span>
                   </div>
                   <div className="font-['Space_Grotesk'] text-[20px] sm:text-[22px] text-[#dce1ff] font-bold pt-1">
                     SOC-2 II
@@ -216,7 +216,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                 <div className="p-3.5 rounded-xl bg-[#181e36]/80 border border-[#222941] backdrop-blur-md flex flex-col gap-0.5">
                   <div className="flex items-center justify-between">
                     <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">CONFIABILIDAD</span>
-                    <span className="material-symbols-outlined text-[#00fe66] text-[15px]">verified_user</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[15px]">verified_user</span>
                   </div>
                   <div className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] text-[#dce1ff] font-bold">99.999%</div>
                   <div className="font-['JetBrains_Mono'] text-[11px] text-[#00e5ff]">SLA Institucional</div>
@@ -262,7 +262,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                   className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[#222941] border border-[#3b494c] hover:border-[#00e5ff]/50 transition-all min-w-[260px] shadow-sm"
                 >
                   <div className="w-10 h-10 rounded bg-[#060d24] flex items-center justify-center">
-                    <span className={`material-symbols-outlined text-[22px] ${item.color}`}>{item.icon}</span>
+                    <span translate="no" className={`notranslate material-symbols-outlined text-[22px] ${item.color}`}>{item.icon}</span>
                   </div>
                   <div className="flex flex-col">
                     <span className="font-['Space_Grotesk'] text-[15px] text-[#dce1ff] font-semibold">{item.title}</span>
@@ -296,7 +296,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             <div className="p-5 rounded-xl bg-[#181e36]/80 border border-[#00e5ff]/20 backdrop-blur-xl shadow-lg flex flex-col gap-3 hover:border-[#00e5ff]/50 transition-all">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-lg bg-[#222941] flex items-center justify-center text-[#00e5ff] shadow-sm">
-                  <span className="material-symbols-outlined text-[24px]">developer_board</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[24px]">developer_board</span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff] bg-[#222941] px-2 py-1 rounded">
                   NODO-01 // HARDWARE
@@ -310,15 +310,15 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               </p>
               <div className="flex flex-col gap-2 pt-1 border-t border-[#222941]">
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>Hardware Root-of-Trust TPM 2.0</span>
                 </div>
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>Rotación automática mTLS 15 min</span>
                 </div>
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>Cilium eBPF Kernel Observability</span>
                 </div>
               </div>
@@ -328,7 +328,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             <div className="p-5 rounded-xl bg-[#181e36]/80 border border-[#00fe66]/20 backdrop-blur-xl shadow-lg flex flex-col gap-3 hover:border-[#00fe66]/50 transition-all">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-lg bg-[#222941] flex items-center justify-center text-[#00fe66] shadow-sm">
-                  <span className="material-symbols-outlined text-[24px]">key</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[24px]">key</span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] bg-[#222941] px-2 py-1 rounded">
                   NODO-02 // QUANTUM-PROOF
@@ -342,15 +342,15 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               </p>
               <div className="flex flex-col gap-2 pt-1 border-t border-[#222941]">
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>Kyber / Dilithium Post-Quantum</span>
                 </div>
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>RBAC Sin Estado con tokens EFEM</span>
                 </div>
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>Argon2id Hash KDF con sal dinámico</span>
                 </div>
               </div>
@@ -360,7 +360,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             <div className="p-5 rounded-xl bg-[#181e36]/80 border border-[#00e5ff]/20 backdrop-blur-xl shadow-lg flex flex-col gap-3 hover:border-[#00e5ff]/50 transition-all">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-lg bg-[#222941] flex items-center justify-center text-[#00e5ff] shadow-sm">
-                  <span className="material-symbols-outlined text-[24px]">history_edu</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[24px]">history_edu</span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff] bg-[#222941] px-2 py-1 rounded">
                   NODO-03 // AUDITORÍA
@@ -374,15 +374,15 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               </p>
               <div className="flex flex-col gap-2 pt-1 border-t border-[#222941]">
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>Ledger inmutable firmado SHA-512</span>
                 </div>
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>Detección heurística SOC asistida</span>
                 </div>
                 <div className="flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#dce1ff]">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">check_circle</span>
                   <span>Exportación compatible SIEM / Splunk</span>
                 </div>
               </div>
@@ -397,7 +397,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
         <section className="w-full flex flex-col gap-4" id="seguridad-cifrado">
           <div className="flex flex-col gap-1">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#222941] w-fit border border-[#00fe66]/30">
-              <span className="material-symbols-outlined text-[#00fe66] text-[16px]">verified</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">verified</span>
               <span className="font-['JetBrains_Mono'] text-[10px] uppercase text-[#00fe66] font-bold">
                 Institutional Trust & Cryptography
               </span>
@@ -420,7 +420,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             <div className="lg:col-span-4 flex flex-col gap-4">
               <div className="bg-[#141a32]/80 border border-[#00e5ff]/20 backdrop-blur-xl rounded-2xl p-5 shadow-xl flex flex-col gap-3">
                 <div className="flex items-center gap-2 text-[#00e5ff]">
-                  <span className="material-symbols-outlined text-[20px]">policy</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[20px]">policy</span>
                   <span className="font-['Space_Grotesk'] text-[18px] text-[#dce1ff] font-semibold">
                     Contratos Criptográficos
                   </span>
@@ -477,7 +477,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                 ></div>
                 <div className="relative z-10 flex flex-col gap-1">
                   <div className="flex items-center gap-1.5 text-[#00fe66] font-['JetBrains_Mono'] text-[11px] font-semibold">
-                    <span className="material-symbols-outlined text-[14px]">nest_cam_wired_stand</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[14px]">nest_cam_wired_stand</span>
                     DATACENTER CAGE: ALPHA-EQUINIX
                   </div>
                   <span className="font-['Space_Grotesk'] text-[17px] text-[#dce1ff] font-bold">
@@ -501,7 +501,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               {/* Explanatory Text Column */}
               <div className="lg:col-span-5 flex flex-col gap-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#222941] w-fit border border-[#00e5ff]/30">
-                  <span className="material-symbols-outlined text-[#00e5ff] text-[16px]">vpn_lock</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[16px]">vpn_lock</span>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff] font-bold uppercase tracking-wider">
                     Restricted Zero Trust Gateway
                   </span>
@@ -517,15 +517,15 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
 
                 <div className="flex flex-col gap-2 pt-1">
                   <div className="flex items-center gap-2 text-[#dce1ff] text-[13px] font-['Inter']">
-                    <span className="material-symbols-outlined text-[#00fe66] text-[18px]">check_circle</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[18px]">check_circle</span>
                     <span>Hardware Token Binding (WebAuthn / FIDO2)</span>
                   </div>
                   <div className="flex items-center gap-2 text-[#dce1ff] text-[13px] font-['Inter']">
-                    <span className="material-symbols-outlined text-[#00fe66] text-[18px]">check_circle</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[18px]">check_circle</span>
                     <span>Protección Anti-Exfiltración IP con Geo-Fencing activo</span>
                   </div>
                   <div className="flex items-center gap-2 text-[#dce1ff] text-[13px] font-['Inter']">
-                    <span className="material-symbols-outlined text-[#00fe66] text-[18px]">check_circle</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[18px]">check_circle</span>
                     <span>Telemetría de ejecución de código en tiempo real (eBPF)</span>
                   </div>
                 </div>
@@ -573,7 +573,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                         Identificador Corporativo
                       </label>
                       <div className="flex items-center bg-[#181e36] px-3 py-2 rounded-lg border border-[#3b494c]">
-                        <span className="material-symbols-outlined text-[16px] text-[#bac9cc] mr-2">badge</span>
+                        <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#bac9cc] mr-2">badge</span>
                         <input
                           className="bg-transparent font-['JetBrains_Mono'] text-[12px] text-[#dce1ff] w-full focus:outline-none"
                           readOnly
@@ -586,7 +586,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                         Security Enclave Key
                       </label>
                       <div className="flex items-center bg-[#181e36] px-3 py-2 rounded-lg border border-[#3b494c]">
-                        <span className="material-symbols-outlined text-[16px] text-[#00e5ff] mr-2">fingerprint</span>
+                        <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00e5ff] mr-2">fingerprint</span>
                         <input
                           className="bg-transparent font-['JetBrains_Mono'] text-[12px] text-[#dce1ff] w-full focus:outline-none"
                           readOnly
@@ -599,14 +599,14 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
 
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
                     <div className="flex items-center gap-1.5 text-[#bac9cc] font-['JetBrains_Mono'] text-[11px]">
-                      <span className="material-symbols-outlined text-[16px] text-[#00fe66]">shield</span>
+                      <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00fe66]">shield</span>
                       <span>2FA / mTLS Hardware Verified Token Requerido</span>
                     </div>
                     <button
                       onClick={() => setIsHardwareTokenModalOpen(true)}
                       className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] uppercase font-bold tracking-wider transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,229,255,0.4)]"
                     >
-                      <span className="material-symbols-outlined text-[18px]">lock_open</span>
+                      <span translate="no" className="notranslate material-symbols-outlined text-[18px]">lock_open</span>
                       <span>Verificar Token Hardware</span>
                     </button>
                   </div>
@@ -659,7 +659,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
         <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-16 md:max-w-xl z-40 bg-[#060d24]/95 border border-[#00e5ff]/40 backdrop-blur-2xl p-4 sm:p-5 rounded-2xl shadow-[0_20px_40px_rgba(5,9,20,0.8),0_0_30px_rgba(0,229,255,0.15)] flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-2 text-[#00e5ff]">
-              <span className="material-symbols-outlined text-[20px]">cookie</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[20px]">cookie</span>
               <span className="font-['Space_Grotesk'] text-[16px] text-[#dce1ff] font-semibold">
                 Gobernanza Criptográfica de Telemetría
               </span>
@@ -669,7 +669,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               className="text-[#bac9cc] hover:text-[#dce1ff] p-0.5"
               aria-label="Cerrar aviso"
             >
-              <span className="material-symbols-outlined text-[18px]">close</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[18px]">close</span>
             </button>
           </div>
 

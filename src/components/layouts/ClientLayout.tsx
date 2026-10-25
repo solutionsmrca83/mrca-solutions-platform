@@ -41,7 +41,7 @@ interface ClientNavItem {
 
 const CLIENT_NAV_ITEMS: ClientNavItem[] = [
   { id: 'capacidades', label: 'Capacidades de Ingeniería', icon: <Code className="w-4 h-4" /> },
-  { id: 'roadmap', label: 'Roadmap de Entregas', icon: <span className="material-symbols-outlined text-[16px]">timeline</span>, badge: 'Sprints', badgeColor: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30' },
+  { id: 'roadmap', label: 'Roadmap de Entregas', icon: <span translate="no" className="notranslate material-symbols-outlined text-[16px]">timeline</span>, badge: 'Sprints', badgeColor: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30' },
   { id: 'api-keys', label: 'Claves API & SDK', icon: <Key className="w-4 h-4" /> },
   { id: 'finanzas', label: 'Finanzas & Pagos SPEI', icon: <DollarSign className="w-4 h-4" />, badge: 'SPEI Activo', badgeColor: 'text-[#00fe66] bg-emerald-950/60 border-emerald-500/30' },
   { id: 'soporte', label: 'Soporte Técnico VIP', icon: <LifeBuoy className="w-4 h-4" /> },
@@ -97,7 +97,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
 
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-[#141a32] border border-[#00e5ff]/40 flex items-center justify-center text-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.25)] shrink-0">
-                <span className="material-symbols-outlined text-[20px]">domain</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[20px]">domain</span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
@@ -141,7 +141,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
 
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#141a32] border border-cyan-500/30 text-left">
               <div className="w-7 h-7 rounded-lg bg-cyan-950 flex items-center justify-center text-cyan-400 font-bold text-xs shrink-0">
-                <span className="material-symbols-outlined text-[16px]">business</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[16px]">business</span>
               </div>
               <div className="flex flex-col max-w-[150px] sm:max-w-[190px]">
                 <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-white truncate">
@@ -245,7 +245,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
                   <div className="flex items-center justify-between pb-3 border-b border-cyan-900/40">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
-                        <span className="material-symbols-outlined text-[18px]">domain</span>
+                        <span translate="no" className="notranslate material-symbols-outlined text-[18px]">domain</span>
                       </div>
                       <span className="font-['Space_Grotesk'] text-[16px] font-bold text-white">
                         PORTAL CLIENTES

@@ -291,7 +291,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                 </span>
               </div>
               <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-[10px] sm:text-[11px] text-[#bac9cc] uppercase">
-                <span className="material-symbols-outlined text-[16px] text-[#00e5ff]">encrypted</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00e5ff]">encrypted</span>
                 <span>HSM YUBI-V4: LOCKED</span>
                 <span className="text-[#3b494c]">•</span>
                 <span className="text-[#00daf3]">TLS 1.3 / ECDSA P-384</span>
@@ -302,7 +302,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2 bg-[#181e36] px-3 py-1.5 rounded-lg border border-[#3b494c]">
                 <div className="w-7 h-7 rounded-full bg-[#2d344c] flex items-center justify-center text-[#00e5ff]">
-                  <span className="material-symbols-outlined text-[16px]">shield_person</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[16px]">shield_person</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="font-['Space_Grotesk'] text-[13px] text-[#dce1ff] font-bold leading-none truncate max-w-[160px]">
@@ -316,7 +316,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
 
               <div className="flex items-center gap-2 bg-[#181e36] px-3 py-1.5 rounded-lg border border-[#3b494c]">
                 <div className="w-7 h-7 rounded-full bg-[#2d344c] flex items-center justify-center text-[#9cf0ff]">
-                  <span className="material-symbols-outlined text-[16px]">terminal</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[16px]">terminal</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="font-['Space_Grotesk'] text-[13px] text-[#dce1ff] font-bold leading-none">
@@ -332,7 +332,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                 onClick={() => setIsReAuthModalOpen(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)]"
               >
-                <span className="material-symbols-outlined text-[16px]">lock_reset</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[16px]">lock_reset</span>
                 <span>RE-AUTH SESIÓN</span>
               </button>
 
@@ -342,7 +342,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#181e36] hover:bg-[#222941] text-[#ffb4ab] border border-[#ffb4ab]/30 font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all"
                   title="Cerrar sesión activa de Supabase y volver al portal público"
                 >
-                  <span className="material-symbols-outlined text-[16px]">logout</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[16px]">logout</span>
                   <span>CERRAR SESIÓN</span>
                 </button>
               )}
@@ -361,7 +361,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">grid_view</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">grid_view</span>
               <span>PRINCIPAL</span>
             </button>
             <button
@@ -373,7 +373,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">account_balance</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">account_balance</span>
               <span>FINANZAS (SPEI)</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
             </button>
@@ -386,7 +386,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">support_agent</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">support_agent</span>
               <span>SOPORTE IT</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
             </button>
@@ -398,7 +398,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">terminal</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">terminal</span>
               <span>KALI AUDIT</span>
             </button>
             <button
@@ -409,7 +409,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">account_tree</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">account_tree</span>
               <span>PROYECTOS</span>
             </button>
             <button
@@ -420,7 +420,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">verified_user</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">verified_user</span>
               <span>SLA & SEGURIDAD</span>
             </button>
             <button
@@ -432,7 +432,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">assignment_turned_in</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">assignment_turned_in</span>
               <span>SOLICITUDES & APROBACIÓN</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
             </button>
@@ -445,7 +445,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">description</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">description</span>
               <span>CONTRATOS & NDA</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
             </button>
@@ -458,7 +458,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">folder_zip</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">folder_zip</span>
               <span>BÓVEDA ENTREGABLES</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
             </button>
@@ -471,7 +471,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">security</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">security</span>
               <span>AUDITORÍA ZERO-TRUST</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
             </button>
@@ -484,7 +484,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[15px]">price_change</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">price_change</span>
               <span>SOLICITUDES DE PRESUPUESTO</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
             </button>
@@ -513,7 +513,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
           <div className="relative overflow-hidden rounded-xl bg-[#222941]/90 border border-[#00e5ff]/20 p-4 backdrop-blur-md shadow-lg flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[#00e5ff] text-[18px]">query_stats</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[18px]">query_stats</span>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase font-medium">
                   GANANCIAS NETAS
                 </span>
@@ -530,7 +530,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                 <div className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3]">MXN // FONDOS CONSOLIDADOS</div>
               </div>
               <div className="w-24 h-9">
-                <svg className="w-full h-full stroke-[#00e5ff] fill-none" preserveAspectRatio="none" viewBox="0 0 100 36">
+                <svg className="notranslate w-full h-full stroke-[#00e5ff] fill-none" preserveAspectRatio="none" viewBox="0 0 100 36">
                   <path d="M0,32 Q15,26 28,30 T55,14 T80,18 T100,4" strokeLinecap="round" strokeWidth="2.5"></path>
                   <path d="M0,32 Q15,26 28,30 T55,14 T80,18 T100,4 L100,36 L0,36 Z" fill="rgba(0, 229, 255, 0.12)" stroke="none"></path>
                 </svg>
@@ -546,7 +546,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
           <div className="rounded-xl bg-[#222941]/90 border border-[#00e5ff]/20 p-4 backdrop-blur-md shadow-lg flex flex-col justify-between">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[#00e5ff] text-[18px]">hub</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[18px]">hub</span>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase font-medium">
                   DISPERSIÓN DUAL GATEWAY
                 </span>
@@ -585,7 +585,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase font-medium">
                 NUEVOS LEADS / PROSPECTOS
               </span>
-              <span className="material-symbols-outlined text-[#00fe66] text-[18px]">task_alt</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[18px]">task_alt</span>
             </div>
             <div className="my-1">
               <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-[#dce1ff] font-bold">
@@ -607,7 +607,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase font-medium">
                 KALI NIDS / ESTADO
               </span>
-              <span className="material-symbols-outlined text-[#00fe66] text-[18px]">security</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[18px]">security</span>
             </div>
             <div className="my-1">
               <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-[#00fe66] font-bold">
@@ -631,7 +631,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             <section className="rounded-2xl bg-[#141a32]/90 border border-[#00e5ff]/20 p-4 sm:p-5 backdrop-blur-md flex flex-col gap-4 shadow-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#00e5ff] text-[22px]">account_balance_wallet</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[22px]">account_balance_wallet</span>
                   <h2 className="font-['Space_Grotesk'] text-[20px] text-[#dce1ff] font-bold tracking-tight">
                     Tesorería B2B & Liquidez
                   </h2>
@@ -648,7 +648,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   <span className="text-[#00e5ff] font-bold">DELTA +$420K MXN</span>
                 </div>
                 <div className="h-32 w-full relative">
-                  <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 320 90">
+                  <svg className="notranslate w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 320 90">
                     <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="20" y2="20"></line>
                     <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="50" y2="50"></line>
                     <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="75" y2="75"></line>
@@ -730,7 +730,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                       </div>
                       <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[10px] pt-1 border-t border-[#222941]">
                         <span className="text-[#00fe66] flex items-center gap-1 font-semibold">
-                          <span className="material-symbols-outlined text-[13px]">check_circle</span>
+                          <span translate="no" className="notranslate material-symbols-outlined text-[13px]">check_circle</span>
                           {item.status}
                         </span>
                         <button
@@ -759,7 +759,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             <section className="rounded-2xl bg-[#141a32]/90 border border-[#00e5ff]/20 p-4 sm:p-5 backdrop-blur-md flex flex-col gap-3 shadow-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[#00fe66] text-[20px]">code</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[20px]">code</span>
                   <h2 className="font-['Space_Grotesk'] text-[18px] text-[#dce1ff] font-bold">
                     Pipeline & Proyectos
                   </h2>
@@ -768,7 +768,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   onClick={() => setIsNewTicketModalOpen(true)}
                   className="px-2.5 py-1 rounded bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[10px] font-bold flex items-center gap-1 uppercase transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[14px]">add</span>
+                  <span translate="no" className="notranslate material-symbols-outlined text-[14px]">add</span>
                   <span>Nuevo Ticket</span>
                 </button>
               </div>
@@ -858,7 +858,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             {/* GESTOR DE GOBERNANZA RAÍZ & PERMISOS SLA */}
             <section className="rounded-2xl bg-[#141a32]/90 border border-[#00e5ff]/20 p-4 sm:p-5 backdrop-blur-md flex flex-col gap-3 shadow-xl">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00e5ff] text-[20px]">
+                <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[20px]">
                   admin_panel_settings
                 </span>
                 <h3 className="font-['Space_Grotesk'] text-[18px] text-[#dce1ff] font-bold">
@@ -940,7 +940,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
         {/* FOOTER PRIVILEGED ENCLAVE STAMP */}
         <div className="py-6 flex flex-col items-center justify-center gap-1 font-['JetBrains_Mono'] text-[11px] text-[#849396] text-center border-t border-[#181e36] mt-4">
           <div className="flex items-center gap-1.5 text-[#00e5ff]">
-            <span className="material-symbols-outlined text-[15px]">lock</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[15px]">lock</span>
             <span>MRCA SOLUTIONS // PRIVILEGED ACCESS ENCLAVE</span>
           </div>
           <span>CONFIDENTIAL - STRICT ACCESS ONLY FOR JEFE & SOCIO</span>

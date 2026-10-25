@@ -248,7 +248,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
         {/* Animated Scanner Pulse Icon */}
         <div className="relative">
           <div className="w-20 h-20 rounded-2xl bg-[#141a32] border border-[#00e5ff]/50 flex items-center justify-center text-[#00e5ff] shadow-[0_0_30px_rgba(0,229,255,0.35)]">
-            <span className="material-symbols-outlined text-[44px] animate-pulse">
+            <span translate="no" className="notranslate material-symbols-outlined text-[44px] animate-pulse">
               verified_user
             </span>
           </div>
@@ -275,7 +275,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
         {/* Enterprise Notice Callout */}
         <div className="w-full p-4 rounded-2xl bg-[#141a32]/80 border border-[#222941] text-left flex flex-col gap-3 font-['Inter'] text-[12px] text-[#bac9cc]">
           <div className="flex items-start gap-2.5">
-            <span className="material-symbols-outlined text-[#00e5ff] text-[18px] shrink-0 mt-0.5">
+            <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[18px] shrink-0 mt-0.5">
               shield
             </span>
             <p className="leading-relaxed">
@@ -310,7 +310,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             }}
             className="w-full py-3 rounded-xl bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2"
           >
-            <span className="material-symbols-outlined text-[18px]">login</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[18px]">login</span>
             <span>Ir a Pantalla de Acceso</span>
           </button>
 
@@ -320,7 +320,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             rel="noopener noreferrer"
             className="w-full py-3 rounded-xl bg-[#181e36] hover:bg-[#222941] text-[#bac9cc] hover:text-[#dce1ff] border border-[#3b494c] font-['JetBrains_Mono'] text-[12px] font-semibold transition-all flex items-center justify-center gap-2"
           >
-            <span className="material-symbols-outlined text-[18px] text-[#00fe66]">support_agent</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[18px] text-[#00fe66]">support_agent</span>
             <span>Canal Prioritario SLA</span>
           </a>
         </div>
@@ -383,7 +383,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             mode === 'login' ? 'text-[#00363d]' : 'text-[#bac9cc] hover:text-[#dce1ff]'
           }`}
         >
-          <span className="material-symbols-outlined text-[16px]">vpn_key</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[16px]">vpn_key</span>
           <span>Iniciar Sesión</span>
         </button>
 
@@ -397,7 +397,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             mode === 'register' ? 'text-[#00363d]' : 'text-[#bac9cc] hover:text-[#dce1ff]'
           }`}
         >
-          <span className="material-symbols-outlined text-[16px]">how_to_reg</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[16px]">how_to_reg</span>
           <span>Crear Cuenta Corporativa</span>
         </button>
       </div>
@@ -409,7 +409,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
           animate={{ opacity: 1, y: 0 }}
           className="p-3.5 rounded-xl bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 flex items-center gap-2.5 text-[12px] font-['JetBrains_Mono'] text-[#ffb4ab] z-10"
         >
-          <span className="material-symbols-outlined text-[18px]">error</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[18px]">error</span>
           <span>{errorMsg}</span>
         </motion.div>
       )}
@@ -434,7 +434,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                 Correo Corporativo Registrado
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-2.5 material-symbols-outlined text-[#849396] text-[18px]">
+                <span translate="no" className="notranslate absolute left-3 top-2.5 material-symbols-outlined text-[#849396] text-[18px]">
                   mail
                 </span>
                 <input
@@ -462,7 +462,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                 </button>
               </div>
               <div className="relative">
-                <span className="absolute left-3 top-2.5 material-symbols-outlined text-[#849396] text-[18px]">
+                <span translate="no" className="notranslate absolute left-3 top-2.5 material-symbols-outlined text-[#849396] text-[18px]">
                   lock
                 </span>
                 <input
@@ -533,7 +533,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                   : 'bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] shadow-[0_0_20px_rgba(0,229,255,0.4)] disabled:opacity-50'
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">
+              <span translate="no" className="notranslate material-symbols-outlined text-[18px]">
                 {loading ? 'sync' : isLockedOut ? 'lock_clock' : 'login'}
               </span>
               <span>
@@ -850,7 +850,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
               disabled={loading}
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00e5ff] to-[#00daf3] hover:opacity-90 text-[#00363d] font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2 mt-1 disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-[18px]">
+              <span translate="no" className="notranslate material-symbols-outlined text-[18px]">
                 {loading ? 'sync' : 'fingerprint'}
               </span>
               <span>{loading ? 'Procesando Solicitud...' : 'Solicitar Acceso al Enclave B2B'}</span>
@@ -902,7 +902,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             {/* Modal Header */}
             <div className="flex items-center justify-between pb-3 border-b border-[#222941]">
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[#00e5ff] text-[24px]">
+                <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[24px]">
                   {activeLegalModal === 'privacy' ? 'privacy_tip' : 'gavel'}
                 </span>
                 <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff]">
@@ -915,7 +915,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                 onClick={() => setActiveLegalModal(null)}
                 className="text-[#bac9cc] hover:text-[#dce1ff] p-1"
               >
-                <span className="material-symbols-outlined text-[20px]">close</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
 

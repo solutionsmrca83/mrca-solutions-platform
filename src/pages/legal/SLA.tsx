@@ -63,7 +63,7 @@ export const SLA: React.FC<SLAProps> = ({ onBack, onNavigate }) => {
       {/* CRITICAL CLAUSE: COMPENSACIONES SOLO EN CRÉDITOS DE SERVICIO */}
       <section className="space-y-4 p-5 rounded-2xl bg-cyan-950/20 border border-cyan-500/30">
         <div className="flex items-center gap-2 text-cyan-400">
-          <span className="material-symbols-outlined text-[22px]">payments</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[22px]">payments</span>
           <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400">
             3. Compensaciones Exclusivas: Créditos de Servicio (Service Credits)
           </h2>

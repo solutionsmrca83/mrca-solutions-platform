@@ -61,7 +61,7 @@ export const LegalLayout: React.FC<LegalLayoutProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#141a32] border border-cyan-500/30 text-cyan-400 hover:text-cyan-300 hover:border-cyan-400 hover:bg-[#181e36] transition-all text-[12px] font-['JetBrains_Mono'] group shadow-[0_0_10px_rgba(0,229,255,0.15)]"
               aria-label="Volver al Inicio"
             >
-              <span className="material-symbols-outlined text-[16px] group-hover:-translate-x-0.5 transition-transform">
+              <span translate="no" className="notranslate material-symbols-outlined text-[16px] group-hover:-translate-x-0.5 transition-transform">
                 arrow_back
               </span>
               <span>Volver a Inicio</span>
@@ -126,7 +126,7 @@ export const LegalLayout: React.FC<LegalLayoutProps> = ({
         <div className="mt-14 pt-8 border-t border-cyan-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-[#060d24]/80 border border-cyan-900/40 backdrop-blur-md">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
-              <span className="material-symbols-outlined text-[20px]">verified_user</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[20px]">verified_user</span>
             </div>
             <div>
               <p className="font-['Space_Grotesk'] text-[13px] font-bold text-white">

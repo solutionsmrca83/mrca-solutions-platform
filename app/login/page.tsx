@@ -66,7 +66,7 @@ export default function LoginPage() {
           href="/"
           className="mt-6 font-['JetBrains_Mono'] text-[11px] text-[#849396] hover:text-[#00e5ff] transition-colors flex items-center gap-1.5 pb-6"
         >
-          <span className="material-symbols-outlined text-[15px]">arrow_back</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[15px]">arrow_back</span>
           <span>Volver a Inicio de MRCA Solutions</span>
         </a>
       </div>

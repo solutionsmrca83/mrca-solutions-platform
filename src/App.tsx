@@ -453,7 +453,7 @@ export default function App() {
               className="md:hidden w-10 h-10 flex items-center justify-center text-[#00e5ff] hover:text-[#c3f5ff] transition-colors p-1"
               aria-label="Abrir menú"
             >
-              <span className="material-symbols-outlined text-[24px]">menu</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[24px]">menu</span>
             </button>
 
             <button
@@ -461,7 +461,7 @@ export default function App() {
               className="flex items-center gap-2.5 group text-left"
             >
               <div className="w-9 h-9 rounded-xl bg-[#181e36] border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.25)] group-hover:border-[#00e5ff] transition-all">
-                <span className="material-symbols-outlined text-[20px]">hexagon</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[20px]">hexagon</span>
               </div>
 
               {/* Static High-Res Brand Preview */}
@@ -510,7 +510,7 @@ export default function App() {
                   : 'text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#141a32]'
               }`}
             >
-              <span className="material-symbols-outlined text-[16px]">domain</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[16px]">domain</span>
               <span>Portal Clientes</span>
             </button>
             <button
@@ -519,9 +519,9 @@ export default function App() {
               className="px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all flex items-center gap-1.5 text-[#bac9cc] hover:text-[#00fe66] hover:bg-[#141a32] border border-transparent hover:border-[#00fe66]/30 group cursor-pointer"
               title="Acceso al Enclave de Administración Zero-Trust"
             >
-              <span className="material-symbols-outlined text-[16px] text-[#00fe66]">admin_panel_settings</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00fe66]">admin_panel_settings</span>
               <span>Panel Admin Socios</span>
-              <span className="material-symbols-outlined text-[14px] text-[#849396] group-hover:text-[#00fe66] transition-colors">arrow_forward</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[14px] text-[#849396] group-hover:text-[#00fe66] transition-colors">arrow_forward</span>
             </button>
           </nav>
 
@@ -529,7 +529,7 @@ export default function App() {
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Zero Trust Status */}
             <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#141a32] border border-[#00e5ff]/20 text-[#bac9cc]">
-              <span className="material-symbols-outlined text-[15px] text-[#00e5ff]">lock</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px] text-[#00e5ff]">lock</span>
               <span className="font-['JetBrains_Mono'] text-[10px] uppercase font-semibold text-[#00daf3]">
                 Zero Trust v2.4
               </span>
@@ -572,7 +572,7 @@ export default function App() {
               className="relative w-9 h-9 rounded-full bg-[#00e5ff] text-[#00363d] flex items-center justify-center hover:bg-[#c3f5ff] transition-all shadow-[0_0_10px_rgba(0,229,255,0.3)] cursor-pointer"
               title={sessionUser ? `Sesión Activa: ${sessionUser.email} (${sessionUser.role || 'usuario'})` : 'Autenticación Supabase'}
             >
-              <span className="material-symbols-outlined text-[20px]">person</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[20px]">person</span>
               {sessionUser && (
                 <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#00fe66] border-2 border-[#060d24] rounded-full shadow-[0_0_6px_#00fe66]"></span>
               )}
@@ -597,7 +597,7 @@ export default function App() {
           <div className="flex items-center justify-between pb-3 border-b border-[#222941]">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded bg-[#060d24] flex items-center justify-center text-[#00e5ff]">
-                <span className="material-symbols-outlined text-[20px]">shield</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[20px]">shield</span>
               </div>
               <span className="font-['Space_Grotesk'] text-[18px] text-[#00e5ff] tracking-tight font-bold">
                 SISTEMA MCRA
@@ -608,7 +608,7 @@ export default function App() {
               className="w-9 h-9 flex items-center justify-center text-[#bac9cc] hover:text-[#dce1ff]"
               aria-label="Cerrar navegación"
             >
-              <span className="material-symbols-outlined text-[24px]">close</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[24px]">close</span>
             </button>
           </div>
 
@@ -628,7 +628,7 @@ export default function App() {
                   : 'text-[#bac9cc] hover:bg-[#181e36] hover:text-[#dce1ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">grid_view</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[20px]">grid_view</span>
               <span className="font-['Space_Grotesk'] text-[16px]">Inicio</span>
             </button>
 
@@ -640,7 +640,7 @@ export default function App() {
               }}
               className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#bac9cc] hover:bg-[#181e36] hover:text-[#00e5ff] transition-all"
             >
-              <span className="material-symbols-outlined text-[20px]">hub</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[20px]">hub</span>
               <span className="font-['Space_Grotesk'] text-[16px]">Arquitectura</span>
             </a>
 
@@ -652,7 +652,7 @@ export default function App() {
               }}
               className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#bac9cc] hover:bg-[#181e36] hover:text-[#00e5ff] transition-all"
             >
-              <span className="material-symbols-outlined text-[20px]">lock</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[20px]">lock</span>
               <span className="font-['Space_Grotesk'] text-[16px]">Seguridad</span>
             </a>
 
@@ -667,7 +667,7 @@ export default function App() {
                   : 'text-[#bac9cc] hover:bg-[#181e36] hover:text-[#dce1ff]'
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">domain</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[20px]">domain</span>
               <span className="font-['Space_Grotesk'] text-[16px]">Portal Clientes B2B</span>
             </button>
 
@@ -679,10 +679,10 @@ export default function App() {
               className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-left transition-all text-[#bac9cc] hover:bg-[#181e36] hover:text-[#00fe66] border border-[#00fe66]/20 bg-[#060d24]/60 cursor-pointer"
             >
               <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-[20px] text-[#00fe66]">admin_panel_settings</span>
+                <span translate="no" className="notranslate material-symbols-outlined text-[20px] text-[#00fe66]">admin_panel_settings</span>
                 <span className="font-['Space_Grotesk'] text-[16px]">Panel Admin Socios</span>
               </div>
-              <span className="material-symbols-outlined text-[16px] text-[#00fe66]">arrow_forward</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00fe66]">arrow_forward</span>
             </button>
           </nav>
         </div>
@@ -690,7 +690,7 @@ export default function App() {
         <div className="p-6 bg-[#060d24] border-t border-[#181e36]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded bg-[#00e5ff]/10 border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff]">
-              <span className="material-symbols-outlined text-[22px]">verified_user</span>
+              <span translate="no" className="notranslate material-symbols-outlined text-[22px]">verified_user</span>
             </div>
             <div>
               <p className="font-['JetBrains_Mono'] text-[13px] text-[#dce1ff] font-semibold">
@@ -744,7 +744,7 @@ export default function App() {
               activeView === 'public' ? 'text-[#00e5ff] font-semibold' : 'text-[#bac9cc] hover:text-[#dce1ff]'
             }`}
           >
-            <span className="material-symbols-outlined text-[22px]">home</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[22px]">home</span>
             <span className="font-['JetBrains_Mono'] text-[10px]">Inicio</span>
           </button>
           <button
@@ -753,7 +753,7 @@ export default function App() {
               (activeView as string) === 'client' ? 'text-[#00e5ff] font-semibold' : 'text-[#bac9cc] hover:text-[#dce1ff]'
             }`}
           >
-            <span className="material-symbols-outlined text-[22px]">domain</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[22px]">domain</span>
             <span className="font-['JetBrains_Mono'] text-[10px]">Portal</span>
           </button>
           <a
@@ -761,7 +761,7 @@ export default function App() {
             onClick={() => setActiveView('public')}
             className="flex flex-col items-center justify-center gap-1 w-14 h-14 text-[#bac9cc] hover:text-[#00e5ff] transition-colors"
           >
-            <span className="material-symbols-outlined text-[22px]">hub</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[22px]">hub</span>
             <span className="font-['JetBrains_Mono'] text-[10px]">Arquitectura</span>
           </a>
           <a
@@ -769,7 +769,7 @@ export default function App() {
             onClick={() => setActiveView('public')}
             className="flex flex-col items-center justify-center gap-1 w-14 h-14 text-[#bac9cc] hover:text-[#00e5ff] transition-colors"
           >
-            <span className="material-symbols-outlined text-[22px]">security</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[22px]">security</span>
             <span className="font-['JetBrains_Mono'] text-[10px]">Seguridad</span>
           </a>
           <button
@@ -777,7 +777,7 @@ export default function App() {
             className="flex flex-col items-center justify-center gap-1 w-14 h-14 transition-colors text-[#bac9cc] hover:text-[#00fe66] cursor-pointer"
             title="Panel de Administración Zero-Trust"
           >
-            <span className="material-symbols-outlined text-[22px] text-[#00fe66]">admin_panel_settings</span>
+            <span translate="no" className="notranslate material-symbols-outlined text-[22px] text-[#00fe66]">admin_panel_settings</span>
             <span className="font-['JetBrains_Mono'] text-[10px]">Admin</span>
           </button>
         </div>
@@ -827,7 +827,7 @@ export default function App() {
       {/* FLOATING HUD TOAST NOTIFICATION */}
       {toastMessage && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl bg-[#141a32] border border-[#00e5ff]/50 shadow-[0_10px_30px_rgba(0,0,0,0.8),0_0_20px_rgba(0,229,255,0.3)] flex items-center gap-3 animate-bounce">
-          <span className="material-symbols-outlined text-[#00fe66] text-[22px]">check_circle</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[22px]">check_circle</span>
           <span className="font-['JetBrains_Mono'] text-[12px] text-[#dce1ff] font-medium">{toastMessage}</span>
         </div>
       )}

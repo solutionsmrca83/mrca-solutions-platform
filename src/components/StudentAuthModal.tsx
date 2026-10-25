@@ -238,7 +238,7 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
       {/* Error alert */}
       {errorMsg && (
         <div className="p-3 rounded-xl bg-[#ff5555]/10 border border-[#ff5555]/30 flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#ff8080]">
-          <span className="material-symbols-outlined text-[16px]">error</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[16px]">error</span>
           <span>{errorMsg}</span>
         </div>
       )}

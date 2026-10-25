@@ -30,7 +30,7 @@ export const AcceptableUse: React.FC<AUPProps> = ({ onBack, onNavigate }) => {
       {/* STRICTLY PROHIBITED ACTIVITIES */}
       <section className="space-y-4 p-5 rounded-2xl bg-red-950/20 border border-red-500/30">
         <div className="flex items-center gap-2 text-red-400">
-          <span className="material-symbols-outlined text-[24px]">block</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[24px]">block</span>
           <h2 className="text-xl font-bold font-['Space_Grotesk'] text-red-300">
             2. Actividades Estrictamente Prohibidas
           </h2>
@@ -85,7 +85,7 @@ export const AcceptableUse: React.FC<AUPProps> = ({ onBack, onNavigate }) => {
       {/* CONSEQUENCES AND PENALTIES */}
       <section className="space-y-4 p-5 rounded-2xl bg-cyan-950/20 border border-cyan-500/30">
         <div className="flex items-center gap-2 text-cyan-400">
-          <span className="material-symbols-outlined text-[22px]">warning</span>
+          <span translate="no" className="notranslate material-symbols-outlined text-[22px]">warning</span>
           <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400">
             3. Consecuencias por Infracción: Terminación Inmediata
           </h2>
