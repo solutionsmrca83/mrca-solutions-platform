@@ -68,7 +68,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
 
         {isDesktop ? (
           /* Desktop layout SVG */
-          <svg className="notranslate w-full h-auto max-w-xl text-[#dce1ff]" fill="none" stroke="currentColor" viewBox="0 0 540 230">
+          <svg translate="no" className="notranslate w-full h-auto max-w-xl text-[#dce1ff]" fill="none" stroke="currentColor" viewBox="0 0 540 230">
             {/* Grid background subtle lines */}
             <line stroke="#181e36" strokeDasharray="4 4" strokeWidth="1" x1="0" x2="540" y1="110" y2="110" />
             <line stroke="#181e36" strokeDasharray="4 4" strokeWidth="1" x1="270" x2="270" y1="0" y2="220" />
@@ -156,7 +156,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
           </svg>
         ) : (
           /* Mobile layout SVG */
-          <svg className="notranslate w-full h-auto max-w-sm text-[#dce1ff]" fill="none" viewBox="0 0 300 135">
+          <svg translate="no" className="notranslate w-full h-auto max-w-sm text-[#dce1ff]" fill="none" viewBox="0 0 300 135">
             {/* Center Master Secret */}
             <circle
               cx="150"

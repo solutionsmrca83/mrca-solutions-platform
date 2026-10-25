@@ -227,9 +227,12 @@
   animation-play-state: paused;
 }
 
-/* ========================================================================== */
-/* TRANSLATION SAFEGUARD: Protect visual UI elements from translation engines */
-/* ========================================================================== */
-.notranslate, svg, [class*="icon-"] {
+/* Anti-translation safeguard for UI icons */
+.notranslate, 
+.material-icons, 
+.material-symbols-outlined,
+[class*="icon-"],
+svg {
   translate: none !important;
 }
+

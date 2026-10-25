@@ -530,7 +530,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                 <div className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3]">MXN // FONDOS CONSOLIDADOS</div>
               </div>
               <div className="w-24 h-9">
-                <svg className="notranslate w-full h-full stroke-[#00e5ff] fill-none" preserveAspectRatio="none" viewBox="0 0 100 36">
+                <svg translate="no" className="notranslate w-full h-full stroke-[#00e5ff] fill-none" preserveAspectRatio="none" viewBox="0 0 100 36">
                   <path d="M0,32 Q15,26 28,30 T55,14 T80,18 T100,4" strokeLinecap="round" strokeWidth="2.5"></path>
                   <path d="M0,32 Q15,26 28,30 T55,14 T80,18 T100,4 L100,36 L0,36 Z" fill="rgba(0, 229, 255, 0.12)" stroke="none"></path>
                 </svg>
@@ -648,7 +648,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   <span className="text-[#00e5ff] font-bold">DELTA +$420K MXN</span>
                 </div>
                 <div className="h-32 w-full relative">
-                  <svg className="notranslate w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 320 90">
+                  <svg translate="no" className="notranslate w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 320 90">
                     <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="20" y2="20"></line>
                     <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="50" y2="50"></line>
                     <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="75" y2="75"></line>
