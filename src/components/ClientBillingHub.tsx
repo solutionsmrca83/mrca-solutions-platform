@@ -57,7 +57,7 @@ const INITIAL_INVOICES: Invoice[] = [
     description: 'Anticipo de Auditoría Ofensiva Pentest Kali Linux & Hardening eBPF',
     due_date: '18 Oct 2026',
     spei_tracking_key: '2026101240014BND00008891230194',
-    payment_proof_url: 'https://enclave.mcrasolutions.com/proofs/spei_recibo_inv074.pdf',
+    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv074.pdf',
     created_at: '10 Oct 2026',
   },
   {
@@ -70,7 +70,7 @@ const INITIAL_INVOICES: Invoice[] = [
     description: 'Sprint 01 & 02: Arquitectura Zero-Trust C4 & Modelado Relacional PostgreSQL RLS',
     due_date: '05 Oct 2026',
     spei_tracking_key: '2026100540014BND00007712490182',
-    payment_proof_url: 'https://enclave.mcrasolutions.com/proofs/spei_recibo_inv062.pdf',
+    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv062.pdf',
     created_at: '28 Sep 2026',
   },
 ];
@@ -82,7 +82,7 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
 }) => {
   const [invoices, setInvoices] = useState<Invoice[]>(() => {
     try {
-      const saved = localStorage.getItem('mcra_client_invoices');
+      const saved = localStorage.getItem('mrca_client_invoices');
       if (saved) return JSON.parse(saved);
     } catch {
       // fallback
@@ -107,7 +107,7 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
   const BANK_DETAILS = {
     institution: 'Nu México',
     clabe: '638180000123456789',
-    beneficiary: 'MCRA Solutions S.A.P.I. de C.V.',
+    beneficiary: 'MRCA Solutions S.A.P.I. de C.V.',
     accountType: 'Cuenta Concentradora B2B / SPEI 24/7',
   };
 
@@ -140,15 +140,15 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
     // Sync with global storage events (e.g. when Admin validates a payment)
     const handleInvoiceSync = () => {
       try {
-        const saved = localStorage.getItem('mcra_client_invoices');
+        const saved = localStorage.getItem('mrca_client_invoices');
         if (saved) setInvoices(JSON.parse(saved));
       } catch {
         // quota
       }
     };
 
-    window.addEventListener('mcra_invoice_updated', handleInvoiceSync);
-    return () => window.removeEventListener('mcra_invoice_updated', handleInvoiceSync);
+    window.addEventListener('mrca_invoice_updated', handleInvoiceSync);
+    return () => window.removeEventListener('mrca_invoice_updated', handleInvoiceSync);
   }, []);
 
   const handleCopy = (text: string, fieldName: string) => {
@@ -198,8 +198,8 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
             status: 'verification_in_progress' as InvoiceStatus,
             spei_tracking_key: trackingKeyInput.trim() || 'SPEI-MANUAL-' + Date.now().toString().slice(-8),
             payment_proof_url: uploadedFileName
-              ? `https://enclave.mcrasolutions.com/proofs/${uploadedFileName}`
-              : 'https://enclave.mcrasolutions.com/proofs/comprobante_bancario_spei.pdf',
+              ? `https://enclave.mrcasolutions.com/proofs/${uploadedFileName}`
+              : 'https://enclave.mrcasolutions.com/proofs/comprobante_bancario_spei.pdf',
             updated_at: new Date().toISOString(),
           }
         : inv
@@ -223,8 +223,8 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
     // Persist to localStorage & emit sync event
     setInvoices(updatedInvoices);
     try {
-      localStorage.setItem('mcra_client_invoices', JSON.stringify(updatedInvoices));
-      window.dispatchEvent(new CustomEvent('mcra_invoice_updated'));
+      localStorage.setItem('mrca_client_invoices', JSON.stringify(updatedInvoices));
+      window.dispatchEvent(new CustomEvent('mrca_invoice_updated'));
     } catch {
       // quota
     }
@@ -457,11 +457,11 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
             </span>
             <div className="flex items-center justify-between">
               <span className="font-['JetBrains_Mono'] text-[14px] font-bold text-[#00daf3]">
-                MCRA-904
+                MRCA-904
               </span>
               <button
                 type="button"
-                onClick={() => handleCopy('MCRA-904', 'Concepto')}
+                onClick={() => handleCopy('MRCA-904', 'Concepto')}
                 className="p-1.5 rounded-lg bg-[#141f42] hover:bg-[#1e2e60] text-[#00E5FF] transition-all"
                 title="Copiar concepto"
               >

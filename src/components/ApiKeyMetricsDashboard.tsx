@@ -77,8 +77,8 @@ export const ApiKeyMetricsDashboard: React.FC<ApiKeyMetricsDashboardProps> = ({
   const [apiKey, setApiKey] = useState<ApiKeyData>({
     id: 'key_prod_9f41b',
     name: 'Production Zero-Trust Key (Cluster Alpha)',
-    keyPrefix: 'mcra_live_sec_',
-    fullKey: 'mcra_live_sec_9f41b8a72e90c8a1b490f840139b8192e021',
+    keyPrefix: 'mrca_live_sec_',
+    fullKey: 'mrca_live_sec_9f41b8a72e90c8a1b490f840139b8192e021',
     environment: 'production',
     status: 'active',
     rateLimit: '5,000 req/min',
@@ -113,7 +113,7 @@ export const ApiKeyMetricsDashboard: React.FC<ApiKeyMetricsDashboardProps> = ({
       const randomHex = Array.from({ length: 32 }, () =>
         Math.floor(Math.random() * 16).toString(16)
       ).join('');
-      const newFullKey = `mcra_live_sec_${randomHex}`;
+      const newFullKey = `mrca_live_sec_${randomHex}`;
       setApiKey((prev) => ({
         ...prev,
         fullKey: newFullKey,
@@ -132,26 +132,26 @@ export const ApiKeyMetricsDashboard: React.FC<ApiKeyMetricsDashboardProps> = ({
     : `${apiKey.fullKey.slice(0, 14)}••••••••••••••••••••••••••••${apiKey.fullKey.slice(-4)}`;
 
   const codeSnippets = {
-    curl: `curl -X POST https://api.mcrasolutions.com/v1/auth/verify-mtls \\
-  -H "Authorization: Bearer ${isRevealed ? apiKey.fullKey : 'mcra_live_sec_YOUR_API_KEY'}" \\
+    curl: `curl -X POST https://api.mrcasolutions.com/v1/auth/verify-mtls \\
+  -H "Authorization: Bearer ${isRevealed ? apiKey.fullKey : 'mrca_live_sec_YOUR_API_KEY'}" \\
   -H "Content-Type: application/json" \\
   -d '{"client_company": "${clientCompany}", "challenge": "nonce_7a81"}'`,
-    ts: `import { McraClient } from '@mcra/sdk';
+    ts: `import { MrcaClient } from '@mrca/sdk';
 
-const mcra = new McraClient({
-  apiKey: '${isRevealed ? apiKey.fullKey : 'mcra_live_sec_YOUR_API_KEY'}',
+const mrca = new MrcaClient({
+  apiKey: '${isRevealed ? apiKey.fullKey : 'mrca_live_sec_YOUR_API_KEY'}',
   environment: '${environment}',
 });
 
-const verification = await mcra.auth.verifyMtls({
+const verification = await mrca.auth.verifyMtls({
   enclaveLevel: 4,
   strictRls: true,
 });
 console.log(verification.sealedHash);`,
-    python: `from mcra_security import McraEnclave
+    python: `from mrca_security import MrcaEnclave
 
-client = McraEnclave(
-    api_key="${isRevealed ? apiKey.fullKey : 'mcra_live_sec_YOUR_API_KEY'}",
+client = MrcaEnclave(
+    api_key="${isRevealed ? apiKey.fullKey : 'mrca_live_sec_YOUR_API_KEY'}",
     env="${environment}"
 )
 

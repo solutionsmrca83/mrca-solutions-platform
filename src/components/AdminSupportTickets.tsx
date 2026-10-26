@@ -81,7 +81,7 @@ const DEFAULT_GLOBAL_TICKETS: SupportTicket[] = [
 export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showToast }) => {
   const [tickets, setTickets] = useState<SupportTicket[]>(() => {
     try {
-      const saved = localStorage.getItem('mcra_support_tickets');
+      const saved = localStorage.getItem('mrca_support_tickets');
       if (saved) return JSON.parse(saved);
     } catch {
       // fallback
@@ -112,14 +112,14 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
 
     const handleSync = () => {
       try {
-        const saved = localStorage.getItem('mcra_support_tickets');
+        const saved = localStorage.getItem('mrca_support_tickets');
         if (saved) setTickets(JSON.parse(saved));
       } catch {
         // quota
       }
     };
-    window.addEventListener('mcra_ticket_updated', handleSync);
-    return () => window.removeEventListener('mcra_ticket_updated', handleSync);
+    window.addEventListener('mrca_ticket_updated', handleSync);
+    return () => window.removeEventListener('mrca_ticket_updated', handleSync);
   }, []);
 
   const handleUpdateStatus = async (ticketId: string, newStatus: TicketStatus) => {
@@ -147,8 +147,8 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
 
     setTickets(updated);
     try {
-      localStorage.setItem('mcra_support_tickets', JSON.stringify(updated));
-      window.dispatchEvent(new CustomEvent('mcra_ticket_updated'));
+      localStorage.setItem('mrca_support_tickets', JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('mrca_ticket_updated'));
     } catch {
       // quota
     }
@@ -190,8 +190,8 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
 
     setTickets(updated);
     try {
-      localStorage.setItem('mcra_support_tickets', JSON.stringify(updated));
-      window.dispatchEvent(new CustomEvent('mcra_ticket_updated'));
+      localStorage.setItem('mrca_support_tickets', JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('mrca_ticket_updated'));
     } catch {
       // quota
     }

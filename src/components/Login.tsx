@@ -98,7 +98,7 @@ export const Login: React.FC<LoginProps> = ({
     const expectedToken =
       import.meta.env.VITE_ADMIN_INIT_TOKEN ||
       import.meta.env.VITE_FOUNDER_MASTER_KEY ||
-      'MCRA-SUPERADMIN-BOOTSTRAP-KEY-2026';
+      'MRCA-SUPERADMIN-BOOTSTRAP-KEY-2026';
 
     if (setupToken.trim() !== expectedToken.trim()) {
       setSetupError('Token de Inicialización inválido. Acceso denegado por Zero-Trust.');
@@ -159,7 +159,7 @@ export const Login: React.FC<LoginProps> = ({
     const expectedToken =
       import.meta.env.VITE_ADMIN_INIT_TOKEN ||
       import.meta.env.VITE_FOUNDER_MASTER_KEY ||
-      'MCRA-SUPERADMIN-BOOTSTRAP-KEY-2026';
+      'MRCA-SUPERADMIN-BOOTSTRAP-KEY-2026';
 
     // If master key is typed into password field, trigger bootstrap elevation directly!
     if (adminPassword.trim() === expectedToken.trim()) {
@@ -199,7 +199,7 @@ export const Login: React.FC<LoginProps> = ({
         if (error) {
           const isMasterCiso = adminEmail.trim().toLowerCase() === 'solutionsmrca83@gmail.com';
           if (
-            (isMasterCiso || adminEmail.endsWith('@mcrasolutions.com')) &&
+            (isMasterCiso || adminEmail.endsWith('@mrcasolutions.com')) &&
             adminPassword.length >= 6
           ) {
             const demoUser = {
@@ -306,14 +306,11 @@ export const Login: React.FC<LoginProps> = ({
                   ENCLAVE SOCIOS // ACCESO CRIPTOGRÁFICO
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={() => setAuthRole('client')}
-                className="font-['JetBrains_Mono'] text-[11px] text-[#849396] hover:text-[#00e5ff] transition-colors underline cursor-pointer"
-              >
-                ← Volver a Portales
-              </button>
+              <span className="font-['JetBrains_Mono'] text-[10px] text-[#566366] uppercase tracking-wider font-semibold">
+                ENCLAVE AISLADO
+              </span>
             </div>
+
           ) : (
             <div className="w-full grid grid-cols-2 gap-1.5 font-['JetBrains_Mono'] text-[11px]">
               <button
@@ -542,13 +539,6 @@ export const Login: React.FC<LoginProps> = ({
 
                 <div className="flex items-center justify-between text-[10px] font-['JetBrains_Mono'] text-[#849396] pt-2 border-t border-[#181e36]">
                   <span>SUPABASE RLS POLICY</span>
-                  <button
-                    type="button"
-                    onClick={() => setAuthRole('client')}
-                    className="text-[#849396] hover:text-[#00e5ff] transition-colors underline cursor-pointer"
-                  >
-                    ← Salir a Portales
-                  </button>
                   <span className="text-[#00daf3]">ENFORCED: JWT HS256/RS256</span>
                 </div>
               </motion.div>
@@ -579,19 +569,22 @@ export const Login: React.FC<LoginProps> = ({
           </div>
         )}
 
-        {/* Back navigation */}
-        <button
-          onClick={onBack || (() => {
-            if (typeof window !== 'undefined') {
-              window.location.hash = '';
-            }
-          })}
-          className="mt-6 font-['JetBrains_Mono'] text-[11px] text-[#849396] hover:text-[#00e5ff] transition-colors flex items-center gap-1.5 cursor-pointer py-1 px-3 rounded-lg hover:bg-[#141a32]/60"
-        >
-          <span translate="no" className="notranslate material-symbols-outlined text-[15px]">arrow_back</span>
-          <span>Volver a Inicio de MRCA Solutions</span>
-        </button>
+        {/* Back navigation strictly for public portals (hidden in admin to prevent navigation bleeding) */}
+        {authRole !== 'admin' && (
+          <button
+            onClick={onBack || (() => {
+              if (typeof window !== 'undefined') {
+                window.location.hash = '';
+              }
+            })}
+            className="mt-6 font-['JetBrains_Mono'] text-[11px] text-[#849396] hover:text-[#00e5ff] transition-colors flex items-center gap-1.5 cursor-pointer py-1 px-3 rounded-lg hover:bg-[#141a32]/60"
+          >
+            <span translate="no" className="notranslate material-symbols-outlined text-[15px]">arrow_back</span>
+            <span>Volver a Inicio de MRCA Solutions</span>
+          </button>
+        )}
       </div>
+
 
       {/* ── MASTER BOOTSTRAP / FIRST-TIME ADMIN SETUP MODAL ───────────── */}
       <AnimatePresence>

@@ -1,5 +1,5 @@
 -- ==============================================================================
--- MCRA SOLUTIONS — DYNAMIC PRICING & BUDGET NEGOTIATIONS SCHEMA
+-- MRCA SOLUTIONS — DYNAMIC PRICING & BUDGET NEGOTIATIONS SCHEMA
 -- Módulo: Motor de Descuentos Dinámicos & Hub de Contraofertas de Presupuesto
 -- ==============================================================================
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS public.budget_negotiations (
 );
 
 COMMENT ON TABLE public.budget_negotiations IS
-  'Solicitudes de negociación y contraofertas de presupuesto para divisiones B2B y MCRA Academy.';
+  'Solicitudes de negociación y contraofertas de presupuesto para divisiones B2B y MRCA Academy.';
 
 CREATE INDEX IF NOT EXISTS idx_budget_negotiations_status ON public.budget_negotiations(status);
 CREATE INDEX IF NOT EXISTS idx_budget_negotiations_client_type ON public.budget_negotiations(client_type);
@@ -141,7 +141,7 @@ VALUES
   'approved',
   'Nuestro límite trimestral de CAPEX TI para este entregable es de $145,000 MXN netos. Solicitamos ajuste de alcance.',
   'Ajuste aprobado: Se difiere el módulo opcional de monitoreo Prometheus a Q1 2027.',
-  'https://enclave.mcrasolutions.com/checkout/spei?negotiation_id=e1a0b3c4-2222-4444-8888-000000000002',
+  'https://enclave.mrcasolutions.com/checkout/spei?negotiation_id=e1a0b3c4-2222-4444-8888-000000000002',
   NOW() - INTERVAL '1 day'
 ),
 (

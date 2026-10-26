@@ -4,7 +4,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import { PublicLanding } from './components/PublicLanding';
 import { AdminEnclave } from './components/AdminEnclave';
 import { ClientPortalView } from './components/ClientPortalView';
-import { McraAcademy } from './components/McraAcademy';
+import { MrcaAcademy } from './components/McraAcademy';
 import { LoginModal } from './components/Modals';
 import { SplashPreloader } from './components/SplashPreloader';
 import { Login } from './components/Login';
@@ -66,7 +66,7 @@ export default function App() {
       const path = window.location.pathname;
       const hash = window.location.hash;
 
-      // 1. ADMIN SUBDOMAIN & ROUTES (admin.mcrasolutions.com, /admin, /enclave, #admin)
+      // 1. ADMIN SUBDOMAIN & ROUTES (admin.mrcasolutions.com, /admin, /enclave, #admin)
       if (
         hostname.startsWith('admin.') ||
         path === '/admin' ||
@@ -106,7 +106,7 @@ export default function App() {
         }
       }
 
-      // 2. CLIENTES SUBDOMAIN & ROUTES (clientes.mcrasolutions.com, /clientes, /dashboard, /portal)
+      // 2. CLIENTES SUBDOMAIN & ROUTES (clientes.mrcasolutions.com, /clientes, /dashboard, /portal)
       if (
         hostname.startsWith('clientes.') ||
         path === '/clientes' ||
@@ -130,7 +130,7 @@ export default function App() {
         return;
       }
 
-      // 3. ESTUDIANTES SUBDOMAIN & ROUTES (estudiantes.mcrasolutions.com, /estudiantes, /academy)
+      // 3. ESTUDIANTES SUBDOMAIN & ROUTES (estudiantes.mrcasolutions.com, /estudiantes, /academy)
       if (
         hostname.startsWith('estudiantes.') ||
         path === '/estudiantes' ||
@@ -285,7 +285,7 @@ export default function App() {
 
   // ── SUBDOMAIN STRUCTURE ISOLATION GATES (Strict Separation) ─────────
   if (activeView === 'academy') {
-    return <McraAcademy />;
+    return <MrcaAcademy />;
   }
 
   if (activeView === 'admin') {
@@ -599,7 +599,7 @@ export default function App() {
                 <span translate="no" className="notranslate material-symbols-outlined text-[20px]">shield</span>
               </div>
               <span className="font-['Space_Grotesk'] text-[18px] text-[#00e5ff] tracking-tight font-bold">
-                SISTEMA MCRA
+                SISTEMA MRCA SOLUTIONS
               </span>
             </div>
             <button

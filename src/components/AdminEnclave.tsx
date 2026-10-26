@@ -356,7 +356,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                 <button
                   onClick={onSignOut}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#181e36] hover:bg-[#222941] text-[#ffb4ab] border border-[#ffb4ab]/30 font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all"
-                  title="Cerrar sesión activa de Supabase y volver al portal público"
+                  title="Cerrar sesión activa y revocar credenciales de enclave"
                 >
                   <span translate="no" className="notranslate material-symbols-outlined text-[16px]">logout</span>
                   <span>CERRAR SESIÓN</span>

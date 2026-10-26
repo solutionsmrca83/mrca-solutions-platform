@@ -44,9 +44,9 @@
 
 :root {
   /* ========================================================================== */
-  /* CSS PLACEHOLDER FOR MCRA SOLUTIONS BRANDING & LOGO WATERMARK               */
+  /* CSS PLACEHOLDER FOR MRCA SOLUTIONS BRANDING & LOGO WATERMARK               */
   /* ========================================================================== */
-  --mcra-logo-watermark-path: url('/assets/images/mcra-watermark.svg');
+  --mrca-logo-watermark-path: url('/assets/images/mrca-watermark.svg');
 }
 
 @layer base {

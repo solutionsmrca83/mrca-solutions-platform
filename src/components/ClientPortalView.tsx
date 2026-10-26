@@ -44,7 +44,7 @@ const INITIAL_CONTRACTS: ClientContract[] = [
     content: `ACUERDO BILATERAL DE CONFIDENCIALIDAD Y PROTECCIÓN CRIPTOGRÁFICA (NDA ZERO-TRUST)
 
 ENTRE LAS PARTES:
-MCRA SOLUTIONS S.A.P.I. DE C.V., representada por su Enclave de Dirección Ejecutiva (Jefe & Socio), y por la otra parte:
+MRCA SOLUTIONS S.A.P.I. DE C.V., representada por su Enclave de Dirección Ejecutiva (Jefe & Socio), y por la otra parte:
 EMPRESA BENEFICIARIA: FinTech Global B2B
 REPRESENTANTE LEGAL: Director Tecnológico Corporativo
 CORREO INSTITUCIONAL: cliente@enterprise.corp
@@ -118,7 +118,7 @@ const INITIAL_CHAT: ClientChatMessage[] = [
     id: 'c1',
     sender: 'admin',
     senderName: 'Jefe (CISO)',
-    text: 'Bienvenido al canal seguro de MCRA Solutions. Su identidad corporativa ha sido verificada. ¿En qué capacidad de ingeniería podemos apoyarle hoy?',
+    text: 'Bienvenido al canal seguro de MRCA Solutions. Su identidad corporativa ha sido verificada. ¿En qué capacidad de ingeniería podemos apoyarle hoy?',
     timestamp: 'Hoy, 10:14 AM',
     isEncrypted: true,
     cipherHash: '0x4f8a...921b',
@@ -166,7 +166,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
   const [isContractsModalOpen, setIsContractsModalOpen] = useState(false);
   const [contracts, setContracts] = useState<ClientContract[]>(() => {
     try {
-      const saved = localStorage.getItem('mcra_client_contracts');
+      const saved = localStorage.getItem('mrca_client_contracts');
       if (saved) return JSON.parse(saved);
     } catch {
       // fallback
@@ -181,14 +181,14 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
         setContracts((prev) => [newContract, ...prev.filter((c) => c.id !== newContract.id)]);
         setIsContractsModalOpen(true);
         if (showToast) {
-          showToast(`[NUEVO CONTRATO] MCRA Solutions le ha enviado un contrato para firma digital.`);
+          showToast(`[NUEVO CONTRATO] MRCA Solutions le ha enviado un contrato para firma digital.`);
         }
       }
     };
 
-    window.addEventListener('mcra_contract_dispatched', handleDispatched);
+    window.addEventListener('mrca_contract_dispatched', handleDispatched);
     return () => {
-      window.removeEventListener('mcra_contract_dispatched', handleDispatched);
+      window.removeEventListener('mrca_contract_dispatched', handleDispatched);
     };
   }, [showToast]);
 
@@ -206,7 +206,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           : c
       );
       try {
-        localStorage.setItem('mcra_client_contracts', JSON.stringify(updated));
+        localStorage.setItem('mrca_client_contracts', JSON.stringify(updated));
       } catch {
         // quota
       }
@@ -292,7 +292,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               </h2>
 
               <p className="font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed">
-                En <strong>MCRA Solutions</strong> creemos que la ingeniería de primer nivel no debe comprometer la salud financiera de tu empresa. Evaluamos tus requerimientos en sprints modulares, optimizando arquitecturas para que obtengas la máxima seguridad con un costo altamente competitivo.
+                En <strong>MRCA Solutions</strong> creemos que la ingeniería de primer nivel no debe comprometer la salud financiera de tu empresa. Evaluamos tus requerimientos en sprints modulares, optimizando arquitecturas para que obtengas la máxima seguridad con un costo altamente competitivo.
               </p>
             </div>
 
@@ -300,7 +300,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               <button
                 onClick={() => {
                   setActiveTab('chat');
-                  setInputMessage('Hola equipo MCRA, me gustaría agendar una evaluación de viabilidad adaptada a nuestro presupuesto.');
+                  setInputMessage('Hola equipo MRCA Solutions, me gustaría agendar una evaluación de viabilidad adaptada a nuestro presupuesto.');
                 }}
                 className="w-full px-5 py-3 rounded-xl bg-[#00fe66] hover:bg-[#5aff96] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,254,102,0.4)] flex items-center justify-center gap-2"
               >
@@ -331,7 +331,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                   ¡Atención! Tiene {pendingContractsCount} Contrato(s) o Acuerdos NDA Pendientes de Firma
                 </div>
                 <div className="font-['JetBrains_Mono'] text-[11px] text-[#ffb020]">
-                  MCRA Solutions ha emitido un documento legal que requiere su firma digital vectorial con hash SHA-256.
+                  MRCA Solutions ha emitido un documento legal que requiere su firma digital vectorial con hash SHA-256.
                 </div>
               </div>
             </div>
@@ -517,7 +517,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                   Catálogo de Capacidades de Ingeniería
                 </h3>
                 <p className="font-['Inter'] text-[13px] text-[#bac9cc]">
-                  Tecnologías y servicios de alto calibre desarrollados y operados por MCRA Solutions.
+                  Tecnologías y servicios de alto calibre desarrollados y operados por MRCA Solutions.
                 </p>
               </div>
             </div>
@@ -761,7 +761,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 {/* 1. Facebook */}
                 <a
                   id="link-support-facebook"
-                  href="https://facebook.com/mcrasolutions"
+                  href="https://facebook.com/mrcasolutions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-4 rounded-2xl bg-[#141a32] border border-[#00e5ff]/30 hover:border-[#00e5ff] shadow-[0_0_15px_rgba(0,229,255,0.15)] hover:shadow-[0_0_25px_rgba(0,229,255,0.4)] transition-all flex items-center gap-3.5 group"
@@ -784,7 +784,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 {/* 2. Instagram */}
                 <a
                   id="link-support-instagram"
-                  href="https://instagram.com/mcrasolutions"
+                  href="https://instagram.com/mrcasolutions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-4 rounded-2xl bg-[#141a32] border border-[#e1306c]/40 hover:border-[#e1306c] shadow-[0_0_15px_rgba(225,48,108,0.15)] hover:shadow-[0_0_25px_rgba(225,48,108,0.4)] transition-all flex items-center gap-3.5 group"
@@ -807,7 +807,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 {/* 3. TikTok */}
                 <a
                   id="link-support-tiktok"
-                  href="https://tiktok.com/@mcrasolutions"
+                  href="https://tiktok.com/@mrcasolutions"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-4 rounded-2xl bg-[#141a32] border border-[#00fe66]/40 hover:border-[#00fe66] shadow-[0_0_15px_rgba(0,254,102,0.15)] hover:shadow-[0_0_25px_rgba(0,254,102,0.4)] transition-all flex items-center gap-3.5 group"

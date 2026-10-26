@@ -80,7 +80,7 @@ export const ClientContractsModal: React.FC<ClientContractsModalProps> = ({
     const blob = new Blob(
       [
         `===================================================================\n` +
-        `MCRA SOLUTIONS // CONTRATO CRIPTOGRÁFICO CERTIFICADO B2B\n` +
+        `MRCA SOLUTIONS // CONTRATO CRIPTOGRÁFICO CERTIFICADO B2B\n` +
         `ID DOCUMENTO: ${currentContract.id}\n` +
         `TÍTULO: ${currentContract.title}\n` +
         `EMPRESA CLIENTE: ${currentContract.client_company}\n` +
@@ -201,7 +201,7 @@ export const ClientContractsModal: React.FC<ClientContractsModalProps> = ({
                   <div className="flex flex-wrap items-center gap-3 font-['JetBrains_Mono'] text-[11px] text-[#849396]">
                     <span>Cliente: <strong className="text-[#dce1ff]">{currentContract.client_company}</strong></span>
                     <span>•</span>
-                    <span>Emisor: <strong className="text-[#00daf3]">MCRA Solutions (Jefe &amp; Socio)</strong></span>
+                    <span>Emisor: <strong className="text-[#00daf3]">MRCA Solutions (Jefe &amp; Socio)</strong></span>
                   </div>
                 </div>
 

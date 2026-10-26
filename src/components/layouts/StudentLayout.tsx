@@ -93,7 +93,7 @@ export const StudentLayout: React.FC<StudentLayoutProps> = ({
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <span className="font-['Space_Grotesk'] text-[16px] font-bold tracking-tight text-white leading-none group-hover:text-emerald-300 transition-colors">
-                    MCRA ACADEMY
+                    MRCA ACADEMY
                   </span>
                   <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[9px] font-['JetBrains_Mono'] font-bold bg-emerald-950/80 border border-emerald-500/40 text-[#00fe66] uppercase tracking-wider">
                     ESTUDIANTES
@@ -187,7 +187,7 @@ export const StudentLayout: React.FC<StudentLayoutProps> = ({
                       <GraduationCap className="w-4 h-4" />
                     </div>
                     <span className="font-['Space_Grotesk'] text-[16px] font-bold text-white">
-                      MCRA ACADEMY
+                      MRCA ACADEMY
                     </span>
                   </div>
                   <button

@@ -146,7 +146,7 @@ const FAQS = [
   },
 ];
 
-export const McraAcademy: React.FC = () => {
+export const MrcaAcademy: React.FC = () => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -187,7 +187,7 @@ export const McraAcademy: React.FC = () => {
           </div>
 
           <h1 className="font-['Space_Grotesk'] text-[32px] sm:text-[46px] md:text-[54px] font-bold text-[#ffffff] tracking-tight leading-[1.12]">
-            MCRA Academy: <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-[#9cf0ff] to-[#00fe66]">Prototipado y Arquitectura</span> para Estudiantes de Ingeniería
+            MRCA Academy: <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-[#9cf0ff] to-[#00fe66]">Prototipado y Arquitectura</span> para Estudiantes de Ingeniería
           </h1>
 
           <p className="font-['Inter'] text-[14px] sm:text-[17px] text-[#bac9cc] max-w-2xl leading-relaxed">
@@ -488,14 +488,14 @@ export const McraAcademy: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <GraduationCap className="w-4 h-4 text-[#00e5ff]" />
-            <span className="text-[#dce1ff] font-bold">MCRA Academy</span>
+            <span className="text-[#dce1ff] font-bold">MRCA Academy</span>
             <span>• Prototipado & Arquitectura para Estudiantes de Ingeniería</span>
           </div>
           <div>
             Pagos protegidos vía Stripe Escrow • Soporte en español para México y LATAM
           </div>
           <div>
-            © 2025-2026 MCRA Solutions Inc. All rights reserved.
+            © 2025-2026 MRCA Solutions Inc. All rights reserved.
           </div>
         </div>
       </footer>
@@ -510,3 +510,6 @@ export const McraAcademy: React.FC = () => {
     </StudentLayout>
   );
 };
+
+export const McraAcademy = MrcaAcademy;
+export default MrcaAcademy;

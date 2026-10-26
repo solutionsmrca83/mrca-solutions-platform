@@ -66,7 +66,7 @@ const INITIAL_NEGOTIATIONS: BudgetNegotiation[] = [
       'Alcance adaptado: Se implementa arquitectura central mTLS y HSM. El módulo complementario de Prometheus se despliega en Q1 2027.',
     admin_notes: 'Aprobado por Jefe (CISO) tras revisión de márgenes.',
     checkout_link:
-      'https://enclave.mcrasolutions.com/checkout/spei?negotiation_id=NEG-2026-038&token=mrca_sec_89fa12',
+      'https://enclave.mrcasolutions.com/checkout/spei?negotiation_id=NEG-2026-038&token=mrca_sec_89fa12',
     created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
   },
   {
@@ -95,7 +95,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
 }) => {
   const [negotiations, setNegotiations] = useState<BudgetNegotiation[]>(() => {
     try {
-      const saved = localStorage.getItem('mcra_budget_negotiations');
+      const saved = localStorage.getItem('mrca_budget_negotiations');
       if (saved) return JSON.parse(saved);
     } catch {
       // fallback
@@ -142,7 +142,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
             created_at: d.created_at,
           }));
           setNegotiations(mapped);
-          localStorage.setItem('mcra_budget_negotiations', JSON.stringify(mapped));
+          localStorage.setItem('mrca_budget_negotiations', JSON.stringify(mapped));
         }
       } catch {
         // use local
@@ -154,15 +154,15 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
     // 2. Listen for custom event when client creates a negotiation
     const handleNewNegotiation = (e: any) => {
       try {
-        const saved = localStorage.getItem('mcra_budget_negotiations');
+        const saved = localStorage.getItem('mrca_budget_negotiations');
         if (saved) setNegotiations(JSON.parse(saved));
       } catch {
         // quota
       }
     };
 
-    window.addEventListener('mcra_negotiation_created', handleNewNegotiation);
-    return () => window.removeEventListener('mcra_negotiation_created', handleNewNegotiation);
+    window.addEventListener('mrca_negotiation_created', handleNewNegotiation);
+    return () => window.removeEventListener('mrca_negotiation_created', handleNewNegotiation);
   }, []);
 
   const handleCopyLink = (link: string, id: string) => {
@@ -184,7 +184,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
     const finalApprovedPrice =
       priceDrafts[neg.id] !== undefined ? priceDrafts[neg.id] : neg.proposed_budget;
 
-    const generatedCheckoutLink = `https://enclave.mcrasolutions.com/checkout/spei?negotiation_id=${neg.id}&auth_price=${finalApprovedPrice}&exp=${Date.now() + 86400000 * 3}`;
+    const generatedCheckoutLink = `https://enclave.mrcasolutions.com/checkout/spei?negotiation_id=${neg.id}&auth_price=${finalApprovedPrice}&exp=${Date.now() + 86400000 * 3}`;
 
     const updated = negotiations.map((item) =>
       item.id === neg.id
@@ -200,7 +200,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
     );
 
     setNegotiations(updated);
-    localStorage.setItem('mcra_budget_negotiations', JSON.stringify(updated));
+    localStorage.setItem('mrca_budget_negotiations', JSON.stringify(updated));
 
     // Update in Supabase
     try {
@@ -241,7 +241,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
     );
 
     setNegotiations(updated);
-    localStorage.setItem('mcra_budget_negotiations', JSON.stringify(updated));
+    localStorage.setItem('mrca_budget_negotiations', JSON.stringify(updated));
 
     try {
       await supabase

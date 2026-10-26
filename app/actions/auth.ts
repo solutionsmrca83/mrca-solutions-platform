@@ -28,7 +28,7 @@ export async function loginOwner(formData: FormData) {
 
   if (error) {
     // Sandbox fallback for local development if credentials don't exist yet
-    if (email === 'jefe@mcrasolutions.com' && password.length >= 6) {
+    if (email === 'jefe@mrcasolutions.com' && password.length >= 6) {
       redirect('/admin/dashboard');
     }
     return { error: error.message };
@@ -67,7 +67,7 @@ export async function loginClient(formData: FormData) {
 
   const metaRole = (data?.user?.user_metadata?.role || data?.user?.app_metadata?.role)?.toString().toLowerCase();
   const lowerEmail = email.toLowerCase().trim();
-  const isFounder = ['solutionsmrca83@gmail.com', 'jefe@mcrasolutions.com', 'admin@mcrasolutions.com'].includes(lowerEmail) || lowerEmail.endsWith('@mcrasolutions.com');
+  const isFounder = ['solutionsmrca83@gmail.com', 'jefe@mrcasolutions.com', 'admin@mrcasolutions.com'].includes(lowerEmail) || lowerEmail.endsWith('@mrcasolutions.com');
 
   if (isFounder || ['admin', 'owner', 'superadmin', 'stealth_partner'].includes(metaRole || '')) {
     redirect('/admin/dashboard');

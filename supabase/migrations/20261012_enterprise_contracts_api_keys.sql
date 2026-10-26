@@ -1,5 +1,5 @@
 -- ==============================================================================
--- MCRA SOLUTIONS — ENTERPRISE B2B CONTRACTS & API KEYS SCHEMA MIGRATION
+-- MRCA SOLUTIONS — ENTERPRISE B2B CONTRACTS & API KEYS SCHEMA MIGRATION
 -- Fecha: 2026-10-12
 -- Soporte para:
 -- 1. Gestor de Plantillas de Contrato (contract_templates)
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS public.client_api_keys (
   id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   client_id       UUID NOT NULL REFERENCES public.user_profiles(id) ON DELETE CASCADE,
   name            TEXT NOT NULL DEFAULT 'Production API Key (Cluster Alpha)',
-  key_prefix      TEXT NOT NULL DEFAULT 'mcra_live_sec_',
+  key_prefix      TEXT NOT NULL DEFAULT 'mrca_live_sec_',
   key_hash        TEXT NOT NULL,
   environment     TEXT NOT NULL DEFAULT 'production' CHECK (environment IN ('production', 'staging')),
   status          TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'rotated', 'revoked')),
@@ -226,7 +226,7 @@ VALUES
   'ACUERDO BILATERAL DE CONFIDENCIALIDAD Y PROTECCIÓN CRIPTOGRÁFICA (NDA ZERO-TRUST)
 
 ENTRE LAS PARTES:
-Por una parte, MCRA SOLUTIONS S.A.P.I. DE C.V., representada por su Enclave de Dirección Ejecutiva y Ciberseguridad (Jefe & Socio), y por la otra parte:
+Por una parte, MRCA SOLUTIONS S.A.P.I. DE C.V., representada por su Enclave de Dirección Ejecutiva y Ciberseguridad (Jefe & Socio), y por la otra parte:
 EMPRESA BENEFICIARIA: {{EMPRESA_CLIENTE}}
 REPRESENTANTE LEGAL: {{REPRESENTANTE_CLIENTE}}
 CORREO INSTITUCIONAL: {{CORREO_CLIENTE}}
@@ -235,7 +235,7 @@ CLÁUSULA PRIMERA — OBJETO DEL SIGILO TECNOLÓGICO:
 Las partes intercambiarán arquitectura de software, diagramas de microservicios, esquemas de bases de datos PostgreSQL con RLS y configuraciones de red eBPF/Cilium con el fin de evaluar y ejecutar servicios de ingeniería avanzada.
 
 CLÁUSULA SEGUNDA — NO REVELACIÓN Y PROTECCIÓN CRIPTOGRÁFICA:
-Toda información compartida se considera Carga Útil Confidencial Nivel 4 (FIPS 140-3). Queda estrictamente prohibida su divulgación, copia o ingesta en modelos de inteligencia artificial públicos sin autorización expresa por escrito sellada criptográficamente por MCRA Solutions.
+Toda información compartida se considera Carga Útil Confidencial Nivel 4 (FIPS 140-3). Queda estrictamente prohibida su divulgación, copia o ingesta en modelos de inteligencia artificial públicos sin autorización expresa por escrito sellada criptográficamente por MRCA Solutions.
 
 CLÁUSULA TERCERA — VIGENCIA Y PENALIZACIÓN CONVENCIONAL:
 El presente acuerdo tendrá una vigencia ininterrumpida de cinco (5) años a partir de la firma digital. En caso de filtración deliberada o negligencia comprobada de secretos industriales o código fuente, la parte infractora cubrirá una pena convencional equivalente a los daños directos calculados en el Enclave Arbitral Tecnológico de la Ciudad de México.
@@ -257,10 +257,10 @@ HASH DE INTEGRIDAD PREVIO: {{HASH_SHA256}}'
 CONTRATANTE: {{EMPRESA_CLIENTE}}
 REPRESENTANTE TÉCNICO: {{REPRESENTANTE_CLIENTE}}
 CONTACTO DE NOTIFICACIONES: {{CORREO_CLIENTE}}
-PRESTADOR DEL SERVICIO: MCRA SOLUTIONS (División Ingeniería de Sistemas)
+PRESTADOR DEL SERVICIO: MRCA SOLUTIONS (División Ingeniería de Sistemas)
 
 CLÁUSULA PRIMERA — ALCANCE DE LA INGENIERÍA:
-MCRA Solutions desarrollará la plataforma tecnológica especificada en la propuesta técnica adjunta, implementando:
+MRCA Solutions desarrollará la plataforma tecnológica especificada en la propuesta técnica adjunta, implementando:
 1. Interfaces reactivas de alta velocidad en Next.js 15 y React 19 con diseño ciber-estético Midnight Blue.
 2. Backends de baja latencia con aislamiento de datos multi-inquilino mediante Row Level Security (RLS).
 3. Pipelines de integración continua blindados con auditoría de vulnerabilidades estáticas (SAST).
@@ -269,7 +269,7 @@ CLÁUSULA SEGUNDA — PROPIEDAD INTELECTUAL Y ENTREGA:
 Los entregables de código fuente, imágenes de contenedor Docker y esquemas SQL serán transferidos en su totalidad a {{EMPRESA_CLIENTE}} una vez liquidado el importe acordado mediante el mecanismo de Escrow pactado.
 
 CLÁUSULA TERCERA — ACUERDO DE NIVEL DE SERVICIO (SLA):
-MCRA Solutions garantiza una disponibilidad operativa mínima de {{SLA_ASIGNADO}} en la infraestructura desplegada bajo nuestra administración directa.
+MRCA Solutions garantiza una disponibilidad operativa mínima de {{SLA_ASIGNADO}} en la infraestructura desplegada bajo nuestra administración directa.
 
 MONTO TOTAL DEL PROYECTO: {{PRESUPUESTO_MARCO}}
 CONDICIONES DE PAGO: 50% Anticipo vía Stripe Escrow / 50% Contra Entrega y Pruebas UAT.
@@ -288,10 +288,10 @@ OBJETIVO AUTORIZADO:
 EMPRESA AUDITADA: {{EMPRESA_CLIENTE}}
 RESPONSABLE DE SEGURIDAD: {{REPRESENTANTE_CLIENTE}}
 CORREO CISO: {{CORREO_CLIENTE}}
-AUDITOR PRINCIPAL: MCRA SOLUTIONS (Equipo Kali Red Team / CISO Jefe)
+AUDITOR PRINCIPAL: MRCA SOLUTIONS (Equipo Kali Red Team / CISO Jefe)
 
 CLÁUSULA PRIMERA — REGLAS DE COMBATE (RULES OF ENGAGEMENT):
-{{EMPRESA_CLIENTE}} otorga autorización expresa y formal a MCRA Solutions para ejecutar pruebas de seguridad ofensiva, análisis de superficie de ataque, simulación de ataques DoS controlados, pentesting de APIs GraphQL/REST e inspección de contenedores.
+{{EMPRESA_CLIENTE}} otorga autorización expresa y formal a MRCA Solutions para ejecutar pruebas de seguridad ofensiva, análisis de superficie de ataque, simulación de ataques DoS controlados, pentesting de APIs GraphQL/REST e inspección de contenedores.
 
 CLÁUSULA SEGUNDA — EXCLUSIÓN DE RESPONSABILIDAD PENAL:
 Ambas partes reconocen que los vectores de prueba se ejecutan en estricto cumplimiento del mandato de hardening defensivo, operando bajo estándar OWASP Top 10 y marco NIST CSF.
@@ -315,7 +315,7 @@ REGISTRADO EN KERNEL: {{FECHA_EMISION}}'
 PARTES INTERVINIENTES:
 CLIENTE PAGADOR: {{EMPRESA_CLIENTE}}
 APODERADO DE FONDOS: {{REPRESENTANTE_CLIENTE}} ({{CORREO_CLIENTE}})
-ADMINISTRADOR ESCROW: MCRA SOLUTIONS S.A.P.I. DE C.V.
+ADMINISTRADOR ESCROW: MRCA SOLUTIONS S.A.P.I. DE C.V.
 
 CLÁUSULA PRIMERA — CONSIGNACIÓN DE FONDOS:
 Los importes por concepto de desarrollo o auditoría serán depositados en la cuenta concentradora segregada bajo protocolo dual Stripe Escrow o SPEI Inmediato Banxico.
@@ -323,7 +323,7 @@ Los importes por concepto de desarrollo o auditoría serán depositados en la cu
 CLÁUSULA SEGUNDA — REGLA CRIPTOGRÁFICA DE DISPERSIÓN DUAL:
 Ningún fondo será liberado sin la presentación simultánea de:
 1. Firma digital del Cliente validando la recepción satisfactoria del hito técnico.
-2. Firma dual criptográfica de los Administradores de MCRA Solutions (Jefe y Socio).
+2. Firma dual criptográfica de los Administradores de MRCA Solutions (Jefe y Socio).
 
 MONTO EN CUSTODIA: {{PRESUPUESTO_MARCO}}
 MÉTODO DE PAGO: SPEI Banxico / Stripe Escrow Dual

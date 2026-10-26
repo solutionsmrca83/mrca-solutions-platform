@@ -316,7 +316,7 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                 <input
                   type="email"
                   required
-                  placeholder="socio@mcrasolutions.com"
+                  placeholder="socio@mrcasolutions.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-[#060d24] border border-slate-700 focus:border-[#00e5ff] rounded-lg px-3 py-2 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] transition-colors"

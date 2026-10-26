@@ -45,7 +45,7 @@ export const BASE_TEMPLATES: ContractTemplate[] = [
     base_content: `ACUERDO BILATERAL DE CONFIDENCIALIDAD Y PROTECCIÓN CRIPTOGRÁFICA (NDA ZERO-TRUST)
 
 ENTRE LAS PARTES:
-Por una parte, MCRA SOLUTIONS S.A.P.I. DE C.V., representada por su Enclave de Dirección Ejecutiva y Ciberseguridad (Jefe & Socio), y por la otra parte:
+Por una parte, MRCA SOLUTIONS S.A.P.I. DE C.V., representada por su Enclave de Dirección Ejecutiva y Ciberseguridad (Jefe & Socio), y por la otra parte:
 EMPRESA BENEFICIARIA: {{EMPRESA_CLIENTE}}
 REPRESENTANTE LEGAL: {{REPRESENTANTE_CLIENTE}}
 CORREO INSTITUCIONAL: {{CORREO_CLIENTE}}
@@ -54,7 +54,7 @@ CLÁUSULA PRIMERA — OBJETO DEL SIGILO TECNOLÓGICO:
 Las partes intercambiarán arquitectura de software, diagramas de microservicios, esquemas de bases de datos PostgreSQL con RLS y configuraciones de red eBPF/Cilium con el fin de evaluar y ejecutar servicios de ingeniería avanzada.
 
 CLÁUSULA SEGUNDA — NO REVELACIÓN Y PROTECCIÓN CRIPTOGRÁFICA:
-Toda información compartida se considera Carga Útil Confidencial Nivel 4 (FIPS 140-3). Queda estrictamente prohibida su divulgación, copia o ingesta en modelos de inteligencia artificial públicos sin autorización expresa por escrito sellada criptográficamente por MCRA Solutions.
+Toda información compartida se considera Carga Útil Confidencial Nivel 4 (FIPS 140-3). Queda estrictamente prohibida su divulgación, copia o ingesta en modelos de inteligencia artificial públicos sin autorización expresa por escrito sellada criptográficamente por MRCA Solutions.
 
 CLÁUSULA TERCERA — VIGENCIA Y PENALIZACIÓN CONVENCIONAL:
 El presente acuerdo tendrá una vigencia ininterrumpida de cinco (5) años a partir de la firma digital. En caso de filtración deliberada o negligencia comprobada de secretos industriales o código fuente, la parte infractora cubrirá una pena convencional equivalente a los daños directos calculados en el Enclave Arbitral Tecnológico de la Ciudad de México.
@@ -77,10 +77,10 @@ HASH DE INTEGRIDAD PREVIO: {{HASH_SHA256}}`,
 CONTRATANTE: {{EMPRESA_CLIENTE}}
 REPRESENTANTE TÉCNICO: {{REPRESENTANTE_CLIENTE}}
 CONTACTO DE NOTIFICACIONES: {{CORREO_CLIENTE}}
-PRESTADOR DEL SERVICIO: MCRA SOLUTIONS (División Ingeniería de Sistemas)
+PRESTADOR DEL SERVICIO: MRCA SOLUTIONS (División Ingeniería de Sistemas)
 
 CLÁUSULA PRIMERA — ALCANCE DE LA INGENIERÍA:
-MCRA Solutions desarrollará la plataforma tecnológica especificada en la propuesta técnica adjunta, implementando:
+MRCA Solutions desarrollará la plataforma tecnológica especificada en la propuesta técnica adjunta, implementando:
 1. Interfaces reactivas de alta velocidad en Next.js 15 y React 19 con diseño ciber-estético Midnight Blue.
 2. Backends de baja latencia con aislamiento de datos multi-inquilino mediante Row Level Security (RLS).
 3. Pipelines de integración continua blindados con auditoría de vulnerabilidades estáticas (SAST).
@@ -89,7 +89,7 @@ CLÁUSULA SEGUNDA — PROPIEDAD INTELECTUAL Y ENTREGA:
 Los entregables de código fuente, imágenes de contenedor Docker y esquemas SQL serán transferidos en su totalidad a {{EMPRESA_CLIENTE}} una vez liquidado el importe acordado mediante el mecanismo de Escrow pactado.
 
 CLÁUSULA TERCERA — ACUERDO DE NIVEL DE SERVICIO (SLA):
-MCRA Solutions garantiza una disponibilidad operativa mínima de {{SLA_ASIGNADO}} en la infraestructura desplegada bajo nuestra administración directa.
+MRCA Solutions garantiza una disponibilidad operativa mínima de {{SLA_ASIGNADO}} en la infraestructura desplegada bajo nuestra administración directa.
 
 MONTO TOTAL DEL PROYECTO: {{PRESUPUESTO_MARCO}}
 CONDICIONES DE PAGO: 50% Anticipo vía Stripe Escrow / 50% Contra Entrega y Pruebas UAT.
@@ -109,10 +109,10 @@ OBJETIVO AUTORIZADO:
 EMPRESA AUDITADA: {{EMPRESA_CLIENTE}}
 RESPONSABLE DE SEGURIDAD: {{REPRESENTANTE_CLIENTE}}
 CORREO CISO: {{CORREO_CLIENTE}}
-AUDITOR PRINCIPAL: MCRA SOLUTIONS (Equipo Kali Red Team / CISO Jefe)
+AUDITOR PRINCIPAL: MRCA SOLUTIONS (Equipo Kali Red Team / CISO Jefe)
 
 CLÁUSULA PRIMERA — REGLAS DE COMBATE (RULES OF ENGAGEMENT):
-{{EMPRESA_CLIENTE}} otorga autorización expresa y formal a MCRA Solutions para ejecutar pruebas de seguridad ofensiva, análisis de superficie de ataque, simulación de ataques DoS controlados, pentesting de APIs GraphQL/REST e inspección de contenedores.
+{{EMPRESA_CLIENTE}} otorga autorización expresa y formal a MRCA Solutions para ejecutar pruebas de seguridad ofensiva, análisis de superficie de ataque, simulación de ataques DoS controlados, pentesting de APIs GraphQL/REST e inspección de contenedores.
 
 CLÁUSULA SEGUNDA — EXCLUSIÓN DE RESPONSABILIDAD PENAL:
 Ambas partes reconocen que los vectores de prueba se ejecutan en estricto cumplimiento del mandato de hardening defensivo, operando bajo estándar OWASP Top 10 y marco NIST CSF.
@@ -137,7 +137,7 @@ REGISTRADO EN KERNEL: {{FECHA_EMISION}}`,
 PARTES INTERVINIENTES:
 CLIENTE PAGADOR: {{EMPRESA_CLIENTE}}
 APODERADO DE FONDOS: {{REPRESENTANTE_CLIENTE}} ({{CORREO_CLIENTE}})
-ADMINISTRADOR ESCROW: MCRA SOLUTIONS S.A.P.I. DE C.V.
+ADMINISTRADOR ESCROW: MRCA SOLUTIONS S.A.P.I. DE C.V.
 
 CLÁUSULA PRIMERA — CONSIGNACIÓN DE FONDOS:
 Los importes por concepto de desarrollo o auditoría serán depositados en la cuenta concentradora segregada bajo protocolo dual Stripe Escrow o SPEI Inmediato Banxico.
@@ -145,7 +145,7 @@ Los importes por concepto de desarrollo o auditoría serán depositados en la cu
 CLÁUSULA SEGUNDA — REGLA CRIPTOGRÁFICA DE DISPERSIÓN DUAL:
 Ningún fondo será liberado sin la presentación simultánea de:
 1. Firma digital del Cliente validando la recepción satisfactoria del hito técnico.
-2. Firma dual criptográfica de los Administradores de MCRA Solutions (Jefe y Socio).
+2. Firma dual criptográfica de los Administradores de MRCA Solutions (Jefe y Socio).
 
 MONTO EN CUSTODIA: {{PRESUPUESTO_MARCO}}
 MÉTODO DE PAGO: SPEI Banxico / Stripe Escrow Dual
@@ -239,7 +239,7 @@ export const AdminContractGenerator: React.FC<AdminContractGeneratorProps> = ({
   const [sentContracts, setSentContracts] = useState<ClientContract[]>(() => {
     // Check localStorage for persisted contracts if available
     try {
-      const saved = localStorage.getItem('mcra_client_contracts');
+      const saved = localStorage.getItem('mrca_client_contracts');
       if (saved) return JSON.parse(saved);
     } catch {
       // fallback
@@ -350,9 +350,9 @@ export const AdminContractGenerator: React.FC<AdminContractGeneratorProps> = ({
     const updatedContracts = [newContract, ...sentContracts];
     setSentContracts(updatedContracts);
     try {
-      localStorage.setItem('mcra_client_contracts', JSON.stringify(updatedContracts));
+      localStorage.setItem('mrca_client_contracts', JSON.stringify(updatedContracts));
       // Dispatch a storage event so other open tabs/components react immediately
-      window.dispatchEvent(new CustomEvent('mcra_contract_dispatched', { detail: newContract }));
+      window.dispatchEvent(new CustomEvent('mrca_contract_dispatched', { detail: newContract }));
     } catch {
       // storage quota fallback
     }
@@ -633,7 +633,7 @@ export const AdminContractGenerator: React.FC<AdminContractGeneratorProps> = ({
                 type="button"
                 onClick={() =>
                   handleInsertPlaceholder(
-                    `\nPROTOCOLO DE REPOSITORIO PRIVADO: git@mcrasolutions.enclave:clients/${clientCompany.toLowerCase().replace(/\\s+/g, '-')}.git`
+                    `\nPROTOCOLO DE REPOSITORIO PRIVADO: git@mrcasolutions.enclave:clients/${clientCompany.toLowerCase().replace(/\\s+/g, '-')}.git`
                   )
                 }
                 className="px-2.5 py-1 rounded bg-[#18244b] hover:bg-[#223164] text-[#bac9cc] border border-[#2c3d75] font-['JetBrains_Mono'] text-[10px] transition-all"
@@ -773,7 +773,7 @@ export const AdminContractGenerator: React.FC<AdminContractGeneratorProps> = ({
           {/* Cyber Watermark */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-5">
             <span className="font-['Space_Grotesk'] text-[140px] font-extrabold text-[#00e5ff] select-none rotate-[-25deg]">
-              MCRA SEC
+              MRCA SEC
             </span>
           </div>
 
@@ -794,7 +794,7 @@ export const AdminContractGenerator: React.FC<AdminContractGeneratorProps> = ({
 
             <div className="text-right font-['JetBrains_Mono'] text-[11px] text-[#849396]">
               <div>DESTINATARIO: <strong className="text-[#00e5ff]">{clientCompany}</strong></div>
-              <div>EMISOR: <span className="text-[#00fe66]">MCRA SOLUTIONS B2B</span></div>
+              <div>EMISOR: <span className="text-[#00fe66]">MRCA SOLUTIONS B2B</span></div>
             </div>
           </div>
 
@@ -806,7 +806,7 @@ export const AdminContractGenerator: React.FC<AdminContractGeneratorProps> = ({
           {/* Footer Signature Box Simulation */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#1b2b52] font-['JetBrains_Mono'] text-[11px] relative z-10">
             <div className="bg-[#0e1633] p-4 rounded-xl border border-[#202f5a] flex flex-col gap-2">
-              <span className="text-[#849396]">FIRMA POR EL ENCLAVE MCRA SOLUTIONS:</span>
+              <span className="text-[#849396]">FIRMA POR EL ENCLAVE MRCA SOLUTIONS:</span>
               <div className="h-14 flex items-center gap-2 text-[#00fe66]">
                 <ShieldCheck className="w-6 h-6" />
                 <div>

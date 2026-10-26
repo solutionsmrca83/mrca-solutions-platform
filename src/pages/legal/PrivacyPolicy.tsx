@@ -104,7 +104,7 @@ export const PrivacyPolicy: React.FC<PrivacyProps> = ({ onBack, onNavigate }) =>
         </div>
         <p className="text-[13px] text-slate-300">
           <strong>Canal Oficial de Atención:</strong> La solicitud deberá dirigirse al Departamento de Protección de Datos Personales vía correo 
-          electrónico firmado digitalmente a: <code className="text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded">privacidad@mcrasolutions.com</code>.
+          electrónico firmado digitalmente a: <code className="text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded">privacidad@mrcasolutions.com</code>.
         </p>
         <p className="text-[12px] text-slate-400">
           <strong>Plazo de Respuesta:</strong> EL RESPONSABLE dará respuesta en un plazo no mayor a <strong>veinte (20) días hábiles</strong> contados 

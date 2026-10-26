@@ -61,7 +61,7 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
 }) => {
   const [tickets, setTickets] = useState<SupportTicket[]>(() => {
     try {
-      const saved = localStorage.getItem('mcra_support_tickets');
+      const saved = localStorage.getItem('mrca_support_tickets');
       if (saved) return JSON.parse(saved);
     } catch {
       // fallback
@@ -80,14 +80,14 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
     // Sync with storage events from Admin replies
     const handleSync = () => {
       try {
-        const saved = localStorage.getItem('mcra_support_tickets');
+        const saved = localStorage.getItem('mrca_support_tickets');
         if (saved) setTickets(JSON.parse(saved));
       } catch {
         // quota
       }
     };
-    window.addEventListener('mcra_ticket_updated', handleSync);
-    return () => window.removeEventListener('mcra_ticket_updated', handleSync);
+    window.addEventListener('mrca_ticket_updated', handleSync);
+    return () => window.removeEventListener('mrca_ticket_updated', handleSync);
   }, []);
 
   // Handle critical priority selection with urgent red pulse
@@ -145,8 +145,8 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
     const updated = [newTicket, ...tickets];
     setTickets(updated);
     try {
-      localStorage.setItem('mcra_support_tickets', JSON.stringify(updated));
-      window.dispatchEvent(new CustomEvent('mcra_ticket_updated'));
+      localStorage.setItem('mrca_support_tickets', JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('mrca_ticket_updated'));
     } catch {
       // quota
     }
@@ -450,7 +450,7 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
                   <div className="mt-2 rounded-2xl bg-[#0a1533] border border-[#00FF66]/30 p-4 flex flex-col gap-1.5 shadow-inner">
                     <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-[11px] text-[#00FF66] font-bold">
                       <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Dictamen / Respuesta de MCRA Solutions:</span>
+                      <span>Dictamen / Respuesta de MRCA Solutions:</span>
                     </div>
                     <p className="font-['Inter'] text-[12px] text-[#cad6ff] leading-relaxed">
                       "{t.admin_reply}"

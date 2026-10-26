@@ -179,7 +179,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
 
     // Pre-built Stripe Payment Link or dynamic fallback
     const stripePaymentUrl =
-      'https://buy.stripe.com/test_mcra_academy_deposit?client_reference_id=' +
+      'https://buy.stripe.com/test_mrca_academy_deposit?client_reference_id=' +
       Date.now() +
       '&prefilled_email=estudiante@ingenieria.edu';
 
@@ -420,7 +420,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
                       Simulación de Defensa 1-a-1 Google Meet (+${DEFENSE_PRICE} MXN)
                     </span>
                     <p className="font-['Inter'] text-[11px] text-[#bac9cc]">
-                      Reunión de 45 min con un arquitecto MCRA repasando cada línea para responder sin titubear.
+                      Reunión de 45 min con un arquitecto de MRCA Solutions repasando cada línea para responder sin titubear.
                     </p>
                   </div>
                 </div>
@@ -720,7 +720,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
               <div className="w-full flex flex-col gap-2 pt-1">
                 <a
                   href={`https://wa.me/525500000000?text=${encodeURIComponent(
-                    `Hola MCRA Academy, coticé un proyecto de ingeniería nivel ${complexity.toUpperCase()} por $${totalPrice} MXN (Anticipo: $${depositPrice} MXN). Me gustaría afinar detalles y coordinar el pago.`
+                    `Hola MRCA Academy, coticé un proyecto de ingeniería nivel ${complexity.toUpperCase()} por $${totalPrice} MXN (Anticipo: $${depositPrice} MXN). Me gustaría afinar detalles y coordinar el pago.`
                   )}`}
                   target="_blank"
                   rel="noreferrer"

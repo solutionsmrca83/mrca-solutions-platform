@@ -115,7 +115,7 @@ export const SLA: React.FC<SLAProps> = ({ onBack, onNavigate }) => {
         </h2>
         <p>
           Para hacer efectivo el reclamo de Créditos de Servicio, EL CLIENTE deberá someter un ticket de soporte de grado corporativo 
-          a través de la mesa de ayuda o enviando correo a <code className="text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded">soporte@mcrasolutions.com</code> dentro 
+          a través de la mesa de ayuda o enviando correo a <code className="text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded">soporte@mrcasolutions.com</code> dentro 
           de los <strong>quince (15) días naturales</strong> posteriores al término del mes en el que ocurrió el incidente, adjuntando la bitácora 
           técnica de desconexión.
         </p>

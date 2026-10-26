@@ -32,7 +32,7 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({
   const [diagnosing, setDiagnosing] = useState(false);
   const [diagStep, setDiagStep] = useState(0);
 
-  const currentHost = typeof window !== 'undefined' ? window.location.host : 'mcrasolutions.com';
+  const currentHost = typeof window !== 'undefined' ? window.location.host : 'mrcasolutions.com';
   const currentPath = typeof window !== 'undefined' ? window.location.pathname + window.location.search + window.location.hash : '/desconocido';
 
   const copyTelemetry = () => {

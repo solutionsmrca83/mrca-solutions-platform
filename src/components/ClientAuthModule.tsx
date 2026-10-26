@@ -268,7 +268,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
 
           <p className="font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed max-w-md mx-auto">
             La cuenta corporativa de <strong className="text-[#00e5ff]">{registeredData.company}</strong> ha sido
-            registrada exitosamente en el clúster seguro de <strong>MCRA Solutions</strong>.
+            registrada exitosamente en el clúster seguro de <strong>MRCA Solutions</strong>.
           </p>
         </div>
 
@@ -315,7 +315,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
           </button>
 
           <a
-            href="https://wa.me/?text=Hola%20MCRA%20Solutions,%20acabo%20de%20registrar%20mi%20empresa%20y%20deseo%20agilizar%20la%20verificaci%C3%B3n."
+            href="https://wa.me/?text=Hola%20MRCA%20Solutions,%20acabo%20de%20registrar%20mi%20empresa%20y%20deseo%20agilizar%20la%20verificaci%C3%B3n."
             target="_blank"
             rel="noopener noreferrer"
             className="w-full py-3 rounded-xl bg-[#181e36] hover:bg-[#222941] text-[#bac9cc] hover:text-[#dce1ff] border border-[#3b494c] font-['JetBrains_Mono'] text-[12px] font-semibold transition-all flex items-center justify-center gap-2"
@@ -924,10 +924,10 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
               {activeLegalModal === 'privacy' ? (
                 <>
                   <p className="font-semibold text-[#dce1ff]">
-                    MCRA Solutions Inc. — Protocolo de Privacidad y No Divulgación (NDA Implícito)
+                    MRCA Solutions Inc. — Protocolo de Privacidad y No Divulgación (NDA Implícito)
                   </p>
                   <p>
-                    En cumplimiento con la normativa internacional de protección de datos personales y comerciales (ISO/IEC 27701, SOC-2 Type II y legislación mexicana LFPDPPP), MCRA Solutions garantiza que la totalidad de la información provista por clientes corporativos es resguardada bajo los siguientes estándares:
+                    En cumplimiento con la normativa internacional de protección de datos personales y comerciales (ISO/IEC 27701, SOC-2 Type II y legislación mexicana LFPDPPP), MRCA Solutions garantiza que la totalidad de la información provista por clientes corporativos es resguardada bajo los siguientes estándares:
                   </p>
                   <ul className="list-disc pl-5 flex flex-col gap-1.5 text-[12px] font-['JetBrains_Mono']">
                     <li><strong className="text-[#00e5ff]">Cifrado en Reposo:</strong> Todos los datos son encriptados mediante el algoritmo AES-256-CBC con claves gestionadas en enclaves segregados.</li>
@@ -942,11 +942,11 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                     Términos y Condiciones de Alianza Tecnológica & Acuerdos de Nivel de Servicio (SLA)
                   </p>
                   <p>
-                    Al solicitar una cuenta corporativa en MCRA Solutions, la entidad solicitante acepta los siguientes compromisos y directrices operativas:
+                    Al solicitar una cuenta corporativa en MRCA Solutions, la entidad solicitante acepta los siguientes compromisos y directrices operativas:
                   </p>
                   <ul className="list-disc pl-5 flex flex-col gap-1.5 text-[12px] font-['JetBrains_Mono']">
                     <li><strong className="text-[#00fe66]">Validación de Identidad Previa:</strong> El acceso a los enclaves y repositorios está sujeto a la validación técnica previa por el Jefe y Socio.</li>
-                    <li><strong className="text-[#00fe66]">Adaptabilidad Presupuestal:</strong> MCRA Solutions evalúa la viabilidad técnica y ajusta arquitecturas para maximizar el retorno de inversión sin comprometer la seguridad.</li>
+                    <li><strong className="text-[#00fe66]">Adaptabilidad Presupuestal:</strong> MRCA Solutions evalúa la viabilidad técnica y ajusta arquitecturas para maximizar el retorno de inversión sin comprometer la seguridad.</li>
                     <li><strong className="text-[#00fe66]">Propiedad Intelectual:</strong> Los desarrollos a medida son de exclusiva propiedad del cliente una vez concluidos los hitos pactados.</li>
                     <li><strong className="text-[#00fe66]">Responsabilidad de Auditoría:</strong> Las pruebas de penetración y escaneos de vulnerabilidades se ejecutan bajo estricta autorización bilateral.</li>
                   </ul>

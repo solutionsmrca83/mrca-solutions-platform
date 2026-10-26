@@ -24,7 +24,7 @@ const INITIAL_PROPOSALS: ClientProjectProposal[] = [
         id: 'm1',
         sender: 'client',
         senderName: 'Ing. Rodrigo Salinas (VP Tech)',
-        text: 'Hola equipo MCRA. Nos urge iniciar el sprint de PostgreSQL RLS. ¿Podemos revisar el SLA de despliegue?',
+        text: 'Hola equipo MRCA Solutions. Nos urge iniciar el sprint de PostgreSQL RLS. ¿Podemos revisar el SLA de despliegue?',
         timestamp: 'Hoy, 09:16 AM',
         isEncrypted: true,
         cipherHash: '0x9f41...2b8c',

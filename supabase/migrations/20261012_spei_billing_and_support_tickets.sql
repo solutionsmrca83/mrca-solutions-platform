@@ -1,5 +1,5 @@
 -- ==============================================================================
--- MCRA SOLUTIONS — ZERO-COMMISSION SPEI BILLING & IT SUPPORT TICKETS SCHEMA
+-- MRCA SOLUTIONS — ZERO-COMMISSION SPEI BILLING & IT SUPPORT TICKETS SCHEMA
 -- Módulo: Facturación SPEI Banxico Sin Comisiones + Mesa de Ayuda IT Zero-Trust
 -- ==============================================================================
 

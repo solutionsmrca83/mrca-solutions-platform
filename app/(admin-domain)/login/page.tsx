@@ -153,7 +153,7 @@ export default function AdminLoginPage() {
                 </div>
                 <div>
                   <h1 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff] tracking-tight leading-tight">
-                    MCRA SOLUTIONS
+                    MRCA SOLUTIONS
                   </h1>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] tracking-widest uppercase font-semibold">
                     ADMIN DOMAIN // SUBDOMINIO PRIVADO
@@ -232,7 +232,7 @@ export default function AdminLoginPage() {
               <input
                 type="email"
                 required
-                placeholder="admin@mcrasolutions.com"
+                placeholder="admin@mrcasolutions.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLockedOut}

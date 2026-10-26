@@ -271,16 +271,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             <p className="text-[11px] text-slate-400 leading-snug">
               Enclave aislado de submódulos. Registros protegidos con sellos criptográficos SHA-256.
             </p>
-            {onBackToPublic && (
-              <button
-                onClick={onBackToPublic}
-                className="text-[10px] font-['JetBrains_Mono'] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 pt-1 border-t border-slate-800 transition-colors cursor-pointer"
-              >
-                <span>← Vista pública principal</span>
-              </button>
-            )}
           </div>
         </aside>
+
 
         {/* MOBILE SLIDE-IN DRAWER */}
         <AnimatePresence>
@@ -373,17 +366,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 </div>
 
                 <div className="pt-4 border-t border-slate-800 flex flex-col gap-2">
-                  {onBackToPublic && (
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        onBackToPublic();
-                      }}
-                      className="w-full py-2.5 rounded-xl bg-[#141a32] text-cyan-400 hover:text-white text-xs font-['JetBrains_Mono'] font-semibold transition-all text-center"
-                    >
-                      ← Volver a Vista Pública
-                    </button>
-                  )}
                   {onSignOut && (
                     <button
                       onClick={() => {
@@ -397,6 +379,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                     </button>
                   )}
                 </div>
+
               </motion.div>
             </>
           )}

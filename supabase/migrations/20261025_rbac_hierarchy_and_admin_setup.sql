@@ -1,5 +1,5 @@
 -- ==============================================================================
--- MCRA SOLUTIONS — ZERO-TRUST RBAC HIERARCHY & ADMIN INITIALIZATION MIGRATION
+-- MRCA SOLUTIONS — ZERO-TRUST RBAC HIERARCHY & ADMIN INITIALIZATION MIGRATION
 -- Date: 2026-10-25
 -- Description:
 -- 1. Safely extends user_role ENUM with 'superadmin', 'partner', and 'employee'

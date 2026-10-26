@@ -132,11 +132,11 @@ export const BudgetNegotiationModal: React.FC<BudgetNegotiationModalProps> = ({
 
     // Persist in localStorage for instant admin enclave sync
     try {
-      const saved = localStorage.getItem('mcra_budget_negotiations');
+      const saved = localStorage.getItem('mrca_budget_negotiations');
       const list: BudgetNegotiation[] = saved ? JSON.parse(saved) : [];
       list.unshift(newNegotiation);
-      localStorage.setItem('mcra_budget_negotiations', JSON.stringify(list));
-      window.dispatchEvent(new CustomEvent('mcra_negotiation_created', { detail: newNegotiation }));
+      localStorage.setItem('mrca_budget_negotiations', JSON.stringify(list));
+      window.dispatchEvent(new CustomEvent('mrca_negotiation_created', { detail: newNegotiation }));
     } catch {
       // storage quota
     }
@@ -220,7 +220,7 @@ export const BudgetNegotiationModal: React.FC<BudgetNegotiationModalProps> = ({
                   ¡Contraoferta Enviada a Mesa de Dirección!
                 </h4>
                 <p className="font-['Inter'] text-[13px] text-[#bac9cc] max-w-lg mt-2 leading-relaxed">
-                  Un arquitecto líder de MCRA evaluará la viabilidad de modularizar el alcance
+                  Un arquitecto líder de MRCA Solutions evaluará la viabilidad de modularizar el alcance
                   para adaptarlo a tu presupuesto propuesto de{' '}
                   <strong className="text-[#00fe66]">
                     ${submittedData.proposed_budget.toLocaleString('es-MX')} MXN

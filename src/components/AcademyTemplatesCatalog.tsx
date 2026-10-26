@@ -525,7 +525,7 @@ export const AcademyTemplatesCatalog: React.FC<AcademyTemplatesCatalogProps> = (
                 </div>
 
                 <div className="flex justify-between text-[10px] text-[#bac9cc]">
-                  <span>Beneficiario: <strong>MCRA Solutions S.A.P.I.</strong></span>
+                  <span>Beneficiario: <strong>MRCA Solutions S.A.P.I.</strong></span>
                   <span>Concepto: <strong className="text-[#00daf3]">{activeTemplateForBuy.id}</strong></span>
                 </div>
               </div>
@@ -543,7 +543,7 @@ export const AcademyTemplatesCatalog: React.FC<AcademyTemplatesCatalogProps> = (
                     </span>
                     <a
                       href={`https://wa.me/525500000000?text=${encodeURIComponent(
-                        `Hola MCRA Solutions, realicé la compra de la plantilla ${activeTemplateForBuy.id} (${activeTemplateForBuy.title}) por $${finalPrice} MXN. Adjunto mi comprobante para acceso al repositorio Git.`
+                        `Hola MRCA Solutions, realicé la compra de la plantilla ${activeTemplateForBuy.id} (${activeTemplateForBuy.title}) por $${finalPrice} MXN. Adjunto mi comprobante para acceso al repositorio Git.`
                       )}`}
                       target="_blank"
                       rel="noreferrer"

@@ -35,7 +35,7 @@ const DEFAULT_ADMIN_INVOICES: Invoice[] = [
     description: 'Anticipo de Auditoría Ofensiva Pentest Kali Linux & Hardening eBPF',
     due_date: '18 Oct 2026',
     spei_tracking_key: '2026101240014BND00008891230194',
-    payment_proof_url: 'https://enclave.mcrasolutions.com/proofs/spei_recibo_inv074.pdf',
+    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv074.pdf',
     created_at: '10 Oct 2026',
   },
   {
@@ -59,7 +59,7 @@ const DEFAULT_ADMIN_INVOICES: Invoice[] = [
     description: 'Sprint 01 & 02: Arquitectura Zero-Trust C4 & Modelado Relacional PostgreSQL RLS',
     due_date: '05 Oct 2026',
     spei_tracking_key: '2026100540014BND00007712490182',
-    payment_proof_url: 'https://enclave.mcrasolutions.com/proofs/spei_recibo_inv062.pdf',
+    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv062.pdf',
     created_at: '28 Sep 2026',
   },
   {
@@ -72,7 +72,7 @@ const DEFAULT_ADMIN_INVOICES: Invoice[] = [
     description: 'Modelado PostgreSQL con RLS y Particionamiento Sharded',
     due_date: '20 Sep 2026',
     spei_tracking_key: '2026092040014BND00005519820144',
-    payment_proof_url: 'https://enclave.mcrasolutions.com/proofs/spei_recibo_inv058.pdf',
+    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv058.pdf',
     created_at: '15 Sep 2026',
   },
 ];
@@ -80,7 +80,7 @@ const DEFAULT_ADMIN_INVOICES: Invoice[] = [
 export const AdminFinances: React.FC<AdminFinancesProps> = ({ showToast }) => {
   const [invoices, setInvoices] = useState<Invoice[]>(() => {
     try {
-      const saved = localStorage.getItem('mcra_client_invoices');
+      const saved = localStorage.getItem('mrca_client_invoices');
       if (saved) return JSON.parse(saved);
     } catch {
       // fallback
@@ -112,14 +112,14 @@ export const AdminFinances: React.FC<AdminFinancesProps> = ({ showToast }) => {
 
     const handleSync = () => {
       try {
-        const saved = localStorage.getItem('mcra_client_invoices');
+        const saved = localStorage.getItem('mrca_client_invoices');
         if (saved) setInvoices(JSON.parse(saved));
       } catch {
         // quota
       }
     };
-    window.addEventListener('mcra_invoice_updated', handleSync);
-    return () => window.removeEventListener('mcra_invoice_updated', handleSync);
+    window.addEventListener('mrca_invoice_updated', handleSync);
+    return () => window.removeEventListener('mrca_invoice_updated', handleSync);
   }, []);
 
   const handleConfirmPayment = async (invoiceId: string) => {
@@ -150,8 +150,8 @@ export const AdminFinances: React.FC<AdminFinancesProps> = ({ showToast }) => {
 
     setInvoices(updated);
     try {
-      localStorage.setItem('mcra_client_invoices', JSON.stringify(updated));
-      window.dispatchEvent(new CustomEvent('mcra_invoice_updated'));
+      localStorage.setItem('mrca_client_invoices', JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('mrca_invoice_updated'));
     } catch {
       // quota
     }

@@ -1,5 +1,5 @@
 -- ==============================================================================
--- MCRA SOLUTIONS — SUPABASE ENTERPRISE DATABASE SCHEMA v2.4
+-- MRCA SOLUTIONS — SUPABASE ENTERPRISE DATABASE SCHEMA v2.4
 -- Zero-Trust RBAC + Row Level Security (RLS)
 -- Ejecutar en Supabase > SQL Editor > New Query
 -- ==============================================================================
@@ -415,8 +415,8 @@ CREATE POLICY "stealth__service_role_only"
 
 /*
 -- PASO 1: Crear usuarios en Dashboard > Authentication > Users:
---   jefe@mcrasolutions.com  (rol: owner)
---   admin@mcrasolutions.com (rol: admin)
+--   jefe@mrcasolutions.com  (rol: owner)
+--   admin@mrcasolutions.com (rol: admin)
 --
 -- PASO 2: Copiar sus UUIDs y reemplazar abajo:
 
@@ -425,15 +425,15 @@ VALUES
   (
     'REEMPLAZA-UUID-JEFE',
     'owner',
-    'Director MCRA Solutions',
-    'MCRA Solutions',
+    'Director MRCA Solutions',
+    'MRCA Solutions',
     TRUE
   ),
   (
     'REEMPLAZA-UUID-SOCIO',
     'stealth_partner',
     'Socio Estrategico',
-    'MCRA Solutions',
+    'MRCA Solutions',
     TRUE
   )
 ON CONFLICT (id) DO UPDATE SET

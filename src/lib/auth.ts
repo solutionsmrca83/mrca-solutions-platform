@@ -4,11 +4,11 @@ import type { UserRole, RolePermissions, ManagedUser } from '../types';
 
 export const FOUNDER_MASTER_EMAILS = [
   'solutionsmrca83@gmail.com',
-  'jefe@mcrasolutions.com',
-  'admin@mcrasolutions.com',
-  'founder@mcrasolutions.com',
-  'owner@mcrasolutions.com',
-  'ciso@mcrasolutions.com',
+  'jefe@mrcasolutions.com',
+  'admin@mrcasolutions.com',
+  'founder@mrcasolutions.com',
+  'owner@mrcasolutions.com',
+  'ciso@mrcasolutions.com',
 ];
 
 export const ADMIN_PRIVILEGED_ROLES = [
@@ -26,7 +26,7 @@ export const ADMIN_PRIVILEGED_ROLES = [
  * Checks if a given Supabase user has administrative privileges.
  *
  * Verifies against:
- * 1. Founder master email list and @mcrasolutions.com corporate domain.
+ * 1. Founder master email list and @mrcasolutions.com corporate domain.
  * 2. Supabase auth user_metadata or app_metadata role ('superadmin', 'partner', 'employee', etc.).
  * 3. Database query across 'user_profiles', 'profiles', or 'users' tables for the 'role' column.
  */
@@ -36,7 +36,7 @@ export async function isUserAdmin(user: any): Promise<boolean> {
   // 1. Strict Founder Email Check
   const email = (user.email || '').toLowerCase().trim();
   if (email) {
-    if (FOUNDER_MASTER_EMAILS.includes(email) || email.endsWith('@mcrasolutions.com')) {
+    if (FOUNDER_MASTER_EMAILS.includes(email) || email.endsWith('@mrcasolutions.com')) {
       return true;
     }
   }
@@ -575,7 +575,7 @@ export async function provisionUserAccount({
 /**
  * Local directory storage helper for team members provisioned by Superadmin
  */
-const MANAGED_USERS_KEY = 'mcra_managed_team_users';
+const MANAGED_USERS_KEY = 'mrca_managed_team_users';
 
 export function getManagedUsersLocally(): ManagedUser[] {
   if (typeof window === 'undefined') return [];
@@ -595,7 +595,7 @@ export function getManagedUsersLocally(): ManagedUser[] {
         },
         {
           id: 'usr_partner_cto',
-          email: 'socio@mcrasolutions.com',
+          email: 'socio@mrcasolutions.com',
           full_name: 'Ing. Alejandro Solís (Socio CTO)',
           role: 'partner',
           status: 'active',
@@ -604,7 +604,7 @@ export function getManagedUsersLocally(): ManagedUser[] {
         },
         {
           id: 'usr_employee_lead',
-          email: 'empleado.ops@mcrasolutions.com',
+          email: 'empleado.ops@mrcasolutions.com',
           full_name: 'Lic. Claudia Morales (Líder Soporte)',
           role: 'employee',
           status: 'active',

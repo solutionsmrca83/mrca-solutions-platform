@@ -120,7 +120,7 @@ export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
 
               {/* Watermark */}
               <div className="absolute bottom-2 right-3 font-['JetBrains_Mono'] text-[9px] text-[#00fe66]/40 uppercase tracking-widest select-none">
-                MCRA SECURE ENCLAVE SEAL
+                MRCA SECURE ENCLAVE SEAL
               </div>
             </div>
 

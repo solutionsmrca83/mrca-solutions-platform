@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <!-- Cyan Cyber Glow Filters -->
+    <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.9" />
+      <stop offset="50%" stop-color="#00daf3" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#00fe66" stop-opacity="0.8" />
+    </linearGradient>
+
+    <radialGradient id="bg-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.15" />
+      <stop offset="60%" stop-color="#060d24" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#060d24" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Ambient background circle glow -->
+  <circle cx="300" cy="300" r="260" fill="url(#bg-glow)" />
+
+  <!-- Outer Cyber Hexagon with dash lines -->
+  <polygon points="300,50 516,175 516,425 300,550 84,425 84,175" 
+           fill="none" 
+           stroke="url(#grad-cyan)" 
+           stroke-width="3" 
+           stroke-dasharray="16, 8" 
+           filter="url(#glow-cyan)" />
+
+  <!-- Secondary Inner Hexagon -->
+  <polygon points="300,85 485,192 485,408 300,515 115,408 115,192" 
+           fill="none" 
+           stroke="#00e5ff" 
+           stroke-width="1.5" 
+           stroke-opacity="0.4" />
+
+  <!-- Circuit nodes around perimeter -->
+  <circle cx="300" cy="50" r="6" fill="#00e5ff" />
+  <circle cx="516" cy="175" r="6" fill="#00fe66" />
+  <circle cx="516" cy="425" r="6" fill="#00e5ff" />
+  <circle cx="300" cy="550" r="6" fill="#00fe66" />
+  <circle cx="84" cy="425" r="6" fill="#00e5ff" />
+  <circle cx="84" cy="175" r="6" fill="#00fe66" />
+
+  <!-- Radial Circuit Tracer Lines -->
+  <line x1="300" y1="85" x2="300" y2="150" stroke="#00e5ff" stroke-width="2" stroke-opacity="0.5" />
+  <line x1="485" y1="192" x2="430" y2="225" stroke="#00e5ff" stroke-width="2" stroke-opacity="0.5" />
+  <line x1="485" y1="408" x2="430" y2="375" stroke="#00e5ff" stroke-width="2" stroke-opacity="0.5" />
+  <line x1="300" y1="515" x2="300" y2="450" stroke="#00e5ff" stroke-width="2" stroke-opacity="0.5" />
+  <line x1="115" y1="408" x2="170" y2="375" stroke="#00e5ff" stroke-width="2" stroke-opacity="0.5" />
+  <line x1="115" y1="192" x2="170" y2="225" stroke="#00e5ff" stroke-width="2" stroke-opacity="0.5" />
+
+  <!-- Central Shield of Armor -->
+  <path d="M300,160 L410,210 L410,330 C410,400 300,450 300,450 C300,450 190,400 190,330 L190,210 Z" 
+        fill="#0a1128" 
+        fill-opacity="0.7" 
+        stroke="url(#grad-cyan)" 
+        stroke-width="3" 
+        filter="url(#glow-cyan)" />
+
+  <!-- Shield Internal Hexagon Keyhole / Monogram -->
+  <polygon points="300,210 355,242 355,305 300,337 245,305 245,242" 
+           fill="none" 
+           stroke="#00fe66" 
+           stroke-width="2.5" 
+           stroke-opacity="0.8" />
+
+  <!-- Inner Lock Core Icon -->
+  <path d="M285,265 C285,256.7 291.7,250 300,250 C308.3,250 315,256.7 315,265 L315,273 L322,273 C324.2,273 326,274.8 326,277 L326,295 C326,297.2 324.2,299 322,299 L278,299 C275.8,299 274,297.2 274,295 L274,277 C274,274.8 275.8,273 278,273 L285,273 Z M291,273 L309,273 L309,265 C309,260 305,256 300,256 C295,256 291,260 291,265 Z" 
+        fill="#00e5ff" />
+
+  <!-- Branding Typography -->
+  <text x="300" y="380" 
+        text-anchor="middle" 
+        font-family="'Space Grotesk', sans-serif" 
+        font-size="28" 
+        font-weight="700" 
+        letter-spacing="6" 
+        fill="#dce1ff">
+    MRCA
+  </text>
+
+  <text x="300" y="405" 
+        text-anchor="middle" 
+        font-family="'JetBrains Mono', monospace" 
+        font-size="12" 
+        font-weight="600" 
+        letter-spacing="5" 
+        fill="#00e5ff">
+    SOLUTIONS
+  </text>
+
+  <text x="300" y="424" 
+        text-anchor="middle" 
+        font-family="'JetBrains Mono', monospace" 
+        font-size="9" 
+        font-weight="500" 
+        letter-spacing="3" 
+        fill="#00fe66">
+    ZERO-TRUST ENCLAVE
+  </text>
+</svg>

@@ -222,7 +222,7 @@ export const HardwareTokenModal: React.FC<ModalProps & { onSuccess: () => void }
           </h3>
           <p className="font-['Inter'] text-[12px] text-[#bac9cc]">
             {step === 'prompt' && 'Toque el sensor de su hardware token o confirme el desafío biométrico WebAuthn.'}
-            {step === 'verifying' && 'Verificando firma ECDSA P-384 con la autoridad certificadora de MCRA Solutions...'}
+            {step === 'verifying' && 'Verificando firma ECDSA P-384 con la autoridad certificadora de MRCA Solutions...'}
             {step === 'granted' && 'Clave efímera generada. Redirigiendo a Enclave Seguro.'}
           </p>
         </div>
@@ -486,7 +486,7 @@ export const LoginModal: React.FC<
         if (error) {
           const isMasterCiso = email.trim().toLowerCase() === 'solutionsmrca83@gmail.com';
           if (
-            (isMasterCiso || email.endsWith('@mcrasolutions.com')) &&
+            (isMasterCiso || email.endsWith('@mrcasolutions.com')) &&
             password.length >= 6
           ) {
             const demoUser = {
@@ -554,18 +554,16 @@ export const LoginModal: React.FC<
         {/* Top Target Selector & Dismiss */}
         <div className="flex items-center justify-between gap-2 border-b border-[#222941] pb-3">
           {authTarget === 'admin' ? (
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#00daf3] uppercase font-bold tracking-wider">
-                ENCLAVE SOCIOS // CREDENCIAL CRIPTOGRÁFICA
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-[#00daf3] uppercase font-bold tracking-wider">
+                  ENCLAVE SOCIOS // CREDENCIAL CRIPTOGRÁFICA
+                </span>
+              </div>
+              <span className="font-['JetBrains_Mono'] text-[10px] text-[#566366] uppercase tracking-wider font-semibold">
+                ENCLAVE AISLADO
               </span>
-              <button
-                type="button"
-                onClick={() => setAuthTarget('client')}
-                className="ml-2 font-['JetBrains_Mono'] text-[10px] text-[#849396] hover:text-[#00e5ff] transition-colors underline cursor-pointer"
-              >
-                ← Portales
-              </button>
             </div>
           ) : (
             <div className="flex items-center bg-[#060d24] p-1 rounded-xl border border-[#222941] text-[11px] font-['JetBrains_Mono']">
@@ -791,13 +789,6 @@ export const LoginModal: React.FC<
 
             <div className="flex items-center justify-between text-[10px] font-['JetBrains_Mono'] text-[#849396] pt-2 border-t border-[#181e36]">
               <span>SUPABASE RLS POLICY</span>
-              <button
-                type="button"
-                onClick={() => setAuthTarget('client')}
-                className="text-[#849396] hover:text-[#00e5ff] transition-colors underline cursor-pointer"
-              >
-                ← Salir a Portales
-              </button>
               <span className="text-[#00daf3]">ENFORCED: JWT HS256/RS256</span>
             </div>
           </div>

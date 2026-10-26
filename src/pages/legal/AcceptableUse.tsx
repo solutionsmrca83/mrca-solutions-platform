@@ -114,7 +114,7 @@ export const AcceptableUse: React.FC<AUPProps> = ({ onBack, onNavigate }) => {
         </h2>
         <p>
           Cualquier indicio de actividad sospechosa o hallazgo de vulnerabilidad en modo de divulgación responsable (Responsible Disclosure) 
-          deberá comunicarse de inmediato a nuestra guardia de seguridad 24/7 vía: <code className="text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded">security@mcrasolutions.com</code>.
+          deberá comunicarse de inmediato a nuestra guardia de seguridad 24/7 vía: <code className="text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded">security@mrcasolutions.com</code>.
         </p>
       </section>
     </LegalLayout>

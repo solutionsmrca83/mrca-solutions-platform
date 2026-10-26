@@ -94,7 +94,7 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
     } else if (lower === 'help') {
       replyText = 'Comandos disponibles: status, nids, iptables, hsm, quorum, payout, ping, clear';
     } else if (lower === 'status') {
-      replyText = 'SISTEMA MCRA: 100% OPERACIONAL. Latencia: 1.14ms. SOC-2 Nivel II Activo.';
+      replyText = 'SISTEMA MRCA SOLUTIONS: 100% OPERACIONAL. Latencia: 1.14ms. SOC-2 Nivel II Activo.';
     } else if (lower === 'nids') {
       replyText = 'Cilium eBPF: 14 scans activos. 2,410 IP bloqueadas. 0 vulnerabilidades críticas.';
     } else if (lower === 'iptables') {
@@ -148,7 +148,7 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
           <span className="w-2.5 h-2.5 rounded-full bg-[#849396]"></span>
           <span className="w-2.5 h-2.5 rounded-full bg-[#00fe66]"></span>
           <span className="text-[11px] text-[#00e5ff] ml-1 truncate">
-            mcra@kali-defense:~/nids-live TTY-1
+            mrca@kali-defense:~/nids-live TTY-1
           </span>
         </div>
         <div className="flex items-center gap-2">

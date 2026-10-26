@@ -9,22 +9,22 @@ import type { UserRole } from './src/types';
  *
  * Implements physical separation and edge routing via subdomains on Vercel:
  *
- * 1. ADMIN SUBDOMAIN (`admin.mcrasolutions.com` / `admin.localhost`):
+ * 1. ADMIN SUBDOMAIN (`admin.mrcasolutions.com` / `admin.localhost`):
  *    - Rewrites requests to `/enclave` or `/admin` route.
  *    - Enforces strict Supabase role validation:
  *      Allowed: 'owner', 'stealth_partner', 'employee'
  *      Unauthorized / Clients: Redirects to /forbidden (403).
  *      Unauthenticated: Redirects to /login on admin subdomain (NO registration UI).
  *
- * 2. CLIENTES SUBDOMAIN (`clientes.mcrasolutions.com` / `clientes.localhost`):
+ * 2. CLIENTES SUBDOMAIN (`clientes.mrcasolutions.com` / `clientes.localhost`):
  *    - Rewrites requests to `/clientes` or `/dashboard` route (Client Portal).
  *    - Allows corporate client onboarding, contracts & invoice vault.
  *
- * 3. ESTUDIANTES SUBDOMAIN (`estudiantes.mcrasolutions.com` / `estudiantes.localhost`):
+ * 3. ESTUDIANTES SUBDOMAIN (`estudiantes.mrcasolutions.com` / `estudiantes.localhost`):
  *    - Rewrites requests to `/estudiantes` route (MRCA Academy).
  *    - Serves student cybersecurity curriculum and Kali Linux training enclaves.
  *
- * 4. MAIN DOMAIN (`mcrasolutions.com` / `localhost:3000`):
+ * 4. MAIN DOMAIN (`mrcasolutions.com` / `localhost:3000`):
  *    - Serves public landing page and client portal.
  *    - Any legacy `/admin` routes are redirected to `admin.` subdomain.
  */
@@ -68,7 +68,7 @@ export async function middleware(request: NextRequest) {
     request.headers.get('x-domain') === 'estudiantes';
 
   // ============================================================================
-  // BRANCH A: CLIENTES SUBDOMAIN (clientes.mcrasolutions.com / clientes.localhost)
+  // BRANCH A: CLIENTES SUBDOMAIN (clientes.mrcasolutions.com / clientes.localhost)
   // ============================================================================
   if (isClientesSubdomain) {
     // If hostname starts with clientes., rewrite to /clientes or /dashboard route
@@ -82,7 +82,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // ============================================================================
-  // BRANCH B: ESTUDIANTES SUBDOMAIN (estudiantes.mcrasolutions.com / estudiantes.localhost)
+  // BRANCH B: ESTUDIANTES SUBDOMAIN (estudiantes.mrcasolutions.com / estudiantes.localhost)
   // ============================================================================
   if (isEstudiantesSubdomain) {
     // If hostname starts with estudiantes., rewrite to /estudiantes route
@@ -96,7 +96,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // ============================================================================
-  // BRANCH C: ADMIN SUBDOMAIN (admin.mcrasolutions.com / admin.localhost)
+  // BRANCH C: ADMIN SUBDOMAIN (admin.mrcasolutions.com / admin.localhost)
   // ============================================================================
   if (isAdminSubdomain) {
     // C.1. 403 Forbidden page is always accessible
@@ -134,15 +134,15 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     const isStealthCookie =
-      request.cookies.get('mcra_stealth_session')?.value === 'authenticated_stealth_partner';
+      request.cookies.get('mrca_stealth_session')?.value === 'authenticated_stealth_partner';
 
     const FOUNDER_MASTER_EMAILS = [
       'solutionsmrca83@gmail.com',
-      'jefe@mcrasolutions.com',
-      'admin@mcrasolutions.com',
-      'founder@mcrasolutions.com',
-      'owner@mcrasolutions.com',
-      'ciso@mcrasolutions.com',
+      'jefe@mrcasolutions.com',
+      'admin@mrcasolutions.com',
+      'founder@mrcasolutions.com',
+      'owner@mrcasolutions.com',
+      'ciso@mrcasolutions.com',
     ];
 
     const ADMIN_PRIVILEGED_ROLES = [
@@ -173,8 +173,8 @@ export async function middleware(request: NextRequest) {
         (user as any).raw_app_meta_data?.role
       )?.toString().toLowerCase().trim();
 
-      // Check founder email list or @mcrasolutions.com
-      if (FOUNDER_MASTER_EMAILS.includes(email) || email.endsWith('@mcrasolutions.com')) {
+      // Check founder email list or @mrcasolutions.com
+      if (FOUNDER_MASTER_EMAILS.includes(email) || email.endsWith('@mrcasolutions.com')) {
         role = 'owner';
         isPrivilegedAdmin = true;
       } else if (metaRole && ADMIN_PRIVILEGED_ROLES.includes(metaRole)) {
@@ -288,7 +288,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // ============================================================================
-  // BRANCH D: MAIN DOMAIN (mcrasolutions.com / localhost:3000 / Netlify)
+  // BRANCH D: MAIN DOMAIN (mrcasolutions.com / localhost:3000 / Netlify)
   // ============================================================================
 
   // D.1. /admin route on main domain:

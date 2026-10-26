@@ -2,7 +2,7 @@ import crypto from 'crypto';
 
 /**
  * Enterprise-Grade Data Encryption Module (AES-256-CBC)
- * MCRA Solutions - Zero-Trust Cryptographic Engine
+ * MRCA Solutions - Zero-Trust Cryptographic Engine
  *
  * Utilized to protect high-sensitivity B2B customer assets (such as private IPs,
  * API secrets, payment gateway webhook tokens, and host configurations) prior to
