@@ -146,14 +146,16 @@ export async function middleware(request: NextRequest) {
     ];
 
     const ADMIN_PRIVILEGED_ROLES = [
+      'superadmin',
+      'partner',
+      'employee',
       'admin',
       'owner',
-      'superadmin',
       'stealth_partner',
-      'employee',
       'ciso',
       'director',
     ];
+
 
     // Resolve user role
     let role: UserRole | null = null;

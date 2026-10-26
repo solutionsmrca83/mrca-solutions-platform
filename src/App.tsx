@@ -78,8 +78,11 @@ export default function App() {
         hash === '#enclave' ||
         hash === '#auditoria' ||
         hash === '#presupuestos' ||
-        hash === '#admin-presupuestos'
+        hash === '#admin-presupuestos' ||
+        hash === '#usuarios' ||
+        hash === '#admin-usuarios'
       ) {
+
         const { data: { session } } = await supabase.auth.getSession();
         const candidateUser = session?.user || sessionUser;
 

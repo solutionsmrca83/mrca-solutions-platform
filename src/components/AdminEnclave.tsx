@@ -10,7 +10,9 @@ import { AdminSupportTickets } from './AdminSupportTickets';
 import { ClientFileVault } from './ClientFileVault';
 import { AdminAuditLogs } from './AdminAuditLogs';
 import { AdminBudgetNegotiations } from './AdminBudgetNegotiations';
+import { UserAccessManager } from './UserAccessManager';
 import { AdminLayout, AdminTab } from './layouts/AdminLayout';
+
 
 interface AdminEnclaveProps {
   onBackToPublic: () => void;
@@ -136,9 +138,13 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       const hash = window.location.hash;
+      if (path === '/admin/usuarios' || hash === '#usuarios' || hash === '#admin-usuarios') {
+        return 'usuarios';
+      }
       if (path === '/admin/presupuestos' || hash === '#presupuestos' || hash === '#admin-presupuestos') {
         return 'presupuestos';
       }
+
       if (path === '/admin/contratos' || hash === '#contratos' || hash === '#admin-contratos') {
         return 'contratos';
       }
@@ -488,10 +494,27 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               <span>SOLICITUDES DE PRESUPUESTO</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
             </button>
+            <button
+              id="admin-tab-usuarios"
+              onClick={() => setActiveTab('usuarios')}
+              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+                activeTab === 'usuarios'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-[0_0_12px_rgba(245,158,11,0.4)]'
+                  : 'bg-[#222941] text-[#dce1ff] hover:text-amber-400'
+              }`}
+            >
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">manage_accounts</span>
+              <span>GESTIÓN DE USUARIOS RBAC</span>
+              <span className="px-1.5 py-0.2 rounded bg-amber-950/60 border border-amber-500/40 text-[9px] text-amber-300">
+                ROOT
+              </span>
+            </button>
           </div>
         </nav>
 
-        {activeTab === 'contratos' ? (
+        {activeTab === 'usuarios' ? (
+          <UserAccessManager sessionUser={sessionUser} showToast={showToast} />
+        ) : activeTab === 'contratos' ? (
           <AdminContractGenerator showToast={showToast} />
         ) : activeTab === 'presupuestos' ? (
           <AdminBudgetNegotiations showToast={showToast} />
@@ -506,6 +529,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
         ) : activeTab === 'auditoria' ? (
           <AdminAuditLogs showToast={showToast} />
         ) : (
+
           <>
         {/* KPI CARDS (BENTO GRID STACK: 4 TILES) */}
         <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">

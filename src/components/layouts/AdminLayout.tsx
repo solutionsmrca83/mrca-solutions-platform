@@ -18,11 +18,15 @@ import {
   Cpu,
   Layers,
   ChevronRight,
+  Users,
 } from 'lucide-react';
 import { NeuralCopilot } from '../NeuralCopilot';
+import { isSuperAdmin } from '../../lib/auth';
+
 
 export type AdminTab =
   | 'principal'
+  | 'usuarios'
   | 'aprobaciones'
   | 'finanzas'
   | 'kali'
@@ -50,10 +54,12 @@ interface NavItem {
   icon: React.ReactNode;
   badge?: string;
   badgeColor?: string;
+  superadminOnly?: boolean;
 }
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: 'principal', label: 'Dashboard Principal', icon: <Grid className="w-4 h-4" /> },
+  { id: 'usuarios', label: 'Gestión Usuarios RBAC', icon: <Users className="w-4 h-4" />, badge: 'Superadmin', badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/30', superadminOnly: true },
   { id: 'aprobaciones', label: 'Aprobaciones Leads', icon: <CheckCircle2 className="w-4 h-4" />, badge: '3 Pendientes', badgeColor: 'text-[#00fe66] bg-[#00fe66]/10 border-[#00fe66]/30' },
   { id: 'finanzas', label: 'Finanzas & SPEI', icon: <DollarSign className="w-4 h-4" />, badge: 'Banxico T+0', badgeColor: 'text-[#00e5ff] bg-[#00e5ff]/10 border-[#00e5ff]/30' },
   { id: 'kali', label: 'Terminal Kali Linux', icon: <Terminal className="w-4 h-4" />, badge: 'NIDS Activo', badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/30' },
@@ -64,6 +70,7 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: 'boveda', label: 'Bóveda Criptográfica', icon: <Archive className="w-4 h-4" /> },
   { id: 'auditoria', label: 'Logs Auditoría SOC-2', icon: <Lock className="w-4 h-4" /> },
 ];
+
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({
   activeTab,
@@ -205,6 +212,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
             {ADMIN_NAV_ITEMS.map((item) => {
               const isActive = activeTab === item.id;
+              const isSuper = isSuperAdmin(sessionUser);
+              const isLocked = item.superadminOnly && !isSuper;
+
               return (
                 <button
                   key={item.id}
@@ -212,26 +222,31 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[12px] font-['JetBrains_Mono'] font-medium transition-all cursor-pointer text-left ${
                     isActive
                       ? 'bg-gradient-to-r from-cyan-500/20 to-cyan-500/5 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(0,229,255,0.15)] font-bold'
+                      : isLocked
+                      ? 'text-slate-600 hover:text-slate-400 hover:bg-[#141a32]/40 border border-transparent opacity-70'
                       : 'text-slate-400 hover:text-white hover:bg-[#141a32]/70 border border-transparent'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className={isActive ? 'text-[#00e5ff]' : 'text-slate-400'}>
-                      {item.icon}
+                    <span className={isActive ? 'text-[#00e5ff]' : isLocked ? 'text-slate-600' : 'text-slate-400'}>
+                      {isLocked ? <Lock className="w-3.5 h-3.5 text-amber-500/60" /> : item.icon}
                     </span>
-                    <span>{item.label}</span>
+                    <span className={isLocked ? 'line-through text-slate-500' : ''}>{item.label}</span>
                   </div>
 
                   {item.badge && (
                     <span
-                      className={`text-[9px] px-1.5 py-0.5 rounded border uppercase tracking-wider font-semibold ${item.badgeColor}`}
+                      className={`text-[9px] px-1.5 py-0.5 rounded border uppercase tracking-wider font-semibold ${
+                        isLocked ? 'text-amber-500/60 bg-amber-950/20 border-amber-900/40' : item.badgeColor
+                      }`}
                     >
-                      {item.badge}
+                      {isLocked ? '🔒 ROOT' : item.badge}
                     </span>
                   )}
                 </button>
               );
             })}
+
           </div>
 
           {/* Quick Enclave Status Footer */}
@@ -311,6 +326,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   <div className="flex flex-col gap-1.5">
                     {ADMIN_NAV_ITEMS.map((item) => {
                       const isActive = activeTab === item.id;
+                      const isSuper = isSuperAdmin(sessionUser);
+                      const isLocked = item.superadminOnly && !isSuper;
+
                       return (
                         <button
                           key={item.id}
@@ -318,20 +336,29 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                           className={`flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-['JetBrains_Mono'] transition-all text-left ${
                             isActive
                               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
+                              : isLocked
+                              ? 'text-slate-500 opacity-60 bg-[#101426]/40'
                               : 'text-slate-300 hover:bg-[#141a32] hover:text-white'
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
-                            <span className={isActive ? 'text-cyan-400' : 'text-slate-400'}>
-                              {item.icon}
+                            <span className={isActive ? 'text-cyan-400' : isLocked ? 'text-slate-600' : 'text-slate-400'}>
+                              {isLocked ? <Lock className="w-3.5 h-3.5 text-amber-500/60" /> : item.icon}
                             </span>
-                            <span>{item.label}</span>
+                            <span className={isLocked ? 'line-through text-slate-500' : ''}>{item.label}</span>
                           </div>
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+                          {isLocked ? (
+                            <span className="text-[9px] px-1 py-0.5 rounded bg-amber-950/30 text-amber-500/80 border border-amber-900/40">
+                              ROOT
+                            </span>
+                          ) : (
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+                          )}
                         </button>
                       );
                     })}
                   </div>
+
                 </div>
 
                 <div className="pt-4 border-t border-slate-800 flex flex-col gap-2">

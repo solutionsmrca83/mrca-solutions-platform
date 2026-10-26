@@ -56,16 +56,51 @@ export interface ShardNode {
 }
 
 // Multi-Role RBAC Definitions
-export type UserRole = 'admin' | 'superadmin' | 'owner' | 'stealth_partner' | 'employee' | 'client' | 'student';
+export type UserRole =
+  | 'superadmin'
+  | 'partner'
+  | 'employee'
+  | 'admin'
+  | 'owner'
+  | 'stealth_partner'
+  | 'client'
+  | 'student';
+
+export type StandardAccessLevel = 'superadmin' | 'partner' | 'employee';
+
+export interface RolePermissions {
+  canManageUsers: boolean;
+  canAccessFinancials: boolean;
+  canGenerateContracts: boolean;
+  canApproveLeads: boolean;
+  canViewAuditLogs: boolean;
+  canAccessVault: boolean;
+  canAccessSupport: boolean;
+  canAccessTerminal: boolean;
+  canAccessRootGovernance: boolean;
+}
+
+export interface ManagedUser {
+  id: string;
+  email: string;
+  full_name?: string;
+  role: UserRole;
+  created_at: string;
+  last_sign_in_at?: string | null;
+  status?: 'active' | 'pending' | 'suspended';
+  initial_password_hint?: string;
+}
 
 export interface UserProfile {
   id: string;
   role: UserRole;
   email?: string;
+  full_name?: string;
   stealth_token_hash?: string;
   created_at: string;
   updated_at: string;
 }
+
 
 export interface SecureMessage {
   id: string;
