@@ -32,14 +32,16 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
   const [logs, setLogs] = useState<TerminalLog[]>(INITIAL_LOGS);
   const [inputVal, setInputVal] = useState('');
   const [isLive, setIsLive] = useState(true);
-  const terminalEndRef = useRef<HTMLDivElement | null>(null);
+  const logsContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto-scroll when new logs arrive
+  // Auto-scroll internal terminal container ONLY (without hijacking window scroll)
   useEffect(() => {
-    if (terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (logsContainerRef.current) {
+      logsContainerRef.current.scrollTop = logsContainerRef.current.scrollHeight;
     }
   }, [logs]);
+
+
 
   // Periodic simulated live packet stream
   useEffect(() => {
@@ -166,6 +168,7 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
 
       {/* Terminal Log Output Window */}
       <div
+        ref={logsContainerRef}
         className={`${
           compact ? 'h-40' : 'h-72'
         } overflow-y-auto pr-1 flex flex-col gap-1 text-[11px] md:text-[12px] leading-relaxed text-[#dce1ff] select-text no-scrollbar`}
@@ -177,8 +180,8 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
             <span className="text-[#dce1ff]">{log.text}</span>
           </div>
         ))}
-        <div ref={terminalEndRef} />
       </div>
+
 
       {/* Terminal Interactive Input Prompt */}
       <form onSubmit={handleCommandSubmit} className="flex items-center gap-1.5 pt-1 border-t border-[#181e36]">

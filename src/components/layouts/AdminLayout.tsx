@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+
 import {
   ShieldAlert,
   Terminal,
@@ -85,10 +86,20 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   const email = sessionUser?.email || 'solutionsmrca83@gmail.com';
   const isMasterCiso = email.trim().toLowerCase() === 'solutionsmrca83@gmail.com';
 
+  // Explicit scroll reset to ensure Admin Enclave always loads at top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [activeTab]);
+
   const handleSelectTab = (tab: AdminTab) => {
     onTabChange(tab);
     setIsMobileMenuOpen(false);
   };
+
 
   return (
     <div className="min-h-screen bg-[#070D22] text-[#dce1ff] flex flex-col font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">

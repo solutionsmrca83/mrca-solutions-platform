@@ -181,6 +181,16 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
     hash: '',
   });
 
+  // Explicit scroll reset to guarantee the Admin Enclave always loads at the top dashboard view
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [activeTab]);
+
+
   useEffect(() => {
     async function fetchLiveEnclaveData() {
       try {

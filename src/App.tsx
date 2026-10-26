@@ -91,8 +91,10 @@ export default function App() {
           if (isAdmin) {
             const enriched = await getEnrichedUser(candidateUser);
             setSessionUser(enriched);
+            window.scrollTo({ top: 0, behavior: 'instant' });
             setActiveView('admin');
             return;
+
           } else {
             showToast('Acceso restringido: Se requieren privilegios de Administrador Zero-Trust.');
             setActiveView('client');
@@ -225,8 +227,10 @@ export default function App() {
         if (window.location.pathname !== '/admin') {
           window.history.pushState(null, '', '/admin');
         }
+        window.scrollTo({ top: 0, behavior: 'instant' });
         setActiveView('admin');
         showToast('[SESIÓN VERIFICADA] Enclave Admin Zero-Trust activado.');
+
       } else {
         showToast('Acceso denegado: Su cuenta no posee privilegios de Administrador.');
         if (window.location.pathname !== '/clientes') {
@@ -516,17 +520,9 @@ export default function App() {
               <span translate="no" className="notranslate material-symbols-outlined text-[16px]">domain</span>
               <span>Portal Clientes</span>
             </button>
-            <button
-              id="nav-btn-admin-subdomain"
-              onClick={navigateToAdmin}
-              className="px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all flex items-center gap-1.5 text-[#bac9cc] hover:text-[#00fe66] hover:bg-[#141a32] border border-transparent hover:border-[#00fe66]/30 group cursor-pointer"
-              title="Acceso al Enclave de Administración Zero-Trust"
-            >
-              <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00fe66]">admin_panel_settings</span>
-              <span>Panel Admin Socios</span>
-              <span translate="no" className="notranslate material-symbols-outlined text-[14px] text-[#849396] group-hover:text-[#00fe66] transition-colors">arrow_forward</span>
-            </button>
+            {/* Security by Obscurity: 'Panel Admin Socios' button removed from public navigation bar */}
           </nav>
+
 
           {/* Right Action Area */}
           <div className="flex items-center gap-2 sm:gap-3">
@@ -673,21 +669,9 @@ export default function App() {
               <span translate="no" className="notranslate material-symbols-outlined text-[20px]">domain</span>
               <span className="font-['Space_Grotesk'] text-[16px]">Portal Clientes B2B</span>
             </button>
-
-            <button
-              onClick={() => {
-                setIsMobileDrawerOpen(false);
-                navigateToAdmin();
-              }}
-              className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-left transition-all text-[#bac9cc] hover:bg-[#181e36] hover:text-[#00fe66] border border-[#00fe66]/20 bg-[#060d24]/60 cursor-pointer"
-            >
-              <div className="flex items-center gap-3">
-                <span translate="no" className="notranslate material-symbols-outlined text-[20px] text-[#00fe66]">admin_panel_settings</span>
-                <span className="font-['Space_Grotesk'] text-[16px]">Panel Admin Socios</span>
-              </div>
-              <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00fe66]">arrow_forward</span>
-            </button>
+            {/* Security by Obscurity: 'Panel Admin Socios' button removed from mobile drawer */}
           </nav>
+
         </div>
 
         <div className="p-6 bg-[#060d24] border-t border-[#181e36]">
@@ -775,16 +759,10 @@ export default function App() {
             <span translate="no" className="notranslate material-symbols-outlined text-[22px]">security</span>
             <span className="font-['JetBrains_Mono'] text-[10px]">Seguridad</span>
           </a>
-          <button
-            onClick={navigateToAdmin}
-            className="flex flex-col items-center justify-center gap-1 w-14 h-14 transition-colors text-[#bac9cc] hover:text-[#00fe66] cursor-pointer"
-            title="Panel de Administración Zero-Trust"
-          >
-            <span translate="no" className="notranslate material-symbols-outlined text-[22px] text-[#00fe66]">admin_panel_settings</span>
-            <span className="font-['JetBrains_Mono'] text-[10px]">Admin</span>
-          </button>
+          {/* Security by Obscurity: Admin button removed from mobile bottom bar */}
         </div>
       </nav>
+
 
       {/* FOOTER */}
       <footer className="w-full bg-[#060d24] border-t border-[#181e36] py-8 text-center md:text-left">
