@@ -5,6 +5,7 @@ import { LedgerEntry, KanbanTicket } from '../types';
 import { supabase } from '../lib/supabase/client';
 import { AdminProjectApprovals } from './AdminProjectApprovals';
 import { AdminContractGenerator } from './AdminContractGenerator';
+import { ContractGenerator } from './ContractGenerator';
 import { AdminFinances } from './AdminFinances';
 import { AdminSupportTickets } from './AdminSupportTickets';
 import { ClientFileVault } from './ClientFileVault';
@@ -525,9 +526,19 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
         {activeTab === 'usuarios' ? (
           <UserAccessManager sessionUser={sessionUser} showToast={showToast} />
         ) : activeTab === 'contratos' ? (
-          <AdminContractGenerator showToast={showToast} />
+          <ContractGenerator
+            showToast={showToast}
+            sessionUser={sessionUser}
+            initialMode="generator"
+            onNavigateTab={(tab) => setActiveTab(tab)}
+          />
         ) : activeTab === 'presupuestos' ? (
-          <AdminBudgetNegotiations showToast={showToast} />
+          <ContractGenerator
+            showToast={showToast}
+            sessionUser={sessionUser}
+            initialMode="negotiations"
+            onNavigateTab={(tab) => setActiveTab(tab)}
+          />
         ) : activeTab === 'aprobaciones' ? (
           <AdminProjectApprovals onToast={showToast} />
         ) : activeTab === 'finanzas' ? (

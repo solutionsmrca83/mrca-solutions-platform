@@ -22,7 +22,7 @@ import {
   Users,
 } from 'lucide-react';
 import { NeuralCopilot } from '../NeuralCopilot';
-import { isSuperAdmin } from '../../lib/auth';
+import { isSuperAdmin, isPartner } from '../../lib/auth';
 
 
 export type AdminTab =
@@ -56,6 +56,7 @@ interface NavItem {
   badge?: string;
   badgeColor?: string;
   superadminOnly?: boolean;
+  privilegedOnly?: boolean;
 }
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
@@ -65,8 +66,8 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: 'finanzas', label: 'Finanzas & SPEI', icon: <DollarSign className="w-4 h-4" />, badge: 'Banxico T+0', badgeColor: 'text-[#00e5ff] bg-[#00e5ff]/10 border-[#00e5ff]/30' },
   { id: 'kali', label: 'Terminal Kali Linux', icon: <Terminal className="w-4 h-4" />, badge: 'NIDS Activo', badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/30' },
   { id: 'proyectos', label: 'Kanban Proyectos', icon: <Layers className="w-4 h-4" /> },
-  { id: 'contratos', label: 'Generador Contratos', icon: <FileText className="w-4 h-4" /> },
-  { id: 'presupuestos', label: 'Negociaciones B2B', icon: <Cpu className="w-4 h-4" /> },
+  { id: 'contratos', label: 'Generador Contratos', icon: <FileText className="w-4 h-4" />, badge: 'SAT 4.0 / SLA', badgeColor: 'text-cyan-400 bg-cyan-950/40 border-cyan-500/30', privilegedOnly: true },
+  { id: 'presupuestos', label: 'Negociaciones B2B', icon: <Cpu className="w-4 h-4" />, badge: 'B2B SOW', badgeColor: 'text-[#00fe66] bg-[#00fe66]/10 border-[#00fe66]/30', privilegedOnly: true },
   { id: 'soporte', label: 'Soporte Clientes VIP', icon: <LifeBuoy className="w-4 h-4" /> },
   { id: 'boveda', label: 'Bóveda Criptográfica', icon: <Archive className="w-4 h-4" /> },
   { id: 'auditoria', label: 'Logs Auditoría SOC-2', icon: <Lock className="w-4 h-4" /> },
@@ -224,18 +225,24 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             {ADMIN_NAV_ITEMS.map((item) => {
               const isActive = activeTab === item.id;
               const isSuper = isSuperAdmin(sessionUser);
-              const isLocked = item.superadminOnly && !isSuper;
+              const isPrtnr = isPartner(sessionUser);
+              const isPrivileged = !sessionUser || isSuper || isPrtnr;
+              const isLocked = (item.superadminOnly && !isSuper) || (item.privilegedOnly && !isPrivileged);
 
               return (
                 <button
                   key={item.id}
-                  onClick={() => handleSelectTab(item.id)}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[12px] font-['JetBrains_Mono'] font-medium transition-all cursor-pointer text-left ${
+                  onClick={() => {
+                    if (isLocked) return;
+                    handleSelectTab(item.id);
+                  }}
+                  disabled={isLocked}
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[12px] font-['JetBrains_Mono'] font-medium transition-all text-left ${
                     isActive
-                      ? 'bg-gradient-to-r from-cyan-500/20 to-cyan-500/5 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(0,229,255,0.15)] font-bold'
+                      ? 'bg-gradient-to-r from-cyan-500/20 to-cyan-500/5 text-cyan-300 border border-cyan-500/40 shadow-[0_0_15px_rgba(0,229,255,0.15)] font-bold cursor-pointer'
                       : isLocked
-                      ? 'text-slate-600 hover:text-slate-400 hover:bg-[#141a32]/40 border border-transparent opacity-70'
-                      : 'text-slate-400 hover:text-white hover:bg-[#141a32]/70 border border-transparent'
+                      ? 'text-slate-600 bg-[#141a32]/20 border border-transparent opacity-60 cursor-not-allowed'
+                      : 'text-slate-400 hover:text-white hover:bg-[#141a32]/70 border border-transparent cursor-pointer'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -331,18 +338,24 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                     {ADMIN_NAV_ITEMS.map((item) => {
                       const isActive = activeTab === item.id;
                       const isSuper = isSuperAdmin(sessionUser);
-                      const isLocked = item.superadminOnly && !isSuper;
+                      const isPrtnr = isPartner(sessionUser);
+                      const isPrivileged = !sessionUser || isSuper || isPrtnr;
+                      const isLocked = (item.superadminOnly && !isSuper) || (item.privilegedOnly && !isPrivileged);
 
                       return (
                         <button
                           key={item.id}
-                          onClick={() => handleSelectTab(item.id)}
+                          onClick={() => {
+                            if (isLocked) return;
+                            handleSelectTab(item.id);
+                          }}
+                          disabled={isLocked}
                           className={`flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-['JetBrains_Mono'] transition-all text-left ${
                             isActive
                               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold'
                               : isLocked
-                              ? 'text-slate-500 opacity-60 bg-[#101426]/40'
-                              : 'text-slate-300 hover:bg-[#141a32] hover:text-white'
+                              ? 'text-slate-500 opacity-60 bg-[#101426]/40 cursor-not-allowed'
+                              : 'text-slate-300 hover:bg-[#141a32] hover:text-white cursor-pointer'
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
