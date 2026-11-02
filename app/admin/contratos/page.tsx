@@ -2,10 +2,20 @@
 
 import React, { useEffect, useState } from 'react';
 import { AdminContractGenerator } from '@/src/components/AdminContractGenerator';
+import { supabase } from '@/src/lib/supabase/client';
 import { FileText, ArrowLeft, ShieldCheck } from 'lucide-react';
 
 export default function AdminContratosMainRoute() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [sessionUser, setSessionUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setSessionUser(session.user);
+      }
+    });
+  }, []);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -43,7 +53,7 @@ export default function AdminContratosMainRoute() {
       </header>
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <AdminContractGenerator showToast={showToast} />
+        <AdminContractGenerator sessionUser={sessionUser} showToast={showToast} />
       </main>
 
       {toastMessage && (

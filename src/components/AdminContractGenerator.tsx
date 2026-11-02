@@ -1,8 +1,24 @@
 import React from 'react';
-import { ContractGenerator, MEXICAN_LEGAL_CLAUSES, AVAILABLE_SERVICES } from './ContractGenerator';
+import {
+  ContractGenerator,
+  MEXICAN_LEGAL_CLAUSES,
+  AVAILABLE_SERVICES,
+  NU_MEXICO_CLABE,
+  NU_MEXICO_INSTITUTION,
+  PAYMENT_SPEI_CLAUSE,
+  getDynamicAdvanceClause,
+} from './ContractGenerator';
 import { ContractTemplate, ClientContract } from '../types';
 
-export { ContractGenerator, MEXICAN_LEGAL_CLAUSES, AVAILABLE_SERVICES };
+export {
+  ContractGenerator,
+  MEXICAN_LEGAL_CLAUSES,
+  AVAILABLE_SERVICES,
+  NU_MEXICO_CLABE,
+  NU_MEXICO_INSTITUTION,
+  PAYMENT_SPEI_CLAUSE,
+  getDynamicAdvanceClause,
+};
 
 export interface AdminContractGeneratorProps {
   showToast: (msg: string) => void;

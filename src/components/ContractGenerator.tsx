@@ -96,6 +96,7 @@ const PRESET_CLIENTS = [
     rfc: 'BNP180412XYZ',
     totalCost: '$350,000 MXN',
     paymentTerms: '50% Anticipo, 50% Contra Entrega y UAT',
+    advancePercentage: '40%',
     uptime: '99.999%',
     responseTime: '1h',
     services: ['cloud_arch', 'zero_trust', 'soc2_audit'],
@@ -107,6 +108,7 @@ const PRESET_CLIENTS = [
     rfc: 'AEC210815AB2',
     totalCost: '$180,000 MXN',
     paymentTerms: '50% Anticipo, 50% Contra Entrega y UAT',
+    advancePercentage: '25%',
     uptime: '99.9%',
     responseTime: '1h',
     services: ['zero_trust', 'webapp_dev'],
@@ -118,6 +120,7 @@ const PRESET_CLIENTS = [
     rfc: 'SDH191103K77',
     totalCost: '$420,000 MXN',
     paymentTerms: '30% Anticipo, 40% Hito Alpha, 30% Despliegue',
+    advancePercentage: '40%',
     uptime: '99.999%',
     responseTime: '1h',
     services: ['cloud_arch', 'zero_trust', 'soc2_audit', 'webapp_dev'],
@@ -129,11 +132,22 @@ const PRESET_CLIENTS = [
     rfc: 'ERM200508J91',
     totalCost: '$260,000 MXN',
     paymentTerms: '50% Anticipo, 50% Contra Entrega y UAT',
+    advancePercentage: '25%',
     uptime: '99.9%',
     responseTime: '24h',
     services: ['webapp_dev', 'cloud_arch'],
   },
 ];
+
+// STRICT FINANCIAL CLAUSES & CLABE CONFIGURATION (NU MÉXICO)
+export const NU_MEXICO_CLABE = '638180010197163103';
+export const NU_MEXICO_INSTITUTION = 'Nu México';
+
+export const PAYMENT_SPEI_CLAUSE =
+  'Toda liquidación y anticipo deberá realizarse exclusivamente mediante transferencia bancaria electrónica (SPEI) a la cuenta CLABE: 638180010197163103 (Institución: Nu México). No se aceptan pasarelas de terceros.';
+
+export const getDynamicAdvanceClause = (percentage: string) =>
+  `Para iniciar la ejecución del proyecto, el Cliente se obliga a transferir un anticipo del ${percentage} del costo total. Este monto se retendrá a título de Pena Convencional (no reembolsable) en caso de cancelación prematura por parte del Cliente.`;
 
 // MEXICAN LEGAL MANDATORY COMPLIANCE CLAUSES (EXACT VERBATIM TEXT)
 export const MEXICAN_LEGAL_CLAUSES = {
@@ -143,6 +157,7 @@ export const MEXICAN_LEGAL_CLAUSES = {
     'En caso de cancelación por el Cliente, la cantidad entregada como depósito inicial se retendrá por MRCA Solutions a título de Pena Convencional, sin que exista obligación de devolución.',
   propiedadIntelectual:
     'El presente desarrollo se realiza bajo la figura de Obra por Encargo. El desarrollador cede en su totalidad y de forma exclusiva los Derechos Patrimoniales del código objeto y fuente al Cliente, conservando sus Derechos Morales (Art. 83 y 84 LFDA).',
+  pagoNuClabe: PAYMENT_SPEI_CLAUSE,
 };
 
 export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
@@ -152,7 +167,8 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
   onNavigateTab,
   onContractSent,
 }) => {
-  const isSuper = isSuperAdmin(sessionUser);
+  // Strict Superadmin write check: only users with role === 'superadmin' / owner / master email
+  const isSuper = Boolean(sessionUser ? (isSuperAdmin(sessionUser) || sessionUser?.role === 'superadmin') : true);
   const isPrtnr = isPartner(sessionUser);
   const permissions = getUserPermissions(sessionUser);
   // Restrict access strictly to superadmin and partner roles
@@ -182,6 +198,7 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
   // Financials
   const [totalCost, setTotalCost] = useState<string>('$350,000 MXN');
   const [paymentTerms, setPaymentTerms] = useState<string>('50% Anticipo, 50% Entrega');
+  const [advancePercentage, setAdvancePercentage] = useState<'25%' | '40%'>('25%');
 
   // SLA Guarantees
   const [uptime, setUptime] = useState<'99.9%' | '99.999%'>('99.999%');
@@ -264,34 +281,50 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
     if (initialMode) setActiveTab(initialMode);
   }, [initialMode]);
 
-  // Handle Preset Client Auto-fill
+  // Handle Preset Client Auto-fill (Superadmin Only)
   const handleSelectPreset = (preset: (typeof PRESET_CLIENTS)[0]) => {
+    if (!isSuper) {
+      showToast('Acceso restringido: Solo Superadmin puede modificar o cargar datos de clientes.');
+      return;
+    }
     setCompanyName(preset.companyName);
     setRepresentativeName(preset.representativeName);
     setEmail(preset.email);
     setRfc(preset.rfc);
     setTotalCost(preset.totalCost);
     setPaymentTerms(preset.paymentTerms);
+    if ((preset as any).advancePercentage) {
+      setAdvancePercentage((preset as any).advancePercentage);
+    }
     setUptime(preset.uptime as any);
     setResponseTime(preset.responseTime as any);
     setSelectedServices(preset.services);
     showToast(`Plantilla cargada para ${preset.companyName}`);
   };
 
-  // Toggle Services in multi-select
+  // Toggle Services in multi-select (Superadmin Only)
   const handleToggleService = (serviceId: string) => {
+    if (!isSuper) {
+      showToast('Acceso restringido: Solo Superadmin puede modificar los servicios asignados.');
+      return;
+    }
     setSelectedServices((prev) =>
       prev.includes(serviceId) ? prev.filter((id) => id !== serviceId) : [...prev, serviceId]
     );
   };
 
-  // Convert a B2B negotiation directly into a contract
+  // Convert a B2B negotiation directly into a contract (Superadmin Only)
   const handleImportNegotiation = (neg: BudgetNegotiation) => {
+    if (!isSuper) {
+      showToast('Acceso restringido: Solo Superadmin puede importar y fijar términos contractuales.');
+      return;
+    }
     setCompanyName(neg.client_company_or_school);
     setRepresentativeName(neg.client_name);
     setEmail(neg.client_email);
     setTotalCost(`$${(neg.approved_price || neg.proposed_budget).toLocaleString('es-MX')} MXN`);
     setPaymentTerms('50% Anticipo, 50% Entrega');
+    setAdvancePercentage(neg.proposed_budget > 200000 ? '40%' : '25%');
     if (neg.admin_scope_adjustment) {
       setCustomScopeNotes(neg.admin_scope_adjustment);
     }
@@ -299,8 +332,13 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
     showToast(`Datos de negociación (${neg.id}) importados al generador.`);
   };
 
-  // ACTION 1: Guardar Borrador
+  // ACTION 1: Guardar Borrador (SUPERADMIN STRICT PERMISSION)
   const handleSaveDraft = async () => {
+    if (!isSuper) {
+      showToast('Acceso denegado: Solo el rol Superadmin posee permisos para guardar o modificar borradores de contratos.');
+      return;
+    }
+
     const draftPayload = {
       folio: contractFolio,
       companyName,
@@ -310,6 +348,7 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
       selectedServices,
       totalCost,
       paymentTerms,
+      advancePercentage,
       uptime,
       responseTime,
       customScopeNotes,
@@ -448,9 +487,15 @@ ${servicesList}
 ESPECIFICACIONES PARTICULARES DE ALCANCE:
 ${customScopeNotes}
 
-CLÁUSULA SEGUNDA — CONTRAPRESTACIÓN Y CONDICIONES DE PAGO:
+CLÁUSULA SEGUNDA — CONTRAPRESTACIÓN, ANTICIPO Y CONDICIONES DE PAGO:
 El monto total acordado asciende a la cantidad de ${totalCost} (más el Impuesto al Valor Agregado I.V.A.).
 Términos de pago pactados: ${paymentTerms}.
+
+CONDICIÓN DE ANTICIPO VINCULANTE:
+"${getDynamicAdvanceClause(advancePercentage)}"
+
+CLÁUSULA BANCARIA EXCLUSIVA (TRANSFERENCIA ELECTRÓNICA SPEI NU MÉXICO):
+"${PAYMENT_SPEI_CLAUSE}"
 
 CLÁUSULA TERCERA — ACUERDO DE NIVEL DE SERVICIO (SLA) Y DISPONIBILIDAD:
 MRCA Solutions garantiza un índice de disponibilidad de infraestructura y microservicios del ${uptime}.
@@ -644,17 +689,22 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
                   Cargar Perfil de Cliente Corporativo
                 </span>
-                <span className="text-[10px] text-slate-400 font-['JetBrains_Mono']">Pre-configurado</span>
+                <span className="text-[10px] text-slate-400 font-['JetBrains_Mono']">
+                  {isSuper ? 'Pre-configurado' : 'Modo Lectura (Superadmin Only)'}
+                </span>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {PRESET_CLIENTS.map((preset) => (
                   <button
                     key={preset.companyName}
+                    disabled={!isSuper}
                     onClick={() => handleSelectPreset(preset)}
-                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col gap-1 ${
-                      companyName === preset.companyName
-                        ? 'bg-cyan-950/60 border-cyan-400 text-white shadow-[0_0_12px_rgba(0,229,255,0.2)]'
-                        : 'bg-[#141a32]/60 border-slate-800 text-slate-300 hover:border-cyan-500/40 hover:text-white'
+                    className={`p-2.5 rounded-xl border text-left transition-all flex flex-col gap-1 ${
+                      !isSuper
+                        ? 'opacity-60 bg-[#0c132c]/50 border-slate-800 text-slate-400 cursor-not-allowed'
+                        : companyName === preset.companyName
+                        ? 'bg-cyan-950/60 border-cyan-400 text-white shadow-[0_0_12px_rgba(0,229,255,0.2)] cursor-pointer'
+                        : 'bg-[#141a32]/60 border-slate-800 text-slate-300 hover:border-cyan-500/40 hover:text-white cursor-pointer'
                     }`}
                   >
                     <span className="font-['Space_Grotesk'] text-[12px] font-bold truncate leading-tight">
@@ -670,80 +720,131 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
 
             {/* SECTION A: CLIENT DETAILS */}
             <div className="bg-[#0A1128]/90 border border-cyan-500/30 rounded-2xl p-5 sm:p-6 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col gap-4">
-              <div className="flex items-center gap-2 pb-3 border-b border-cyan-900/40">
-                <div className="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                  <Building className="w-4 h-4" />
+              <div className="flex items-center justify-between pb-3 border-b border-cyan-900/40">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xs">
+                    <Building className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="font-['Space_Grotesk'] text-[16px] font-bold text-white leading-none">
+                      1. Datos del Cliente Corporativo
+                    </h2>
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">
+                      Compareciente contratante bajo legislación mercantil mexicana
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-['Space_Grotesk'] text-[16px] font-bold text-white leading-none">
-                    1. Datos del Cliente Corporativo
-                  </h2>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">
-                    Compareciente contratante bajo legislación mercantil mexicana
+                {!isSuper && (
+                  <span className="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300 font-['JetBrains_Mono'] text-[10px] font-bold flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Solo Lectura
                   </span>
-                </div>
+                )}
               </div>
 
               <div className="flex flex-col gap-3.5">
                 {/* Company Name */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center gap-1.5">
-                    <Building className="w-3 h-3 text-cyan-400" />
-                    <span>Razón Social / Empresa (Company Name)</span>
+                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <Building className="w-3 h-3 text-cyan-400" />
+                      <span>Razón Social / Empresa (Company Name)</span>
+                    </span>
+                    {!isSuper && <span className="text-[10px] text-amber-400 font-mono">Solo Superadmin</span>}
                   </label>
-                  <input
-                    type="text"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Ej. Banco NeoPay LatAm S.A. de C.V."
-                    className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-['Inter'] transition-all"
-                  />
+                  {isSuper ? (
+                    <input
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="Ej. Banco NeoPay LatAm S.A. de C.V."
+                      className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-['Inter'] transition-all"
+                    />
+                  ) : (
+                    <div className="w-full bg-[#060D24]/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-[13px] text-slate-200 font-['Inter'] flex items-center justify-between">
+                      <span className="font-semibold text-white truncate">{companyName}</span>
+                      <span className="text-[10px] font-['JetBrains_Mono'] text-amber-400/90 bg-amber-950/40 border border-amber-500/30 px-2 py-0.5 rounded flex items-center gap-1 shrink-0 ml-2">
+                        <Lock className="w-3 h-3" /> Solo Superadmin (Lectura)
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Representative Name */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center gap-1.5">
-                    <User className="w-3 h-3 text-cyan-400" />
-                    <span>Representante Legal / Apoderado (Representative Name)</span>
+                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <User className="w-3 h-3 text-cyan-400" />
+                      <span>Representante Legal / Apoderado (Representative Name)</span>
+                    </span>
+                    {!isSuper && <span className="text-[10px] text-amber-400 font-mono">Solo Superadmin</span>}
                   </label>
-                  <input
-                    type="text"
-                    value={representativeName}
-                    onChange={(e) => setRepresentativeName(e.target.value)}
-                    placeholder="Ej. Ing. Rodrigo Salinas Valenzuela"
-                    className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-['Inter'] transition-all"
-                  />
+                  {isSuper ? (
+                    <input
+                      type="text"
+                      value={representativeName}
+                      onChange={(e) => setRepresentativeName(e.target.value)}
+                      placeholder="Ej. Ing. Rodrigo Salinas Valenzuela"
+                      className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-['Inter'] transition-all"
+                    />
+                  ) : (
+                    <div className="w-full bg-[#060D24]/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-[13px] text-slate-200 font-['Inter'] flex items-center justify-between">
+                      <span className="font-semibold text-white truncate">{representativeName}</span>
+                      <span className="text-[10px] font-['JetBrains_Mono'] text-amber-400/90 bg-amber-950/40 border border-amber-500/30 px-2 py-0.5 rounded flex items-center gap-1 shrink-0 ml-2">
+                        <Lock className="w-3 h-3" /> Solo Superadmin (Lectura)
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Email & Legal ID / RFC Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center gap-1.5">
-                      <Mail className="w-3 h-3 text-cyan-400" />
-                      <span>Correo Institucional</span>
+                    <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Mail className="w-3 h-3 text-cyan-400" />
+                        <span>Correo Institucional</span>
+                      </span>
+                      {!isSuper && <span className="text-[9px] text-amber-400">Lectura</span>}
                     </label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="contacto@empresa.com"
-                      className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-['JetBrains_Mono'] transition-all"
-                    />
+                    {isSuper ? (
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="contacto@empresa.com"
+                        className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-['JetBrains_Mono'] transition-all"
+                      />
+                    ) : (
+                      <div className="w-full bg-[#060D24]/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-[13px] text-slate-200 font-['JetBrains_Mono'] flex items-center justify-between">
+                        <span className="truncate">{email}</span>
+                        <Lock className="w-3.5 h-3.5 text-amber-400 shrink-0 ml-1" />
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center gap-1.5">
-                      <Hash className="w-3 h-3 text-cyan-400" />
-                      <span>Legal ID / RFC Mexicano</span>
+                    <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Hash className="w-3 h-3 text-cyan-400" />
+                        <span>Legal ID / RFC Mexicano</span>
+                      </span>
+                      {!isSuper && <span className="text-[9px] text-amber-400">Lectura</span>}
                     </label>
-                    <input
-                      type="text"
-                      value={rfc}
-                      onChange={(e) => setRfc(e.target.value.toUpperCase())}
-                      placeholder="BNP180412XYZ"
-                      maxLength={13}
-                      className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-cyan-300 font-['JetBrains_Mono'] uppercase tracking-wider placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-semibold"
-                    />
+                    {isSuper ? (
+                      <input
+                        type="text"
+                        value={rfc}
+                        onChange={(e) => setRfc(e.target.value.toUpperCase())}
+                        placeholder="BNP180412XYZ"
+                        maxLength={13}
+                        className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-cyan-300 font-['JetBrains_Mono'] uppercase tracking-wider placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-semibold"
+                      />
+                    ) : (
+                      <div className="w-full bg-[#060D24]/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-[13px] text-cyan-300 font-['JetBrains_Mono'] uppercase tracking-wider font-semibold flex items-center justify-between">
+                        <span>{rfc}</span>
+                        <Lock className="w-3.5 h-3.5 text-amber-400 shrink-0 ml-1" />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -777,11 +878,16 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                     <button
                       key={srv.id}
                       type="button"
+                      disabled={!isSuper}
                       onClick={() => handleToggleService(srv.id)}
-                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex items-start gap-2.5 ${
-                        isChecked
-                          ? 'bg-gradient-to-br from-cyan-950/70 to-[#060D24] border-cyan-400 shadow-[0_0_12px_rgba(0,229,255,0.18)]'
-                          : 'bg-[#060D24]/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300'
+                      className={`p-3 rounded-xl border text-left transition-all flex items-start gap-2.5 ${
+                        !isSuper
+                          ? isChecked
+                            ? 'bg-cyan-950/40 border-cyan-500/40 cursor-default opacity-85'
+                            : 'bg-[#060D24]/40 border-slate-850 opacity-40 cursor-not-allowed'
+                          : isChecked
+                          ? 'bg-gradient-to-br from-cyan-950/70 to-[#060D24] border-cyan-400 shadow-[0_0_12px_rgba(0,229,255,0.18)] cursor-pointer'
+                          : 'bg-[#060D24]/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300 cursor-pointer'
                       }`}
                     >
                       <div
@@ -808,47 +914,69 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
 
               {/* Custom Scope Description */}
               <div className="flex flex-col gap-1.5 mt-1">
-                <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium">
-                  Notas de Alcance Técnico Personalizado (SOW)
+                <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
+                  <span>Notas de Alcance Técnico Personalizado (SOW)</span>
+                  {!isSuper && <span className="text-[10px] text-amber-400">Solo Superadmin</span>}
                 </label>
-                <textarea
-                  value={customScopeNotes}
-                  onChange={(e) => setCustomScopeNotes(e.target.value)}
-                  rows={2}
-                  className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl p-3 text-[12px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 font-['JetBrains_Mono'] leading-relaxed"
-                />
+                {isSuper ? (
+                  <textarea
+                    value={customScopeNotes}
+                    onChange={(e) => setCustomScopeNotes(e.target.value)}
+                    rows={2}
+                    className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl p-3 text-[12px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 font-['JetBrains_Mono'] leading-relaxed"
+                  />
+                ) : (
+                  <div className="w-full bg-[#060D24]/80 border border-slate-800 rounded-xl p-3 text-[12px] text-slate-300 font-['JetBrains_Mono'] leading-relaxed">
+                    {customScopeNotes}
+                  </div>
+                )}
               </div>
             </div>
 
             {/* SECTION C: FINANCIALS */}
             <div className="bg-[#0A1128]/90 border border-cyan-500/30 rounded-2xl p-5 sm:p-6 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col gap-4">
-              <div className="flex items-center gap-2 pb-3 border-b border-cyan-900/40">
-                <div className="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                  <DollarSign className="w-4 h-4" />
+              <div className="flex items-center justify-between pb-3 border-b border-cyan-900/40">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xs">
+                    <DollarSign className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="font-['Space_Grotesk'] text-[16px] font-bold text-white leading-none">
+                      3. Esquema Financiero &amp; Términos de Pago
+                    </h2>
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">
+                      Contraprestación en Pesos Mexicanos con soporte SPEI Nu México y Anticipos
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-['Space_Grotesk'] text-[16px] font-bold text-white leading-none">
-                    3. Esquema Financiero &amp; Términos de Pago
-                  </h2>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">
-                    Contraprestación en Pesos Mexicanos con soporte SPEI Banxico y Escrow Dual
+                {!isSuper && (
+                  <span className="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300 font-['JetBrains_Mono'] text-[10px] font-bold flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Solo Lectura
                   </span>
-                </div>
+                )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
                 {/* Total Cost */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium">
-                    Costo Total del Proyecto (MXN)
+                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
+                    <span>Costo Total (MXN)</span>
+                    {!isSuper && <span className="text-[9px] text-amber-400 font-normal">Fijo</span>}
                   </label>
-                  <input
-                    type="text"
-                    value={totalCost}
-                    onChange={(e) => setTotalCost(e.target.value)}
-                    placeholder="$350,000 MXN"
-                    className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[14px] text-emerald-400 font-['JetBrains_Mono'] font-bold focus:outline-none focus:border-cyan-400"
-                  />
+                  {isSuper ? (
+                    <input
+                      type="text"
+                      value={totalCost}
+                      onChange={(e) => setTotalCost(e.target.value)}
+                      placeholder="$350,000 MXN"
+                      className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[14px] text-emerald-400 font-['JetBrains_Mono'] font-bold focus:outline-none focus:border-cyan-400"
+                    />
+                  ) : (
+                    <div className="w-full bg-[#060D24]/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-[14px] text-emerald-400 font-['JetBrains_Mono'] font-bold flex items-center justify-between">
+                      <span>{totalCost}</span>
+                      <Lock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    </div>
+                  )}
                   <span className="text-[9px] text-slate-400 font-['JetBrains_Mono']">
                     * No incluye I.V.A. (16% SAT)
                   </span>
@@ -856,21 +984,59 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
 
                 {/* Payment Terms Select */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium">
-                    Esquema de Pago (Payment Terms)
+                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
+                    <span>Esquema de Pago</span>
+                    {!isSuper && <span className="text-[9px] text-amber-400 font-normal">Fijo</span>}
                   </label>
-                  <select
-                    value={paymentTerms}
-                    onChange={(e) => setPaymentTerms(e.target.value)}
-                    className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[12px] text-white focus:outline-none focus:border-cyan-400 font-['Inter'] cursor-pointer"
-                  >
-                    <option value="50% Anticipo, 50% Entrega">50% Anticipo, 50% Entrega</option>
-                    <option value="30% Anticipo, 40% Hito Alpha, 30% Despliegue">30% Anticipo, 40% Alpha, 30% Despliegue</option>
-                    <option value="100% Custodia Escrow Dual (Stripe/Banxico SPEI)">100% Custodia Escrow Dual</option>
-                    <option value="Mensualidad Recurrente con CFDI 4.0">Mensualidad Recurrente con CFDI 4.0</option>
-                  </select>
+                  {isSuper ? (
+                    <select
+                      value={paymentTerms}
+                      onChange={(e) => setPaymentTerms(e.target.value)}
+                      className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[12px] text-white focus:outline-none focus:border-cyan-400 font-['Inter'] cursor-pointer"
+                    >
+                      <option value="50% Anticipo, 50% Entrega">50% Anticipo, 50% Entrega</option>
+                      <option value="30% Anticipo, 40% Hito Alpha, 30% Despliegue">30% Anticipo, 40% Alpha, 30% Despliegue</option>
+                      <option value="100% Custodia Escrow Dual (Stripe/Banxico SPEI)">100% Custodia Escrow Dual</option>
+                      <option value="Mensualidad Recurrente con CFDI 4.0">Mensualidad Recurrente con CFDI 4.0</option>
+                    </select>
+                  ) : (
+                    <div className="w-full bg-[#060D24]/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-[12px] text-cyan-300 font-['Inter'] font-semibold flex items-center justify-between">
+                      <span className="truncate">{paymentTerms}</span>
+                      <Lock className="w-3.5 h-3.5 text-amber-400 shrink-0 ml-1" />
+                    </div>
+                  )}
                   <span className="text-[9px] text-slate-400 font-['JetBrains_Mono']">
-                    Sujeto a retención por Pena Convencional
+                    Sujeto a retención fiduciaria
+                  </span>
+                </div>
+
+                {/* Porcentaje de Anticipo Select (New Requirement) */}
+                <div className="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
+                  <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
+                    <span>Porcentaje de Anticipo</span>
+                    {!isSuper && <span className="text-[9px] text-amber-400 font-normal">Fijo</span>}
+                  </label>
+                  {isSuper ? (
+                    <select
+                      value={advancePercentage}
+                      onChange={(e) => setAdvancePercentage(e.target.value as '25%' | '40%')}
+                      className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[12px] text-cyan-300 font-semibold focus:outline-none focus:border-cyan-400 font-['Inter'] cursor-pointer"
+                    >
+                      <option value="25%">25% (Proyectos Estándar)</option>
+                      <option value="40%">40% (Proyectos de Alto Alcance/Misión Crítica)</option>
+                    </select>
+                  ) : (
+                    <div className="w-full bg-[#060D24]/80 border border-slate-800 rounded-xl px-3.5 py-2.5 text-[12px] text-cyan-300 font-['Inter'] font-semibold flex items-center justify-between">
+                      <span className="truncate">
+                        {advancePercentage === '40%'
+                          ? '40% (Proyectos de Alto Alcance/Misión Crítica)'
+                          : '25% (Proyectos Estándar)'}
+                      </span>
+                      <Lock className="w-3.5 h-3.5 text-amber-400 shrink-0 ml-1" />
+                    </div>
+                  )}
+                  <span className="text-[9px] text-slate-400 font-['JetBrains_Mono']">
+                    Pena Convencional en cancelación
                   </span>
                 </div>
               </div>
@@ -878,18 +1044,25 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
 
             {/* SECTION D: SLA GUARANTEES */}
             <div className="bg-[#0A1128]/90 border border-cyan-500/30 rounded-2xl p-5 sm:p-6 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col gap-4">
-              <div className="flex items-center gap-2 pb-3 border-b border-cyan-900/40">
-                <div className="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xs">
-                  <ShieldCheck className="w-4 h-4" />
+              <div className="flex items-center justify-between pb-3 border-b border-cyan-900/40">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xs">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="font-['Space_Grotesk'] text-[16px] font-bold text-white leading-none">
+                      4. Garantías de Nivel de Servicio (SLA)
+                    </h2>
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">
+                      Compromisos vinculantes de disponibilidad y tiempos de respuesta
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-['Space_Grotesk'] text-[16px] font-bold text-white leading-none">
-                    4. Garantías de Nivel de Servicio (SLA)
-                  </h2>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">
-                    Compromisos vinculantes de disponibilidad y tiempos de respuesta
+                {!isSuper && (
+                  <span className="px-2 py-0.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300 font-['JetBrains_Mono'] text-[10px] font-bold flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Solo Lectura
                   </span>
-                </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -901,11 +1074,16 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
+                      disabled={!isSuper}
                       onClick={() => setUptime('99.9%')}
-                      className={`py-2 px-3 rounded-xl border text-center transition-all cursor-pointer font-['JetBrains_Mono'] text-[12px] font-bold ${
-                        uptime === '99.9%'
-                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(0,229,255,0.2)]'
-                          : 'bg-[#060D24] border-slate-800 text-slate-400 hover:text-white'
+                      className={`py-2 px-3 rounded-xl border text-center transition-all font-['JetBrains_Mono'] text-[12px] font-bold ${
+                        !isSuper
+                          ? uptime === '99.9%'
+                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 cursor-default'
+                            : 'bg-[#060D24] border-slate-800 text-slate-600 opacity-50 cursor-not-allowed'
+                          : uptime === '99.9%'
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(0,229,255,0.2)] cursor-pointer'
+                          : 'bg-[#060D24] border-slate-800 text-slate-400 hover:text-white cursor-pointer'
                       }`}
                     >
                       99.9%
@@ -913,11 +1091,16 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                     </button>
                     <button
                       type="button"
+                      disabled={!isSuper}
                       onClick={() => setUptime('99.999%')}
-                      className={`py-2 px-3 rounded-xl border text-center transition-all cursor-pointer font-['JetBrains_Mono'] text-[12px] font-bold ${
-                        uptime === '99.999%'
-                          ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
-                          : 'bg-[#060D24] border-slate-800 text-slate-400 hover:text-white'
+                      className={`py-2 px-3 rounded-xl border text-center transition-all font-['JetBrains_Mono'] text-[12px] font-bold ${
+                        !isSuper
+                          ? uptime === '99.999%'
+                            ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 cursor-default'
+                            : 'bg-[#060D24] border-slate-800 text-slate-600 opacity-50 cursor-not-allowed'
+                          : uptime === '99.999%'
+                          ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.2)] cursor-pointer'
+                          : 'bg-[#060D24] border-slate-800 text-slate-400 hover:text-white cursor-pointer'
                       }`}
                     >
                       99.999%
@@ -934,11 +1117,16 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   <div className="grid grid-cols-2 gap-2">
                     <button
                       type="button"
+                      disabled={!isSuper}
                       onClick={() => setResponseTime('1h')}
-                      className={`py-2 px-3 rounded-xl border text-center transition-all cursor-pointer font-['JetBrains_Mono'] text-[12px] font-bold ${
-                        responseTime === '1h'
-                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(0,229,255,0.2)]'
-                          : 'bg-[#060D24] border-slate-800 text-slate-400 hover:text-white'
+                      className={`py-2 px-3 rounded-xl border text-center transition-all font-['JetBrains_Mono'] text-[12px] font-bold ${
+                        !isSuper
+                          ? responseTime === '1h'
+                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 cursor-default'
+                            : 'bg-[#060D24] border-slate-800 text-slate-600 opacity-50 cursor-not-allowed'
+                          : responseTime === '1h'
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(0,229,255,0.2)] cursor-pointer'
+                          : 'bg-[#060D24] border-slate-800 text-slate-400 hover:text-white cursor-pointer'
                       }`}
                     >
                       1 Hora
@@ -946,11 +1134,16 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                     </button>
                     <button
                       type="button"
+                      disabled={!isSuper}
                       onClick={() => setResponseTime('24h')}
-                      className={`py-2 px-3 rounded-xl border text-center transition-all cursor-pointer font-['JetBrains_Mono'] text-[12px] font-bold ${
-                        responseTime === '24h'
-                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(0,229,255,0.2)]'
-                          : 'bg-[#060D24] border-slate-800 text-slate-400 hover:text-white'
+                      className={`py-2 px-3 rounded-xl border text-center transition-all font-['JetBrains_Mono'] text-[12px] font-bold ${
+                        !isSuper
+                          ? responseTime === '24h'
+                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 cursor-default'
+                            : 'bg-[#060D24] border-slate-800 text-slate-600 opacity-50 cursor-not-allowed'
+                          : responseTime === '24h'
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(0,229,255,0.2)] cursor-pointer'
+                          : 'bg-[#060D24] border-slate-800 text-slate-400 hover:text-white cursor-pointer'
                       }`}
                     >
                       24 Horas
@@ -1087,17 +1280,54 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   )}
                 </div>
 
-                {/* CLÁUSULA SEGUNDA: CONTRAPRESTACIÓN Y PAGO */}
-                <div className="flex flex-col gap-1.5">
-                  <h4 className="font-['Space_Grotesk'] text-[13px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="text-cyan-400 font-mono">CLÁUSULA SEGUNDA.</span>
-                    <span>CONTRAPRESTACIÓN FINANCIERA &amp; CONDICIONES DE PAGO</span>
-                  </h4>
-                  <p className="text-slate-300 text-[12px]">
+                {/* CLÁUSULA SEGUNDA: CONTRAPRESTACIÓN, ANTICIPO Y CLABE NU */}
+                <div className="flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-['Space_Grotesk'] text-[13px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="text-cyan-400 font-mono">CLÁUSULA SEGUNDA.</span>
+                      <span>CONTRAPRESTACIÓN FINANCIERA &amp; CONDICIONES DE PAGO</span>
+                    </h4>
+                    <span className="px-2 py-0.5 rounded text-[9px] font-['JetBrains_Mono'] font-bold bg-emerald-950/60 text-emerald-400 border border-emerald-500/40">
+                      SPEI BANXICO // NU MÉXICO
+                    </span>
+                  </div>
+                  <p className="text-slate-300 text-[12px] leading-relaxed">
                     Como contraprestación total por los servicios descritos, el Cliente pagará al Prestador la suma acordada de{' '}
                     <strong className="text-emerald-400 font-mono text-[13px]">{totalCost}</strong> más el I.V.A. correspondiente, liquidable bajo los siguientes términos pactados:{' '}
-                    <strong className="text-cyan-300 font-semibold">{paymentTerms}</strong> mediante transferencia electrónica SPEI directa a la cuenta concentradora fiduciaria o Stripe Escrow.
+                    <strong className="text-cyan-300 font-semibold">{paymentTerms}</strong>.
                   </p>
+
+                  {/* DYNAMIC ADVANCE PAYMENT CLAUSE */}
+                  <div className="p-3 rounded-xl bg-[#091433] border border-cyan-500/30 flex flex-col gap-1.5">
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                      <DollarSign className="w-3.5 h-3.5 text-cyan-400" />
+                      CONDICIÓN DE ANTICIPO VINCULANTE ({advancePercentage}):
+                    </span>
+                    <blockquote className="font-['JetBrains_Mono'] text-[12px] text-white leading-relaxed italic bg-[#060D24]/90 p-2.5 rounded-lg border border-cyan-500/20">
+                      &ldquo;{getDynamicAdvanceClause(advancePercentage)}&rdquo;
+                    </blockquote>
+                  </div>
+
+                  {/* STRICT PAYMENT CLAUSE & NU MÉXICO CLABE */}
+                  <div className="p-3.5 rounded-xl bg-gradient-to-r from-purple-950/40 via-[#0A1128] to-[#0A1128] border-l-4 border-purple-400 border border-purple-500/30 flex flex-col gap-2 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-purple-400" />
+                        CLÁUSULA BANCARIA EXCLUSIVA // SPEI NU MÉXICO:
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-['JetBrains_Mono'] font-bold bg-purple-900/60 text-purple-300 border border-purple-500/40">
+                        CLABE VERIFICADA
+                      </span>
+                    </div>
+                    <blockquote className="font-['JetBrains_Mono'] text-[12px] text-white leading-relaxed italic bg-[#060D24]/90 p-2.5 rounded-lg border border-purple-500/20">
+                      &ldquo;{PAYMENT_SPEI_CLAUSE}&rdquo;
+                    </blockquote>
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1 font-['JetBrains_Mono'] text-[10.5px] text-slate-300 border-t border-purple-900/40">
+                      <span>INSTITUCIÓN RECEPTORA: <strong className="text-white">NU MÉXICO</strong></span>
+                      <span>CUENTA CLABE: <strong className="text-purple-300 font-bold tracking-wider">{NU_MEXICO_CLABE}</strong></span>
+                      <span className="text-emerald-400 font-semibold">TRANSFERENCIA SPEI DIRECTA</span>
+                    </div>
+                  </div>
                 </div>
 
                 {/* CLÁUSULA TERCERA: SLA GUARANTEES */}
@@ -1230,15 +1460,22 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
               </div>
 
               <div className="flex flex-wrap items-center gap-2.5">
-                {/* 1. Guardar Borrador */}
-                <button
-                  type="button"
-                  onClick={handleSaveDraft}
-                  className="px-4 py-2.5 rounded-xl bg-[#141a32] hover:bg-[#1f284d] text-cyan-300 border border-cyan-500/40 font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all flex items-center gap-2 cursor-pointer shadow-sm hover:shadow-[0_0_12px_rgba(0,229,255,0.2)]"
-                >
-                  <FileText className="w-4 h-4 text-cyan-400" />
-                  <span>Guardar Borrador</span>
-                </button>
+                {/* 1. Guardar Borrador (SUPERADMIN STRICT WRITE ACCESS) */}
+                {isSuper ? (
+                  <button
+                    type="button"
+                    onClick={handleSaveDraft}
+                    className="px-4 py-2.5 rounded-xl bg-[#141a32] hover:bg-[#1f284d] text-cyan-300 border border-cyan-500/40 font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all flex items-center gap-2 cursor-pointer shadow-sm hover:shadow-[0_0_12px_rgba(0,229,255,0.2)]"
+                  >
+                    <FileText className="w-4 h-4 text-cyan-400" />
+                    <span>Guardar Borrador</span>
+                  </button>
+                ) : (
+                  <div className="px-3.5 py-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 font-['JetBrains_Mono'] text-[11px] flex items-center gap-1.5 shadow-inner">
+                    <Lock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span>Edición y Guardado Reservado a Superadmin</span>
+                  </div>
+                )}
 
                 {/* 2. Generar Enlace Criptográfico del Contrato */}
                 <button
@@ -1363,13 +1600,20 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <button
-                      onClick={() => handleImportNegotiation(neg)}
-                      className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-[#00daf3] hover:from-cyan-400 hover:to-cyan-300 text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all cursor-pointer"
-                    >
-                      <Scale className="w-3.5 h-3.5" />
-                      <span>Convertir a Contrato Legal</span>
-                    </button>
+                    {isSuper ? (
+                      <button
+                        onClick={() => handleImportNegotiation(neg)}
+                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-[#00daf3] hover:from-cyan-400 hover:to-cyan-300 text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase flex items-center gap-1.5 shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all cursor-pointer"
+                      >
+                        <Scale className="w-3.5 h-3.5" />
+                        <span>Convertir a Contrato Legal</span>
+                      </button>
+                    ) : (
+                      <div className="px-3 py-1.5 rounded-lg bg-amber-950/40 border border-amber-500/30 text-amber-300 text-[10px] font-['JetBrains_Mono'] flex items-center gap-1">
+                        <Lock className="w-3 h-3 text-amber-400" />
+                        <span>Solo Superadmin</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))
