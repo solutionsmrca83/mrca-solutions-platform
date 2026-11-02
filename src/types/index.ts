@@ -190,6 +190,16 @@ export interface ClientContract {
   signed_at?: string | null;
   created_at: string;
   updated_at?: string;
+  physical_signature_filename?: string | null;
+  physical_signature_url?: string | null;
+  physical_signature_date?: string | null;
+  signature_mode?: 'digital' | 'physical';
+  advance_percentage?: string;
+  total_cost?: string;
+  rfc?: string;
+  uptime?: string;
+  response_time?: string;
+  services?: string[];
 }
 
 // Developer Portal & API Key Types

@@ -40,7 +40,13 @@ const INITIAL_CONTRACTS: ClientContract[] = [
     client_company: 'FinTech Global B2B',
     client_email: 'cliente@enterprise.corp',
     template_id: 'tmpl_nda_v4',
-    title: 'NDA - Acuerdo de Confidencialidad & Sigilo Criptográfico Zero-Trust',
+    title: 'Contrato Marco de Servicios de Ingeniería, Ciberseguridad & Acuerdo SLA',
+    advance_percentage: '40%',
+    total_cost: '$350,000 MXN',
+    rfc: 'FTG200315KY1',
+    uptime: '99.999%',
+    response_time: '1h',
+    services: ['cloud_arch', 'zero_trust', 'soc2_audit', 'webapp_dev'],
     content: `ACUERDO BILATERAL DE CONFIDENCIALIDAD Y PROTECCIÓN CRIPTOGRÁFICA (NDA ZERO-TRUST)
 
 ENTRE LAS PARTES:
@@ -202,6 +208,31 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               signature_data: signatureData,
               signature_hash: signatureHash,
               signed_at: new Date().toISOString(),
+            }
+          : c
+      );
+      try {
+        localStorage.setItem('mrca_client_contracts', JSON.stringify(updated));
+      } catch {
+        // quota
+      }
+      return updated;
+    });
+  };
+
+  const handleUploadPhysicalContract = (
+    contractId: string,
+    _file: File,
+    meta: { filename: string; size: number; uploadDate: string }
+  ) => {
+    setContracts((prev) => {
+      const updated = prev.map((c) =>
+        c.id === contractId
+          ? {
+              ...c,
+              physical_signature_filename: meta.filename,
+              physical_signature_date: meta.uploadDate,
+              signature_mode: 'physical' as const,
             }
           : c
       );
@@ -905,12 +936,13 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
         </div>
       )}
 
-      {/* MODAL DE CONTRATOS Y ACUERDOS NDA (FIRMA DIGITAL VECTORIAL) */}
+      {/* MODAL DE CONTRATOS Y ACUERDOS NDA (SISTEMA DUAL DE FIRMA) */}
       <ClientContractsModal
         isOpen={isContractsModalOpen}
         onClose={() => setIsContractsModalOpen(false)}
         contracts={contracts}
         onContractSigned={handleContractSigned}
+        onUploadPhysicalContract={handleUploadPhysicalContract}
         showToast={showToast}
         clientCompany={clientCompany}
         clientEmail={clientEmail}
