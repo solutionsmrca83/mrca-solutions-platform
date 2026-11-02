@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  GraduationCap, 
-  Sparkles, 
-  KeyRound, 
-  CheckCircle2, 
-  ArrowRight, 
-  Mail, 
-  Lock, 
-  Eye, 
-  EyeOff, 
-  X, 
-  School, 
+import {
+  GraduationCap,
+  Sparkles,
+  KeyRound,
+  CheckCircle2,
+  ArrowRight,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  User,
   ShieldCheck,
-  Tag
+  Tag,
+  BookOpen,
 } from 'lucide-react';
 
 interface StudentAuthModuleProps {
@@ -28,14 +28,13 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
   onSuccess,
   onExploreTemplates,
   showToast = (msg) => console.log(msg),
-  onSwitchToB2B,
-  onSwitchToAdmin,
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
+  
+  // Registration and Login state: STRICTLY Full Name, Email, Password (NO MATRÍCULA / NO PII)
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [institution, setInstitution] = useState('');
-  const [studentId, setStudentId] = useState('');
   const [acceptAcademicTerms, setAcceptAcademicTerms] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,7 +61,7 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
 
         if (error) {
           // Sandbox fallback for academic domains & testing
-          const isAcademicDomain = 
+          const isAcademicDomain =
             email.endsWith('.edu.mx') ||
             email.endsWith('.edu') ||
             email.includes('ipn.mx') ||
@@ -80,7 +79,6 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
               role: 'student',
               user_metadata: {
                 role: 'STUDENT',
-                institution: institution || 'Universidad Validada',
                 coupon: 'BECA-50',
                 discountPercent: 50,
               },
@@ -97,15 +95,14 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
           if (onSuccess) onSuccess({ ...data.user, role: 'student' });
         }
       } else {
-        // Register mode
+        // Register mode: Strictly Full Name, Email, Password (ZERO Matrícula / PII)
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: {
               role: 'student',
-              institution: institution || 'Institución Educativa',
-              studentId,
+              full_name: fullName,
               coupon: 'BECA-50',
             },
           },
@@ -119,8 +116,7 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
             role: 'student',
             user_metadata: {
               role: 'STUDENT',
-              institution: institution || 'Institución Educativa',
-              studentId,
+              full_name: fullName,
               coupon: 'BECA-50',
             },
           };
@@ -150,71 +146,71 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
   };
 
   return (
-    <div className="w-full flex flex-col gap-5">
-      {/* Header with Terminal Green Cyber Aesthetic */}
+    <div className="w-full flex flex-col gap-5 font-['Inter']">
+      {/* Header */}
       <div className="flex flex-col items-center text-center gap-1.5">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00FF66]/10 border border-[#00FF66]/30 text-[#00FF66] font-['JetBrains_Mono'] text-[11px] font-semibold">
-          <GraduationCap className="w-4 h-4 text-[#00FF66]" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-['JetBrains_Mono'] text-[11px] font-semibold">
+          <GraduationCap className="w-4 h-4 text-emerald-400" />
           <span>PORTAL ACADÉMICO MRCA // VERIFICACIÓN EDU</span>
         </div>
 
-        <h3 className="font-['Space_Grotesk'] text-[24px] font-bold text-[#dce1ff]">
+        <h3 className="font-['Space_Grotesk'] text-[24px] font-bold text-white">
           Portal Académico MRCA
         </h3>
-        <p className="font-['Inter'] text-[13px] text-[#bac9cc] max-w-md">
+        <p className="font-['Inter'] text-[13px] text-slate-300 max-w-md">
           Acceso exclusivo para estudiantes, investigadores y docentes con acreditación institucional.
         </p>
       </div>
 
-      {/* Feature 1: Dynamic Pricing & Coupon Banner */}
-      <motion.div 
+      {/* Coupon Banner */}
+      <motion.div
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden p-3.5 rounded-2xl bg-gradient-to-r from-[#00FF66]/10 via-[#00FF66]/5 to-transparent border border-[#00FF66]/30 shadow-[0_0_20px_rgba(0,255,102,0.12)] flex items-start gap-3"
+        className="relative overflow-hidden p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.15)] flex items-start gap-3"
       >
-        <div className="w-9 h-9 rounded-xl bg-[#00FF66]/20 border border-[#00FF66]/40 flex items-center justify-center shrink-0 text-[#00FF66]">
-          <Tag className="w-5 h-5 text-[#00FF66]" />
+        <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0 text-emerald-400">
+          <Tag className="w-5 h-5 text-emerald-400" />
         </div>
         <div className="flex-1 flex flex-col gap-0.5 text-left">
           <div className="flex items-center gap-1.5">
-            <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-[#00FF66] uppercase tracking-wide">
+            <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-emerald-400 uppercase tracking-wide">
               Beneficio Estudiantil 50% OFF
             </span>
-            <span className="px-1.5 py-0.2 rounded bg-[#00FF66] text-[#00363d] font-['JetBrains_Mono'] text-[9px] font-extrabold">
+            <span className="px-1.5 py-0.2 rounded bg-emerald-400 text-slate-950 font-['JetBrains_Mono'] text-[9px] font-extrabold">
               BECA-50
             </span>
           </div>
-          <p className="font-['Inter'] text-[12px] text-[#dce1ff]/90 leading-snug">
-            Valida tu credencial institucional para activar el motor de precios dinámicos y cupones (Ej. <strong className="text-[#00FF66] font-mono">BECA-50</strong>) en toda la biblioteca de código.
+          <p className="font-['Inter'] text-[12px] text-slate-300 leading-snug">
+            Acceso preferencial para proyectos de titulación y software open-source con el cupón <strong className="text-emerald-400 font-mono">BECA-50</strong>.
           </p>
         </div>
       </motion.div>
 
-      {/* Feature 2: Quick Link to Templates Gallery */}
+      {/* Quick Link to Templates */}
       <button
         type="button"
         onClick={handleQuickExplore}
-        className="w-full group flex items-center justify-between px-4 py-2.5 rounded-xl bg-[#060d24] hover:bg-[#141a32] border border-[#00FF66]/20 hover:border-[#00FF66]/50 transition-all font-['JetBrains_Mono'] text-[12px] text-[#bac9cc] hover:text-[#00FF66]"
+        className="w-full group flex items-center justify-between px-4 py-2.5 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-emerald-500/25 hover:border-emerald-400 transition-all duration-300 font-['JetBrains_Mono'] text-[12px] text-slate-300 hover:text-emerald-300 cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]"
       >
         <span className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#00FF66] group-hover:rotate-12 transition-transform" />
+          <Sparkles className="w-4 h-4 text-emerald-400 group-hover:rotate-12 transition-transform" />
           <span>Explorar Galería de Plantillas Quick-Start</span>
         </span>
-        <ArrowRight className="w-4 h-4 text-[#00FF66] group-hover:translate-x-1 transition-transform" />
+        <ArrowRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
       </button>
 
-      {/* Mode Selector Pill (Login vs Registro Académico) */}
-      <div className="flex bg-[#060d24] p-1 rounded-xl border border-[#222941] text-[11px] font-['JetBrains_Mono']">
+      {/* Mode Selector Pill */}
+      <div className="flex bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800 text-[11px] font-['JetBrains_Mono']">
         <button
           type="button"
           onClick={() => {
             setMode('login');
             setErrorMsg(null);
           }}
-          className={`flex-1 py-1.5 rounded-lg transition-all font-semibold ${
+          className={`flex-1 py-2 rounded-xl transition-all duration-300 font-semibold cursor-pointer ${
             mode === 'login'
-              ? 'bg-[#00FF66] text-[#00363d] shadow-[0_0_12px_rgba(0,255,102,0.4)]'
-              : 'text-[#bac9cc] hover:text-[#dce1ff]'
+              ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold shadow-[0_0_15px_rgba(16,185,129,0.4)]'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           Acceso Estudiante
@@ -225,10 +221,10 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
             setMode('register');
             setErrorMsg(null);
           }}
-          className={`flex-1 py-1.5 rounded-lg transition-all font-semibold ${
+          className={`flex-1 py-2 rounded-xl transition-all duration-300 font-semibold cursor-pointer ${
             mode === 'register'
-              ? 'bg-[#00FF66] text-[#00363d] shadow-[0_0_12px_rgba(0,255,102,0.4)]'
-              : 'text-[#bac9cc] hover:text-[#dce1ff]'
+              ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold shadow-[0_0_15px_rgba(16,185,129,0.4)]'
+              : 'text-slate-400 hover:text-white'
           }`}
         >
           Alta de Credencial
@@ -237,81 +233,68 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
 
       {/* Error alert */}
       {errorMsg && (
-        <div className="p-3 rounded-xl bg-[#ff5555]/10 border border-[#ff5555]/30 flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#ff8080]">
+        <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-red-300">
           <span translate="no" className="notranslate material-symbols-outlined text-[16px]">error</span>
           <span>{errorMsg}</span>
         </div>
       )}
 
-      {/* Authentication Form */}
+      {/* Authentication Form: ONLY Full Name, Email, Password */}
       <form onSubmit={handleStudentAuth} className="flex flex-col gap-3.5">
-        <div>
-          <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-            Correo Institucional (@edu.mx, IPN, UNAM, TEC...)
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-2.5 w-4 h-4 text-[#849396]" />
-            <input
-              type="email"
-              required
-              placeholder="alumno@institucion.edu.mx"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-[#060d24] border border-[#222941] focus:border-[#00FF66] rounded-xl pl-9 pr-3 py-2.5 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] transition-colors"
-            />
-          </div>
-        </div>
-
         {mode === 'register' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                Universidad / Facultad
-              </label>
-              <div className="relative">
-                <School className="absolute left-3 top-2.5 w-4 h-4 text-[#849396]" />
-                <input
-                  type="text"
-                  placeholder="Ej. ESCOM IPN / Fac. Ingeniería"
-                  value={institution}
-                  onChange={(e) => setInstitution(e.target.value)}
-                  className="w-full bg-[#060d24] border border-[#222941] focus:border-[#00FF66] rounded-xl pl-9 pr-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                Matrícula o Boleta
-              </label>
+          <div>
+            <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
+              Nombre Completo (Full Name)
+            </label>
+            <div className="relative">
+              <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
               <input
                 type="text"
-                placeholder="2024XXXXXX"
-                value={studentId}
-                onChange={(e) => setStudentId(e.target.value)}
-                className="w-full bg-[#060d24] border border-[#222941] focus:border-[#00FF66] rounded-xl px-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
+                required
+                placeholder="Ej. Rodrigo Salinas Ruiz"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="w-full bg-slate-950/80 border border-emerald-500/30 focus:border-emerald-400 rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-white focus:outline-none font-['Inter'] focus:ring-1 focus:ring-emerald-400 transition-all duration-300"
               />
             </div>
           </div>
         )}
 
         <div>
-          <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-            Contraseña de Acceso
+          <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
+            Correo Institucional (@edu.mx, IPN, UNAM, TEC...)
           </label>
           <div className="relative">
-            <Lock className="absolute left-3 top-2.5 w-4 h-4 text-[#849396]" />
+            <Mail className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+            <input
+              type="email"
+              required
+              placeholder="alumno@institucion.edu.mx"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-slate-950/80 border border-emerald-500/30 focus:border-emerald-400 rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-emerald-400 transition-all duration-300"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
+            Contraseña de Acceso (Password)
+          </label>
+          <div className="relative">
+            <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
             <input
               type={showPassword ? 'text' : 'password'}
               required
               placeholder="••••••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#060d24] border border-[#222941] focus:border-[#00FF66] rounded-xl pl-9 pr-10 py-2.5 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] transition-colors"
+              className="w-full bg-slate-950/80 border border-emerald-500/30 focus:border-emerald-400 rounded-xl pl-10 pr-10 py-2.5 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-emerald-400 transition-all duration-300"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-2.5 text-[#849396] hover:text-[#00FF66] transition-colors p-0.5 focus:outline-none"
+              className="absolute right-3.5 top-3 text-slate-400 hover:text-emerald-400 transition-colors p-0.5 focus:outline-none cursor-pointer"
               aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -319,21 +302,21 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
           </div>
         </div>
 
-        {/* Legal Disclaimer: Lighter Academic Disclaimer */}
-        <div className="p-3 rounded-xl bg-[#060d24] border border-[#222941] flex items-start gap-2.5 font-['Inter'] text-[12px]">
+        {/* Academic Terms */}
+        <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-start gap-2.5 font-['Inter'] text-[12px]">
           <input
             type="checkbox"
             id="academic-terms-check"
             checked={acceptAcademicTerms}
             onChange={(e) => setAcceptAcademicTerms(e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded border-[#3b494c] text-[#00FF66] focus:ring-[#00FF66] bg-[#141a32] accent-[#00FF66] cursor-pointer shrink-0"
+            className="mt-0.5 w-4 h-4 rounded border-slate-700 text-emerald-400 focus:ring-emerald-400 bg-slate-900 accent-emerald-400 cursor-pointer shrink-0"
           />
-          <label htmlFor="academic-terms-check" className="text-[#bac9cc] leading-snug cursor-pointer select-none">
+          <label htmlFor="academic-terms-check" className="text-slate-300 leading-snug cursor-pointer select-none">
             Acepto los{' '}
-            <span className="text-[#00FF66] font-semibold underline">
+            <span className="text-emerald-400 font-semibold underline">
               Términos de Uso Académico
             </span>{' '}
-            y la política de uso ético de plantillas para titulación y aprendizaje.
+            y la política de privacidad con protección de datos personales.
           </label>
         </div>
 
@@ -341,60 +324,19 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3.5 rounded-xl bg-[#00FF66] hover:bg-[#52ff94] text-[#00363d] font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,255,102,0.4)] flex items-center justify-center gap-2 mt-1 disabled:opacity-50"
+          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] hover:scale-[1.01] flex items-center justify-center gap-2 mt-1 cursor-pointer disabled:opacity-50"
         >
           <KeyRound className="w-4 h-4" />
           <span>
             {loading
               ? 'Validando Credencial...'
               : mode === 'login'
-              ? 'Autenticar Acceso Académico'
-              : 'Registrar Cuenta de Estudiante'}
+              ? 'Iniciar Sesión Académica'
+              : 'Registrar Credencial Estudiantil'}
           </span>
         </button>
       </form>
     </div>
   );
 };
-
-export const StudentAuthModal: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  onSuccess?: (user: any) => void;
-  showToast?: (msg: string) => void;
-  onExploreTemplates?: () => void;
-}> = ({ isOpen, onClose, onSuccess, showToast, onExploreTemplates }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/90 backdrop-blur-xl p-4 overflow-y-auto">
-      <div className="relative w-full max-w-xl max-h-[94vh] overflow-y-auto rounded-3xl bg-[#0a1128] border border-[#00FF66]/40 shadow-[0_0_60px_rgba(0,255,102,0.2)] p-6 sm:p-8 flex flex-col gap-4">
-        {/* Close Button */}
-        <div className="flex items-center justify-end">
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-[#141a32] border border-[#222941] flex items-center justify-center text-[#bac9cc] hover:text-[#00FF66] hover:border-[#00FF66]/40 transition-all"
-            aria-label="Cerrar modal"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        <StudentAuthModule
-          onSuccess={(user) => {
-            if (onSuccess) onSuccess(user);
-            onClose();
-          }}
-          onExploreTemplates={() => {
-            onClose();
-            if (onExploreTemplates) onExploreTemplates();
-            else if (typeof window !== 'undefined') window.location.hash = '#academy';
-          }}
-          showToast={showToast}
-        />
-      </div>
-    </div>
-  );
-};
-
-export default StudentAuthModal;
+export default StudentAuthModule;

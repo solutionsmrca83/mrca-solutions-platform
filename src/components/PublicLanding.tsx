@@ -31,26 +31,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
     description: '',
   });
 
-  const [cookieConsentVisible, setCookieConsentVisible] = useState(false);
-
-  useEffect(() => {
-    try {
-      const isAccepted = localStorage.getItem('mrca_telemetry_accepted');
-      if (!isAccepted) {
-        setCookieConsentVisible(true);
-      }
-    } catch (e) {
-      setCookieConsentVisible(true);
-    }
-  }, []);
-
-  const handleAcceptTelemetry = () => {
-    try {
-      localStorage.setItem('mrca_telemetry_accepted', 'true');
-    } catch (e) {}
-    setCookieConsentVisible(false);
-  };
-
   const techStackItems = [
     { title: 'Python', desc: 'AsyncIO / FastAPI / AI Kernels', icon: 'terminal', color: 'text-[#00e5ff]' },
     { title: 'Supabase', desc: 'PostgreSQL / RLS Enterprise', icon: 'database', color: 'text-[#00fe66]' },
@@ -95,16 +75,16 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex flex-col gap-10">
         {/* SECTION 1: TOP STATUS BAR (Quick Anchor Bar & Live Telemetry Node) */}
         <section className="w-full">
-          <div className="w-full bg-[#141a32]/80 border border-[#00e5ff]/20 backdrop-blur-md rounded-xl p-3 flex flex-col md:flex-row items-center justify-between gap-3 shadow-md">
+          <div className="w-full bg-slate-900/50 border border-cyan-500/30 hover:border-cyan-400/60 backdrop-blur-xl rounded-2xl p-3 flex flex-col md:flex-row items-center justify-between gap-3 shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-300">
             <div className="flex items-center gap-3 flex-wrap">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#222941] border border-[#00fe66]/30">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-950/80 border border-[#00fe66]/30">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66] uppercase tracking-wider font-semibold">
                   All Systems Operational — 99.9% Uptime (CDMX & US-East Cluster)
                 </span>
               </div>
-              <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#060d24] font-['JetBrains_Mono'] text-[11px] text-[#bac9cc]">
-                <span className="text-[#00e5ff] font-semibold">LATENCY:</span>
+              <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-950/80 border border-slate-800 font-['JetBrains_Mono'] text-[11px] text-[#bac9cc]">
+                <span className="text-cyan-400 font-semibold">LATENCY:</span>
                 <span className="text-[#6bff83]">1.14ms</span>
               </div>
             </div>
@@ -112,25 +92,25 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             <nav className="flex items-center gap-1 flex-wrap justify-center font-['JetBrains_Mono'] text-[11px] uppercase">
               <a
                 href="#arquitectura"
-                className="px-3 py-1 rounded hover:bg-[#181e36] text-[#bac9cc] hover:text-[#00e5ff] transition-all"
+                className="px-3 py-1 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-300 transition-all duration-300"
               >
                 Arquitectura
               </a>
               <a
                 href="#seguridad-cifrado"
-                className="px-3 py-1 rounded hover:bg-[#181e36] text-[#bac9cc] hover:text-[#00e5ff] transition-all"
+                className="px-3 py-1 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-300 transition-all duration-300"
               >
                 Seguridad & Cifrado
               </a>
               <a
                 href="#tech-stack"
-                className="px-3 py-1 rounded hover:bg-[#181e36] text-[#bac9cc] hover:text-[#00e5ff] transition-all"
+                className="px-3 py-1 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-cyan-300 transition-all duration-300"
               >
                 Tech Stack
               </a>
               <button
                 onClick={onNavigateToAdmin}
-                className="px-3 py-1 rounded bg-[#222941] hover:bg-[#00e5ff] hover:text-[#00363d] text-[#00e5ff] border border-[#00e5ff]/40 transition-all flex items-center gap-1 font-semibold"
+                className="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-teal-400 hover:text-slate-950 text-cyan-300 border border-cyan-500/40 hover:border-transparent transition-all duration-300 flex items-center gap-1.5 font-bold cursor-pointer shadow-[0_0_12px_rgba(6,182,212,0.2)]"
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[14px]">key</span>
                 <span>Portal Privado</span>
@@ -144,7 +124,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Left Content Column */}
             <div className="lg:col-span-7 flex flex-col gap-4 z-10">
-              <div className="inline-flex items-center gap-2 w-fit px-3 py-1 rounded-full bg-[#222941]/90 border border-[#00fe66]/30 shadow-sm">
+              <div className="inline-flex items-center gap-2 w-fit px-3 py-1 rounded-full bg-slate-900/80 border border-[#00fe66]/30 shadow-[0_0_12px_rgba(0,254,102,0.15)]">
                 <span className="w-2 h-2 rounded-full bg-[#00fe66] shadow-[0_0_8px_rgba(0,254,102,0.8)] animate-pulse-dot"></span>
                 <span className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] uppercase tracking-wider font-semibold">
                   PROTOCOLO ZERO-TRUST V2.4.1 // HIGH-ASSURANCE CLUSTER
@@ -153,12 +133,12 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
 
               <h1 className="font-['Space_Grotesk'] text-[32px] sm:text-[44px] lg:text-[48px] text-[#dce1ff] font-bold tracking-tight leading-tight">
                 Ingeniería de Software &{' '}
-                <span className="text-[#00e5ff] drop-shadow-[0_0_15px_rgba(0,229,255,0.4)]">
+                <span className="text-cyan-400 drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]">
                   Seguridad B2B
                 </span>
               </h1>
 
-              <p className="font-['Inter'] text-[15px] sm:text-[16px] text-[#bac9cc] max-w-2xl leading-relaxed">
+              <p className="font-['Inter'] text-[15px] sm:text-[16px] text-slate-300 max-w-2xl leading-relaxed">
                 Arquitectura resiliente en la nube, microservicios blindados y auditoría criptográfica continua para consorcios corporativos de misión crítica. Protección inquebrantable desde el silicio hasta la capa de aplicación.
               </p>
 
@@ -166,14 +146,14 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
                 <button
                   onClick={() => setIsAuditModalOpen(true)}
-                  className="min-h-[48px] px-6 py-3 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['Space_Grotesk'] text-[16px] font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(0,229,255,0.4)] active:scale-[0.98] transition-all"
+                  className="min-h-[48px] px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[16px] font-bold tracking-wide flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(6,182,212,0.4)] hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
                 >
                   <span translate="no" className="notranslate material-symbols-outlined text-[20px]">shield_lock</span>
                   <span>Desplegar Auditoría de Seguridad</span>
                 </button>
                 <a
                   href="#tech-stack"
-                  className="min-h-[48px] px-6 py-3 rounded-lg bg-[#222941]/80 hover:bg-[#2d344c] border border-[#00e5ff]/20 text-[#c3f5ff] font-['Space_Grotesk'] text-[16px] font-medium flex items-center justify-center gap-2 transition-colors"
+                  className="min-h-[48px] px-6 py-3 rounded-xl bg-slate-900/60 hover:bg-slate-850 border border-cyan-500/30 hover:border-cyan-400 text-cyan-300 font-['Space_Grotesk'] text-[16px] font-medium flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] cursor-pointer"
                 >
                   <span translate="no" className="notranslate material-symbols-outlined text-[20px]">account_tree</span>
                   <span>Explorar Arquitectura</span>
@@ -182,44 +162,44 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
 
               {/* Live Telemetry Grid (4 items) */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
-                <div className="p-3.5 rounded-xl bg-[#181e36]/80 border border-[#222941] backdrop-blur-md flex flex-col gap-0.5">
+                <div className="p-3.5 rounded-2xl bg-slate-900/50 border border-cyan-500/30 hover:border-cyan-400 backdrop-blur-xl flex flex-col gap-0.5 shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-300">
                   <div className="flex items-center justify-between">
-                    <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">VELOCIDAD</span>
-                    <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[15px]">bolt</span>
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">VELOCIDAD</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-cyan-400 text-[15px]">bolt</span>
                   </div>
-                  <div className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] text-[#dce1ff] font-bold">42.8M</div>
-                  <div className="font-['JetBrains_Mono'] text-[11px] text-[#00e5ff]">OPS/s nominal</div>
+                  <div className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] text-white font-bold">42.8M</div>
+                  <div className="font-['JetBrains_Mono'] text-[11px] text-cyan-400 font-semibold">OPS/s nominal</div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#181e36]/80 border border-[#222941] backdrop-blur-md flex flex-col gap-0.5">
+                <div className="p-3.5 rounded-2xl bg-slate-900/50 border border-cyan-500/30 hover:border-cyan-400 backdrop-blur-xl flex flex-col gap-0.5 shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-300">
                   <div className="flex items-center justify-between">
-                    <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">FAILOVER</span>
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">FAILOVER</span>
                     <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[15px]">sync</span>
                   </div>
                   <div className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] text-[#00fe66] font-bold">
                     0.00<span className="text-[14px]">ms</span>
                   </div>
-                  <div className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc]">Latencia rSync</div>
+                  <div className="font-['JetBrains_Mono'] text-[11px] text-slate-400">Latencia rSync</div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#181e36]/80 border border-[#222941] backdrop-blur-md flex flex-col gap-0.5">
+                <div className="p-3.5 rounded-2xl bg-slate-900/50 border border-cyan-500/30 hover:border-cyan-400 backdrop-blur-xl flex flex-col gap-0.5 shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-300">
                   <div className="flex items-center justify-between">
-                    <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">CERTIFICACIÓN</span>
-                    <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[15px]">verified</span>
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">CERTIFICACIÓN</span>
+                    <span translate="no" className="notranslate material-symbols-outlined text-cyan-400 text-[15px]">verified</span>
                   </div>
-                  <div className="font-['Space_Grotesk'] text-[20px] sm:text-[22px] text-[#dce1ff] font-bold pt-1">
+                  <div className="font-['Space_Grotesk'] text-[20px] sm:text-[22px] text-white font-bold pt-1">
                     SOC-2 II
                   </div>
-                  <div className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66]">ISO-27001 Activa</div>
+                  <div className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66] font-semibold">ISO-27001 Activa</div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-[#181e36]/80 border border-[#222941] backdrop-blur-md flex flex-col gap-0.5">
+                <div className="p-3.5 rounded-2xl bg-slate-900/50 border border-cyan-500/30 hover:border-cyan-400 backdrop-blur-xl flex flex-col gap-0.5 shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all duration-300">
                   <div className="flex items-center justify-between">
-                    <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">CONFIABILIDAD</span>
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">CONFIABILIDAD</span>
                     <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[15px]">verified_user</span>
                   </div>
-                  <div className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] text-[#dce1ff] font-bold">99.999%</div>
-                  <div className="font-['JetBrains_Mono'] text-[11px] text-[#00e5ff]">SLA Institucional</div>
+                  <div className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] text-white font-bold">99.999%</div>
+                  <div className="font-['JetBrains_Mono'] text-[11px] text-cyan-400 font-semibold">SLA Institucional</div>
                 </div>
               </div>
             </div>
@@ -653,55 +633,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
           </div>
         </section>
       </div>
-
-      {/* STICKY / FLOATING COOKIE & CRYPTOGRAPHIC TELEMETRY CONSENT BANNER */}
-      {cookieConsentVisible && (
-        <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-16 md:max-w-xl z-40 bg-[#060d24]/95 border border-[#00e5ff]/40 backdrop-blur-2xl p-4 sm:p-5 rounded-2xl shadow-[0_20px_40px_rgba(5,9,20,0.8),0_0_30px_rgba(0,229,255,0.15)] flex flex-col gap-3">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2 text-[#00e5ff]">
-              <span translate="no" className="notranslate material-symbols-outlined text-[20px]">cookie</span>
-              <span className="font-['Space_Grotesk'] text-[16px] text-[#dce1ff] font-semibold">
-                Gobernanza Criptográfica de Telemetría
-              </span>
-            </div>
-            <button
-              onClick={handleAcceptTelemetry}
-              className="text-[#bac9cc] hover:text-[#dce1ff] p-0.5"
-              aria-label="Cerrar aviso"
-            >
-              <span translate="no" className="notranslate material-symbols-outlined text-[18px]">close</span>
-            </button>
-          </div>
-
-          <p className="font-['Inter'] text-[12px] text-[#bac9cc] leading-relaxed">
-            MRCA Solutions trata identificadores anónimos cifrados en tránsito exclusivamente para monitorear resiliencia y mitigar ataques DDOS. Cero cookies de terceros y cumplimiento estricto RGPD/CCPA.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-end gap-2 pt-1">
-            <button
-              onClick={handleAcceptTelemetry}
-              className="px-3 py-1.5 rounded-lg bg-[#181e36] hover:bg-[#222941] text-[#dce1ff] font-['JetBrains_Mono'] text-[11px] uppercase transition-colors"
-            >
-              Solo Esenciales
-            </button>
-            <button
-              onClick={() => {
-                alert('Políticas Criptográficas Configuradas: Modos HSM Zero-Retention Activados.');
-                handleAcceptTelemetry();
-              }}
-              className="px-3 py-1.5 rounded-lg bg-[#222941] hover:bg-[#2d344c] text-[#00daf3] font-['JetBrains_Mono'] text-[11px] uppercase transition-colors"
-            >
-              Preferencias Criptográficas
-            </button>
-            <button
-              onClick={handleAcceptTelemetry}
-              className="px-4 py-1.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[11px] uppercase font-bold transition-all shadow-[0_0_12px_rgba(0,229,255,0.3)]"
-            >
-              Aceptar Todas
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Modals */}
       <AuditModal

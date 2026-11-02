@@ -1,28 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Eye, EyeOff, ShieldAlert, CheckCircle2, XCircle } from 'lucide-react';
-import { EngineeringCapabilityCategory } from '../types';
+import {
+  Eye,
+  EyeOff,
+  Shield,
+  ShieldCheck,
+  ShieldAlert,
+  CheckCircle2,
+  XCircle,
+  Building,
+  User,
+  Mail,
+  Lock,
+  ArrowRight,
+  ExternalLink,
+  Sparkles,
+} from 'lucide-react';
 
 interface ClientAuthModuleProps {
   onLoginSuccess?: (user: any) => void;
   onRegisterSubmitted?: (proposal: any) => void;
-  initialMode?: 'login' | 'register';
   showToast?: (msg: string) => void;
+  initialMode?: 'login' | 'register';
 }
 
 export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
   onLoginSuccess,
   onRegisterSubmitted,
-  initialMode = 'login',
   showToast,
+  initialMode = 'login',
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [isPendingVerification, setIsPendingVerification] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  // Legal Modals state
-  const [activeLegalModal, setActiveLegalModal] = useState<'privacy' | 'terms' | null>(null);
 
   // Password visibility state
   const [showLoginPassword, setShowLoginPassword] = useState(false);
@@ -38,22 +49,20 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
-  // Register form state
+  // Register form state: ONLY Full Name, Work Email, Password, Company Name (ZERO friction)
+  const [fullName, setFullName] = useState('');
   const [companyName, setCompanyName] = useState('');
-  const [repName, setRepName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
-  const [serviceCategory, setServiceCategory] = useState<EngineeringCapabilityCategory>('web_apps');
-  const [projectBrief, setProjectBrief] = useState('');
-  const [budgetTier, setBudgetTier] = useState('Adaptable a Presupuesto / Viabilidad');
-  
+
   // Compliance Checkboxes
-  const [privacyAccepted, setPrivacyAccepted] = useState(false);
-  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(true);
+  const [termsAccepted, setTermsAccepted] = useState(true);
 
   // Generated Registration Audit Data
   const [registeredData, setRegisteredData] = useState<{
     company: string;
+    fullName: string;
     email: string;
     tokenHash: string;
     timestamp: string;
@@ -92,9 +101,8 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
   const isHighSecurityB2B = metCount === passwordCriteria.length;
   const strengthPercentage = regPassword.length === 0 ? 0 : (metCount / passwordCriteria.length) * 100;
 
-  // Terminal Green (#00FF66) ONLY when meeting high-security B2B standards!
   const progressBarColor = isHighSecurityB2B
-    ? 'bg-[#00FF66] shadow-[0_0_12px_#00FF66]'
+    ? 'bg-[#00fe66] shadow-[0_0_12px_#00fe66]'
     : metCount >= 3
     ? 'bg-[#ffd260] shadow-[0_0_8px_rgba(255,210,96,0.5)]'
     : 'bg-[#ff5555] shadow-[0_0_8px_rgba(255,85,85,0.5)]';
@@ -120,8 +128,8 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
         // Local sandbox fallback for testing
         if (
           (loginEmail.includes('socio') ||
-          loginEmail.includes('jefe') ||
-          loginEmail.includes('cliente')) &&
+            loginEmail.includes('jefe') ||
+            loginEmail.includes('cliente')) &&
           loginPassword.length >= 6
         ) {
           const mockUser = {
@@ -166,12 +174,12 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!privacyAccepted || !termsAccepted) {
-      setErrorMsg('Debe aceptar el Aviso de Privacidad y los Términos de Alianza para continuar.');
+      setErrorMsg('Debe aceptar el Aviso de Privacidad y los Términos de Servicio para continuar.');
       return;
     }
 
     if (!isHighSecurityB2B) {
-      setErrorMsg('La contraseña maestra debe cumplir los estándares B2B de alta seguridad (indicador verde #00FF66).');
+      setErrorMsg('La contraseña maestra debe cumplir los estándares B2B de alta seguridad (indicador verde #00fe66).');
       return;
     }
 
@@ -184,48 +192,61 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
         Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
       const timestamp = new Date().toISOString();
 
-      const newProposal = {
-        id: 'PROP-' + Math.floor(Math.random() * 9000 + 1000),
-        companyName,
-        representativeName: repName,
-        email: regEmail,
-        category: serviceCategory,
-        projectTitle: `${companyName} // Proyecto ${serviceCategory.toUpperCase()}`,
-        description: projectBrief,
-        budgetTier,
-        status: 'pending',
-        submittedAt: timestamp,
-        complianceAccepted: true,
-        messages: [
-          {
-            id: 'm1',
-            sender: 'client',
-            senderName: repName,
-            text: `Registro inicial: ${projectBrief}`,
-            timestamp,
-            isEncrypted: true,
-            cipherHash: tokenHash,
+      // Attempt Supabase signUp
+      try {
+        const { supabase } = await import('../lib/supabase/client');
+        const { data, error } = await supabase.auth.signUp({
+          email: regEmail,
+          password: regPassword,
+          options: {
+            data: {
+              role: 'client',
+              full_name: fullName,
+              company_name: companyName,
+            },
           },
-        ],
+        });
+
+        if (data?.user && onLoginSuccess) {
+          onLoginSuccess({
+            ...data.user,
+            role: 'client',
+            user_metadata: {
+              role: 'client',
+              full_name: fullName,
+              company_name: companyName,
+            },
+          });
+        }
+      } catch {
+        // local sandbox fallback
+      }
+
+      const clientAccount = {
+        id: 'CLI-' + Math.floor(Math.random() * 9000 + 1000),
+        companyName,
+        representativeName: fullName,
+        email: regEmail,
+        submittedAt: timestamp,
+        tokenHash,
       };
 
-      // Store in state & notify parent
       setRegisteredData({
         company: companyName,
+        fullName,
         email: regEmail,
         tokenHash,
         timestamp,
       });
 
       if (onRegisterSubmitted) {
-        onRegisterSubmitted(newProposal);
+        onRegisterSubmitted(clientAccount);
       }
 
       if (showToast) {
-        showToast('Solicitud registrada. Pendiente de verificación por Arquitectura.');
+        showToast('Cuenta corporativa creada exitosamente. Bienvenido a MRCA Solutions.');
       }
 
-      // Transition to Post-registration Pending State
       setIsPendingVerification(true);
     } catch (err: any) {
       setErrorMsg(err.message || 'Error registrando cuenta corporativa.');
@@ -234,112 +255,73 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
     }
   };
 
-  // ----------------------------------------------------------------------------
-  // POST-REGISTRATION UI: Identity Verification Pending
-  // ----------------------------------------------------------------------------
+  // POST-REGISTRATION UI: Identity Verification Confirmed
   if (isPendingVerification && registeredData) {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, ease: 'easeOut' }}
-        className="w-full max-w-xl mx-auto rounded-3xl bg-[#0a1128]/95 border border-[#00e5ff]/40 p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.85),0_0_40px_rgba(0,229,255,0.15)] backdrop-blur-2xl flex flex-col items-center text-center gap-6"
+        transition={{ duration: 0.35, ease: 'easeOut' }}
+        className="w-full max-w-xl mx-auto rounded-3xl bg-slate-900/60 backdrop-blur-xl border border-cyan-500/30 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.25)] flex flex-col items-center text-center gap-5 transition-all duration-300"
       >
-        {/* Animated Scanner Pulse Icon */}
         <div className="relative">
-          <div className="w-20 h-20 rounded-2xl bg-[#141a32] border border-[#00e5ff]/50 flex items-center justify-center text-[#00e5ff] shadow-[0_0_30px_rgba(0,229,255,0.35)]">
-            <span translate="no" className="notranslate material-symbols-outlined text-[44px] animate-pulse">
-              verified_user
-            </span>
+          <div className="w-16 h-16 rounded-2xl bg-cyan-950/80 border-2 border-cyan-400 flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)]">
+            <ShieldCheck className="w-9 h-9" />
           </div>
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#00fe66] border-2 border-[#0a1128] rounded-full shadow-[0_0_10px_#00fe66] animate-ping"></span>
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#00fe66] border-2 border-slate-900 rounded-full shadow-[0_0_8px_#00fe66] animate-ping" />
         </div>
 
-        {/* Status Headings */}
-        <div className="flex flex-col gap-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00fe66]/10 border border-[#00fe66]/30 text-[#00fe66] font-['JetBrains_Mono'] text-[11px] font-semibold mx-auto">
-            <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse"></span>
-            <span>EN REVISIÓN // ZERO-TRUST IDENTITY AUDIT</span>
-          </div>
-
-          <h2 className="font-['Space_Grotesk'] text-[26px] font-bold text-[#dce1ff]">
-            Verificación de Identidad Pendiente
+        <div className="flex flex-col gap-1.5">
+          <span className="px-3 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-['JetBrains_Mono'] text-[10px] font-bold uppercase tracking-wider mx-auto">
+            REGISTRO B2B COMPLETADO // IDENTIDAD LISTA
+          </span>
+          <h2 className="font-['Space_Grotesk'] text-[24px] font-bold text-white">
+            Cuenta Corporativa Activa
           </h2>
-
-          <p className="font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed max-w-md mx-auto">
-            La cuenta corporativa de <strong className="text-[#00e5ff]">{registeredData.company}</strong> ha sido
-            registrada exitosamente en el clúster seguro de <strong>MRCA Solutions</strong>.
+          <p className="font-['Inter'] text-[13px] text-slate-300 leading-relaxed max-w-md mx-auto">
+            La empresa <strong className="text-cyan-300">{registeredData.company}</strong> ({registeredData.fullName}) cuenta con acceso al Portal de Clientes bajo estándar de cifrado Zero-Trust.
           </p>
         </div>
 
-        {/* Enterprise Notice Callout */}
-        <div className="w-full p-4 rounded-2xl bg-[#141a32]/80 border border-[#222941] text-left flex flex-col gap-3 font-['Inter'] text-[12px] text-[#bac9cc]">
-          <div className="flex items-start gap-2.5">
-            <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[18px] shrink-0 mt-0.5">
-              shield
+        <div className="w-full p-4 rounded-2xl bg-slate-950/80 border border-cyan-500/20 text-left font-['JetBrains_Mono'] text-[11px] text-slate-300 flex flex-col gap-2">
+          <div className="flex justify-between items-center text-slate-400">
+            <span>USUARIO:</span>
+            <span className="text-white font-semibold">{registeredData.email}</span>
+          </div>
+          <div className="flex justify-between items-center text-slate-400">
+            <span>EMPRESA:</span>
+            <span className="text-cyan-300 font-semibold">{registeredData.company}</span>
+          </div>
+          <div className="flex flex-col pt-1 border-t border-slate-800 text-[10px]">
+            <span className="text-slate-500">TOKEN CRIPTOGRÁFICO DE SESIÓN:</span>
+            <span className="text-cyan-400 break-all select-all font-mono">
+              {registeredData.tokenHash}
             </span>
-            <p className="leading-relaxed">
-              Para preservar la integridad del Enclave B2B, nuestro equipo de Arquitectura y Seguridad (<strong className="text-[#dce1ff]">Jefe & Socio</strong>) evalúa manualmente cada requerimiento técnico antes de autorizar el acceso definitivo al Portal.
-            </p>
-          </div>
-
-          <div className="p-3 rounded-xl bg-[#060d24] border border-[#181e36] flex flex-col gap-1.5 font-['JetBrains_Mono'] text-[11px]">
-            <div className="flex justify-between text-[#849396]">
-              <span>CUENTA:</span>
-              <span className="text-[#dce1ff] font-semibold">{registeredData.email}</span>
-            </div>
-            <div className="flex justify-between text-[#849396]">
-              <span>TIEMPO SLA ESTIMADO:</span>
-              <span className="text-[#00fe66] font-bold">&lt; 2 Horas Hábiles</span>
-            </div>
-            <div className="flex flex-col pt-1 border-t border-[#181e36]">
-              <span className="text-[#849396]">TOKEN DE AUDITORÍA SHA-256:</span>
-              <span className="text-[#00daf3] break-all select-all font-mono text-[10px]">
-                {registeredData.tokenHash}
-              </span>
-            </div>
           </div>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
-          <button
-            onClick={() => {
-              setIsPendingVerification(false);
-              setMode('login');
-            }}
-            className="w-full py-3 rounded-xl bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2"
-          >
-            <span translate="no" className="notranslate material-symbols-outlined text-[18px]">login</span>
-            <span>Ir a Pantalla de Acceso</span>
-          </button>
-
-          <a
-            href="https://wa.me/?text=Hola%20MRCA%20Solutions,%20acabo%20de%20registrar%20mi%20empresa%20y%20deseo%20agilizar%20la%20verificaci%C3%B3n."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full py-3 rounded-xl bg-[#181e36] hover:bg-[#222941] text-[#bac9cc] hover:text-[#dce1ff] border border-[#3b494c] font-['JetBrains_Mono'] text-[12px] font-semibold transition-all flex items-center justify-center gap-2"
-          >
-            <span translate="no" className="notranslate material-symbols-outlined text-[18px] text-[#00fe66]">support_agent</span>
-            <span>Canal Prioritario SLA</span>
-          </a>
-        </div>
+        <button
+          onClick={() => {
+            setIsPendingVerification(false);
+            setMode('login');
+          }}
+          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>Acceder con mis Credenciales</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </motion.div>
     );
   }
 
-  // ----------------------------------------------------------------------------
-  // MAIN AUTH INTERFACE: Login & Register Glassmorphic Module
-  // ----------------------------------------------------------------------------
   return (
-    <div className="w-full max-w-xl mx-auto rounded-3xl bg-[#0a1128]/95 border border-[#00e5ff]/30 p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl flex flex-col gap-6 relative overflow-hidden">
-      {/* Background glow accent */}
-      <div className="absolute top-0 right-1/4 w-64 h-32 bg-[#00e5ff]/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="w-full max-w-xl mx-auto rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-cyan-500/30 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.25)] flex flex-col gap-6 relative overflow-hidden transition-all duration-300">
+      {/* Background radial glow */}
+      <div className="absolute top-0 right-1/4 w-64 h-32 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Module Brand Header */}
+      {/* Brand Header */}
       <div className="flex flex-col items-center text-center gap-2 relative z-10">
-        {/* Static High-Res Brand Logo */}
-        <div className="relative w-36 h-10 rounded-xl overflow-hidden border border-[#00E5FF]/40 shadow-[0_0_15px_rgba(0,229,255,0.3)] shrink-0 bg-[#0A1128] mb-1 p-1 flex items-center justify-center">
+        <div className="relative w-36 h-10 rounded-xl overflow-hidden border border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.3)] shrink-0 bg-[#0A1128] mb-1 p-1 flex items-center justify-center">
           <img
             src="/MRCA.SVG"
             alt="MRCA Solutions"
@@ -348,25 +330,24 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-['Space_Grotesk'] text-[24px] font-bold text-[#dce1ff]">
+          <span className="font-['Space_Grotesk'] text-[24px] font-bold text-white">
             MRCA SOLUTIONS
           </span>
-          <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-[#00fe66]/10 text-[#00fe66] border border-[#00fe66]/30 font-semibold">
-            v4.12 B2B
+          <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">
+            B2B ZERO-TRUST
           </span>
         </div>
-        <p className="font-['Inter'] text-[13px] text-[#bac9cc]">
+        <p className="font-['Inter'] text-[13px] text-slate-300">
           Infraestructura de Ingeniería de Software de Alta Precisión &amp; Ciberseguridad.
         </p>
       </div>
 
-      {/* Glassmorphic Sliding Toggle Switch */}
-      <div className="relative flex p-1.5 rounded-2xl bg-[#060d24] border border-[#222941] backdrop-blur-md z-10 font-['JetBrains_Mono'] text-[12px]">
-        {/* Animated Background Pill */}
+      {/* Glassmorphic Sliding Toggle */}
+      <div className="relative flex p-1.5 rounded-2xl bg-slate-950/80 border border-slate-800 backdrop-blur-md z-10 font-['JetBrains_Mono'] text-[12px]">
         <motion.div
           layout
           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-          className="absolute top-1.5 bottom-1.5 rounded-xl bg-gradient-to-r from-[#00e5ff] to-[#00daf3] shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+          className="absolute top-1.5 bottom-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-[#00daf3] shadow-[0_0_15px_rgba(6,182,212,0.4)]"
           style={{
             left: mode === 'login' ? '6px' : '50%',
             width: 'calc(50% - 6px)',
@@ -379,11 +360,11 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             setMode('login');
             setErrorMsg(null);
           }}
-          className={`flex-1 py-2.5 rounded-xl text-center relative z-10 font-bold transition-colors flex items-center justify-center gap-2 ${
-            mode === 'login' ? 'text-[#00363d]' : 'text-[#bac9cc] hover:text-[#dce1ff]'
+          className={`flex-1 py-2.5 rounded-xl text-center relative z-10 font-bold transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer ${
+            mode === 'login' ? 'text-slate-950' : 'text-slate-400 hover:text-white'
           }`}
         >
-          <span translate="no" className="notranslate material-symbols-outlined text-[16px]">vpn_key</span>
+          <Lock className="w-4 h-4" />
           <span>Iniciar Sesión</span>
         </button>
 
@@ -393,12 +374,12 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             setMode('register');
             setErrorMsg(null);
           }}
-          className={`flex-1 py-2.5 rounded-xl text-center relative z-10 font-bold transition-colors flex items-center justify-center gap-2 ${
-            mode === 'register' ? 'text-[#00363d]' : 'text-[#bac9cc] hover:text-[#dce1ff]'
+          className={`flex-1 py-2.5 rounded-xl text-center relative z-10 font-bold transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer ${
+            mode === 'register' ? 'text-slate-950' : 'text-slate-400 hover:text-white'
           }`}
         >
-          <span translate="no" className="notranslate material-symbols-outlined text-[16px]">how_to_reg</span>
-          <span>Crear Cuenta Corporativa</span>
+          <Building className="w-4 h-4" />
+          <span>Crear Cuenta B2B</span>
         </button>
       </div>
 
@@ -407,14 +388,14 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-3.5 rounded-xl bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 flex items-center gap-2.5 text-[12px] font-['JetBrains_Mono'] text-[#ffb4ab] z-10"
+          className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-2.5 text-[12px] font-['JetBrains_Mono'] text-red-300 z-10"
         >
-          <span translate="no" className="notranslate material-symbols-outlined text-[18px]">error</span>
+          <ShieldAlert className="w-4 h-4 text-red-400 shrink-0" />
           <span>{errorMsg}</span>
         </motion.div>
       )}
 
-      {/* Animated Form Container */}
+      {/* Form Area */}
       <AnimatePresence mode="wait">
         {mode === 'login' ? (
           /* ================================================================ */
@@ -430,41 +411,37 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             className="flex flex-col gap-4 relative z-10"
           >
             <div>
-              <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
+              <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
                 Correo Corporativo Registrado
               </label>
               <div className="relative">
-                <span translate="no" className="notranslate absolute left-3 top-2.5 material-symbols-outlined text-[#849396] text-[18px]">
-                  mail
-                </span>
+                <Mail className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
                 <input
                   type="email"
                   required
                   placeholder="ejecutivo@tuempresa.com"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
-                  className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] transition-colors"
+                  className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"
                 />
               </div>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc]">
+                <label className="text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300">
                   Contraseña de Acceso / Passkey
                 </label>
                 <button
                   type="button"
                   onClick={() => alert('Para reestablecer su clave, contacte a soporte con su token SHA-256.')}
-                  className="text-[11px] font-['JetBrains_Mono'] text-[#00daf3] hover:underline"
+                  className="text-[11px] font-['JetBrains_Mono'] text-cyan-400 hover:underline cursor-pointer"
                 >
                   ¿Olvidó su clave?
                 </button>
               </div>
               <div className="relative">
-                <span translate="no" className="notranslate absolute left-3 top-2.5 material-symbols-outlined text-[#849396] text-[18px]">
-                  lock
-                </span>
+                <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
                 <input
                   type={showLoginPassword ? 'text' : 'password'}
                   required
@@ -472,12 +449,12 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   disabled={isLockedOut}
-                  className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl pl-10 pr-10 py-2.5 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] transition-colors disabled:opacity-50"
+                  className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-10 pr-10 py-2.5 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300 disabled:opacity-50"
                 />
                 <button
                   type="button"
                   onClick={() => setShowLoginPassword(!showLoginPassword)}
-                  className="absolute right-3 top-2.5 text-[#849396] hover:text-[#00e5ff] transition-colors p-0.5 focus:outline-none"
+                  className="absolute right-3.5 top-3 text-slate-400 hover:text-cyan-400 transition-colors p-0.5 focus:outline-none cursor-pointer"
                   aria-label={showLoginPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                 >
                   {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -485,41 +462,41 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
               </div>
             </div>
 
-            {/* Rate Limiting Status Indicator */}
-            <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-[#060d24] border border-[#1e2642] text-[11px] font-['JetBrains_Mono']">
-              <span className="text-[#849396] flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00e5ff]"></span>
+            {/* Rate Limiting Status */}
+            <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] font-['JetBrains_Mono']">
+              <span className="text-slate-400 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                 Intentos de autenticación:
               </span>
               <span
                 className={`font-bold ${
                   failedAttempts >= 2
-                    ? 'text-[#ff5555]'
+                    ? 'text-red-400'
                     : failedAttempts === 1
-                    ? 'text-[#ffd260]'
-                    : 'text-[#00FF66]'
+                    ? 'text-amber-400'
+                    : 'text-[#00fe66]'
                 }`}
               >
-                Intentos restantes: {Math.max(0, MAX_LOGIN_ATTEMPTS - failedAttempts)} / {MAX_LOGIN_ATTEMPTS}
+                Restantes: {Math.max(0, MAX_LOGIN_ATTEMPTS - failedAttempts)} / {MAX_LOGIN_ATTEMPTS}
               </span>
             </div>
 
-            {/* Cooldown Lockout Red Warning Callout */}
+            {/* Lockout alert */}
             {isLockedOut && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="p-3.5 rounded-xl bg-[#ff5555]/15 border-2 border-[#ff5555] flex flex-col gap-1.5 text-center shadow-[0_0_20px_rgba(255,85,85,0.3)]"
+                className="p-3.5 rounded-xl bg-red-500/15 border-2 border-red-500 flex flex-col gap-1.5 text-center shadow-[0_0_20px_rgba(239,68,68,0.3)]"
               >
-                <div className="flex items-center justify-center gap-2 text-[#ff5555] font-['JetBrains_Mono'] font-bold text-[12px]">
-                  <ShieldAlert className="w-5 h-5 text-[#ff5555] animate-bounce" />
+                <div className="flex items-center justify-center gap-2 text-red-400 font-['JetBrains_Mono'] font-bold text-[12px]">
+                  <ShieldAlert className="w-5 h-5 text-red-400 animate-bounce" />
                   <span>ALERTA DE SEGURIDAD // BLOQUEO ACTIVO</span>
                 </div>
-                <p className="font-['Inter'] text-[12px] text-[#ffb4ab] leading-snug">
-                  Has agotado los 3 intentos permitidos. Por política Zero-Trust, el acceso ha sido suspendido temporalmente.
+                <p className="font-['Inter'] text-[12px] text-red-200 leading-snug">
+                  Ha agotado los intentos permitidos. Cooldown de seguridad activo.
                 </p>
-                <div className="font-['JetBrains_Mono'] text-[13px] text-[#ffffff] font-extrabold mt-1 py-1 rounded bg-[#ff5555]/30">
-                  TIEMPO DE ESPERA RESTANTE: {cooldownRemaining}s
+                <div className="font-['JetBrains_Mono'] text-[13px] text-white font-extrabold mt-1 py-1 rounded bg-red-500/30">
+                  TIEMPO RESTANTE: {cooldownRemaining}s
                 </div>
               </motion.div>
             )}
@@ -527,15 +504,13 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             <button
               type="submit"
               disabled={loading || isLockedOut}
-              className={`w-full py-3.5 rounded-xl font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 mt-2 ${
+              className={`w-full py-3.5 rounded-xl font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 mt-2 ${
                 isLockedOut
-                  ? 'bg-[#3b1219] text-[#ff8080] border border-[#ff5555]/40 opacity-70 cursor-not-allowed'
-                  : 'bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] shadow-[0_0_20px_rgba(0,229,255,0.4)] disabled:opacity-50'
+                  ? 'bg-red-950/40 text-red-300 border border-red-500/40 opacity-70 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.01] cursor-pointer disabled:opacity-50'
               }`}
             >
-              <span translate="no" className="notranslate material-symbols-outlined text-[18px]">
-                {loading ? 'sync' : isLockedOut ? 'lock_clock' : 'login'}
-              </span>
+              <Lock className="w-4 h-4" />
               <span>
                 {loading
                   ? 'Validando Credenciales...'
@@ -545,35 +520,15 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
               </span>
             </button>
 
-            {/* Strict B2B Legal Disclaimer */}
-            <div className="pt-2 text-center">
-              <p className="font-['Inter'] text-[11px] text-[#849396] leading-relaxed">
+            <div className="pt-1 text-center">
+              <p className="font-['Inter'] text-[11px] text-slate-400 leading-relaxed">
                 Al autenticarse, acepta nuestros{' '}
-                <a
-                  href="#legal-terminos"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#00daf3] hover:text-[#00e5ff] underline transition-colors font-medium"
-                >
+                <a href="#legal-terminos" className="text-cyan-400 hover:underline">
                   Términos de Servicio
-                </a>
-                ,{' '}
-                <a
-                  href="#legal-privacidad"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#00daf3] hover:text-[#00e5ff] underline transition-colors font-medium"
-                >
-                  Aviso de Privacidad
                 </a>{' '}
                 y{' '}
-                <a
-                  href="#legal-sla"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#00daf3] hover:text-[#00e5ff] underline transition-colors font-medium"
-                >
-                  SLA B2B
+                <a href="#legal-privacidad" className="text-cyan-400 hover:underline">
+                  Aviso de Privacidad
                 </a>
                 .
               </p>
@@ -581,7 +536,8 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
           </motion.form>
         ) : (
           /* ================================================================ */
-          /* FORM: CREAR CUENTA CORPORATIVA                                  */
+          /* FORM: CREAR CUENTA CORPORATIVA B2B (SIMPLIFIED ZERO-FRICTION)    */
+          /* ONLY: Full Name, Work Email, Password, Company Name               */
           /* ================================================================ */
           <motion.form
             key="register-form"
@@ -592,386 +548,185 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             onSubmit={handleRegister}
             className="flex flex-col gap-4 relative z-10"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <div>
-                <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                  Empresa / Razón Social
-                </label>
+            {/* Field 1: Full Name */}
+            <div>
+              <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
+                Nombre Completo (Full Name)
+              </label>
+              <div className="relative">
+                <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
                 <input
                   type="text"
                   required
-                  placeholder="Ej. FinTech NeoPay S.A."
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl px-3 py-2 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                  Representante Técnico / Cargo
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ej. Ing. Carlos Vega (CTO)"
-                  value={repName}
-                  onChange={(e) => setRepName(e.target.value)}
-                  className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl px-3 py-2 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
+                  placeholder="Ej. Ing. Carlos Vega"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-white focus:outline-none font-['Inter'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <div>
-                <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                  Correo Oficial Corporativo
-                </label>
+            {/* Field 2: Company Name */}
+            <div>
+              <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
+                Empresa / Razón Social (Company Name)
+              </label>
+              <div className="relative">
+                <Building className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+                <input
+                  type="text"
+                  required
+                  placeholder="Ej. FinTech NeoPay S.A. de C.V."
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-white focus:outline-none font-['Inter'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"
+                />
+              </div>
+            </div>
+
+            {/* Field 3: Work Email */}
+            <div>
+              <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
+                Correo Corporativo (Work Email)
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
                 <input
                   type="email"
                   required
                   placeholder="carlos@neopay.com"
                   value={regEmail}
                   onChange={(e) => setRegEmail(e.target.value)}
-                  className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl px-3 py-2 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
+                  className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"
                 />
               </div>
+            </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc]">
-                    Contraseña Maestra de Acceso
-                  </label>
-                  <span
-                    className={`text-[10px] font-['JetBrains_Mono'] font-bold ${
-                      isHighSecurityB2B
-                        ? 'text-[#00FF66]'
-                        : metCount >= 3
-                        ? 'text-[#ffd260]'
-                        : 'text-[#849396]'
-                    }`}
-                  >
-                    {isHighSecurityB2B
-                      ? 'NIVEL B2B ✓'
-                      : regPassword.length > 0
-                      ? `${metCount}/5 REQUISITOS`
-                      : 'B2B STANDARD'}
-                  </span>
-                </div>
-                <div className="relative">
-                  <input
-                    type={showRegPassword ? 'text' : 'password'}
-                    required
-                    placeholder="Mínimo 10 car. con A-Z, 0-9, símbolos"
-                    value={regPassword}
-                    onChange={(e) => setRegPassword(e.target.value)}
-                    className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl pl-3 pr-10 py-2 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] transition-colors"
+            {/* Field 4: Password */}
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300">
+                  Contraseña Maestra (Password)
+                </label>
+                <span
+                  className={`text-[10px] font-['JetBrains_Mono'] font-bold ${
+                    isHighSecurityB2B
+                      ? 'text-[#00fe66]'
+                      : metCount >= 3
+                      ? 'text-amber-400'
+                      : 'text-slate-500'
+                  }`}
+                >
+                  {isHighSecurityB2B
+                    ? 'NIVEL B2B SEGURO ✓'
+                    : regPassword.length > 0
+                    ? `${metCount}/5 REQUISITOS`
+                    : 'B2B STANDARD'}
+                </span>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+                <input
+                  type={showRegPassword ? 'text' : 'password'}
+                  required
+                  placeholder="Mínimo 10 car. con A-Z, 0-9, símbolos"
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                  className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-10 pr-10 py-2.5 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowRegPassword(!showRegPassword)}
+                  className="absolute right-3.5 top-3 text-slate-400 hover:text-cyan-400 transition-colors p-0.5 focus:outline-none cursor-pointer"
+                  aria-label={showRegPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                >
+                  {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* Security Meter */}
+              <div className="mt-2 p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col gap-1.5">
+                <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                  <motion.div
+                    initial={false}
+                    animate={{ width: `${strengthPercentage}%` }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    className={`h-full rounded-full transition-colors duration-300 ${progressBarColor}`}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowRegPassword(!showRegPassword)}
-                    className="absolute right-3 top-2.5 text-[#849396] hover:text-[#00e5ff] transition-colors p-0.5 focus:outline-none"
-                    aria-label={showRegPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
-                  >
-                    {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
                 </div>
-
-                {/* Advanced B2B Password Strength Meter */}
-                <div className="mt-2 p-2.5 rounded-xl bg-[#060d24] border border-[#1e2642] flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono']">
-                    <span className="text-[#849396]">Nivel de Robustez:</span>
-                    <span
-                      className={`font-semibold ${
-                        isHighSecurityB2B
-                          ? 'text-[#00FF66]'
-                          : metCount >= 3
-                          ? 'text-[#ffd260]'
-                          : 'text-[#ff5555]'
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-0.5 text-[10px] font-['JetBrains_Mono']">
+                  {passwordCriteria.map((c) => (
+                    <div
+                      key={c.id}
+                      className={`flex items-center gap-1.5 ${
+                        c.met ? 'text-[#00fe66]' : 'text-slate-500'
                       }`}
                     >
-                      {regPassword.length === 0
-                        ? 'Sin definir'
-                        : isHighSecurityB2B
-                        ? 'Estándar B2B (#00FF66) Cumplido'
-                        : metCount >= 3
-                        ? 'Seguridad Intermedia'
-                        : 'Vulnerable / Insegura'}
-                    </span>
-                  </div>
-
-                  {/* Progress Bar Container - ONLY #00FF66 when high security is met */}
-                  <div className="w-full h-2 rounded-full bg-[#181e36] overflow-hidden p-0.5">
-                    <motion.div
-                      initial={false}
-                      animate={{
-                        width: `${strengthPercentage}%`,
-                      }}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                      className={`h-full rounded-full transition-colors duration-300 ${progressBarColor}`}
-                    />
-                  </div>
-
-                  {/* Criteria Checklist */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-1 text-[10px] font-['JetBrains_Mono']">
-                    {passwordCriteria.map((c) => (
-                      <div
-                        key={c.id}
-                        className={`flex items-center gap-1.5 ${
-                          c.met ? 'text-[#00FF66]' : 'text-[#849396]'
-                        }`}
-                      >
-                        {c.met ? (
-                          <CheckCircle2 className="w-3 h-3 text-[#00FF66] shrink-0" />
-                        ) : (
-                          <XCircle className="w-3 h-3 text-[#566366] shrink-0" />
-                        )}
-                        <span>{c.label}</span>
-                      </div>
-                    ))}
-                  </div>
+                      {c.met ? (
+                        <CheckCircle2 className="w-3 h-3 text-[#00fe66] shrink-0" />
+                      ) : (
+                        <XCircle className="w-3 h-3 text-slate-600 shrink-0" />
+                      )}
+                      <span>{c.label}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Service Capability Selector */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <div>
-                <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                  Capacidad Requerida
-                </label>
-                <select
-                  value={serviceCategory}
-                  onChange={(e) => setServiceCategory(e.target.value as any)}
-                  className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl px-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
-                >
-                  <option value="web_apps">Web Apps & Plataformas Cloud</option>
-                  <option value="databases">Bases de Datos SQL & Supabase RLS</option>
-                  <option value="custom_scripts">Scripts a Medida & Automatización</option>
-                  <option value="security">Pentesting Kali & Auditoría Zero-Trust</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                  Presupuesto / Alcance Inicial
-                </label>
-                <select
-                  value={budgetTier}
-                  onChange={(e) => setBudgetTier(e.target.value)}
-                  className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl px-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
-                >
-                  <option value="Adaptable a Presupuesto / Viabilidad">Adaptable a Presupuesto (Alianza B2B)</option>
-                  <option value="$50,000 - $150,000 MXN">$50k - $150k MXN (Sprint Inicial)</option>
-                  <option value="$150,000 - $350,000 MXN">$150k - $350k MXN (Enterprise)</option>
-                  <option value="$350,000+ MXN">$350k+ MXN (Arquitectura Completa)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Project Brief */}
-            <div>
-              <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                Resumen del Desafío Tecnológico
-              </label>
-              <textarea
-                rows={2}
-                required
-                placeholder="Describa brevemente qué desea construir o proteger (ej. Migración a Postgres con RLS, app financiera, hardening)..."
-                value={projectBrief}
-                onChange={(e) => setProjectBrief(e.target.value)}
-                className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-xl p-3 text-[12px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] leading-relaxed"
-              />
-            </div>
-
-            {/* ============================================================== */}
-            {/* MANDATORY STYLISH LEGAL CHECKBOXES                             */}
-            {/* ============================================================== */}
-            <div className="p-3.5 rounded-2xl bg-[#060d24] border border-[#222941] flex flex-col gap-2.5 font-['Inter'] text-[12px]">
-              {/* Checkbox 1: Aviso de Privacidad */}
-              <label className="flex items-start gap-3 cursor-pointer group">
+            {/* Mandatory Checkboxes */}
+            <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col gap-2 text-[11.5px] font-['Inter'] text-slate-300">
+              <label className="flex items-start gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   required
                   checked={privacyAccepted}
                   onChange={(e) => setPrivacyAccepted(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded border-[#3b494c] text-[#00e5ff] focus:ring-[#00e5ff] bg-[#141a32] accent-[#00e5ff] cursor-pointer shrink-0"
+                  className="mt-0.5 w-4 h-4 rounded border-slate-700 text-cyan-400 focus:ring-cyan-400 bg-slate-900 accent-cyan-400 cursor-pointer shrink-0"
                 />
-                <span className="text-[#bac9cc] leading-snug">
-                  He leído y acepto el{' '}
-                  <a
-                    href="#legal-privacidad"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#00e5ff] underline font-semibold hover:text-[#c3f5ff]"
-                  >
+                <span className="leading-snug">
+                  Acepto el{' '}
+                  <a href="#legal-privacidad" className="text-cyan-400 underline font-semibold">
                     Aviso de Privacidad
                   </a>{' '}
-                  (conforme a LFPDPPP) para la custodia y no divulgación de datos corporativos.
+                  (conforme a LFPDPPP) para la protección de datos corporativos.
                 </span>
               </label>
 
-              {/* Checkbox 2: Términos y Condiciones */}
-              <label className="flex items-start gap-3 cursor-pointer group">
+              <label className="flex items-start gap-2.5 cursor-pointer">
                 <input
                   type="checkbox"
                   required
                   checked={termsAccepted}
                   onChange={(e) => setTermsAccepted(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded border-[#3b494c] text-[#00e5ff] focus:ring-[#00e5ff] bg-[#141a32] accent-[#00e5ff] cursor-pointer shrink-0"
+                  className="mt-0.5 w-4 h-4 rounded border-slate-700 text-cyan-400 focus:ring-cyan-400 bg-slate-900 accent-cyan-400 cursor-pointer shrink-0"
                 />
-                <span className="text-[#bac9cc] leading-snug">
+                <span className="leading-snug">
                   Acepto los{' '}
-                  <a
-                    href="#legal-terminos"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#00e5ff] underline font-semibold hover:text-[#c3f5ff]"
-                  >
+                  <a href="#legal-terminos" className="text-cyan-400 underline font-semibold">
                     Términos de Servicio
-                  </a>
-                  {' '}y el{' '}
-                  <a
-                    href="#legal-sla"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#00e5ff] underline font-semibold hover:text-[#c3f5ff]"
-                  >
-                    SLA B2B (99.9% Uptime)
                   </a>{' '}
-                  bajo Protocolos de Cifrado Zero-Trust.
+                  y el{' '}
+                  <a href="#legal-sla" className="text-cyan-400 underline font-semibold">
+                    SLA B2B (99.9% Uptime)
+                  </a>
+                  .
                 </span>
               </label>
             </div>
 
-            {/* Submit Registration Button */}
+            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00e5ff] to-[#00daf3] hover:opacity-90 text-[#00363d] font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2 mt-1 disabled:opacity-50"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
             >
-              <span translate="no" className="notranslate material-symbols-outlined text-[18px]">
-                {loading ? 'sync' : 'fingerprint'}
-              </span>
-              <span>{loading ? 'Procesando Solicitud...' : 'Solicitar Acceso al Enclave B2B'}</span>
+              <Building className="w-4 h-4" />
+              <span>{loading ? 'Registrando Cuenta...' : 'Crear Cuenta B2B Inmediata'}</span>
             </button>
-
-            {/* Strict B2B Legal Disclaimer below button */}
-            <div className="pt-2 text-center">
-              <p className="font-['Inter'] text-[11px] text-[#849396] leading-relaxed">
-                Al solicitar cuenta corporativa, acepta nuestros{' '}
-                <a
-                  href="#legal-terminos"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#00daf3] hover:text-[#00e5ff] underline transition-colors font-medium"
-                >
-                  Términos de Servicio
-                </a>
-                ,{' '}
-                <a
-                  href="#legal-privacidad"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#00daf3] hover:text-[#00e5ff] underline transition-colors font-medium"
-                >
-                  Aviso de Privacidad
-                </a>{' '}
-                y{' '}
-                <a
-                  href="#legal-sla"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#00daf3] hover:text-[#00e5ff] underline transition-colors font-medium"
-                >
-                  SLA B2B
-                </a>
-                .
-              </p>
-            </div>
           </motion.form>
         )}
       </AnimatePresence>
-
-      {/* ==================================================================== */}
-      {/* LEGAL MODALS: AVISO DE PRIVACIDAD & TÉRMINOS Y CONDICIONES           */}
-      {/* ==================================================================== */}
-      {activeLegalModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/90 backdrop-blur-xl p-4">
-          <div className="relative w-full max-w-2xl max-h-[85vh] rounded-3xl bg-[#141a32] border border-[#00e5ff]/40 p-6 sm:p-7 shadow-2xl flex flex-col gap-4 overflow-hidden">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-[#222941]">
-              <div className="flex items-center gap-2.5">
-                <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[24px]">
-                  {activeLegalModal === 'privacy' ? 'privacy_tip' : 'gavel'}
-                </span>
-                <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff]">
-                  {activeLegalModal === 'privacy'
-                    ? 'Aviso de Privacidad Integral B2B'
-                    : 'Términos y Condiciones de Alianza Tecnológica'}
-                </h3>
-              </div>
-              <button
-                onClick={() => setActiveLegalModal(null)}
-                className="text-[#bac9cc] hover:text-[#dce1ff] p-1"
-              >
-                <span translate="no" className="notranslate material-symbols-outlined text-[20px]">close</span>
-              </button>
-            </div>
-
-            {/* Modal Body Scrollable Text */}
-            <div className="overflow-y-auto pr-2 flex flex-col gap-3 font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed">
-              {activeLegalModal === 'privacy' ? (
-                <>
-                  <p className="font-semibold text-[#dce1ff]">
-                    MRCA Solutions Inc. — Protocolo de Privacidad y No Divulgación (NDA Implícito)
-                  </p>
-                  <p>
-                    En cumplimiento con la normativa internacional de protección de datos personales y comerciales (ISO/IEC 27701, SOC-2 Type II y legislación mexicana LFPDPPP), MRCA Solutions garantiza que la totalidad de la información provista por clientes corporativos es resguardada bajo los siguientes estándares:
-                  </p>
-                  <ul className="list-disc pl-5 flex flex-col gap-1.5 text-[12px] font-['JetBrains_Mono']">
-                    <li><strong className="text-[#00e5ff]">Cifrado en Reposo:</strong> Todos los datos son encriptados mediante el algoritmo AES-256-CBC con claves gestionadas en enclaves segregados.</li>
-                    <li><strong className="text-[#00e5ff]">Zero-Knowledge Architecture:</strong> Ningún colaborador no autorizado tiene acceso a los payloads ni credenciales suministradas.</li>
-                    <li><strong className="text-[#00e5ff]">No Transferencia a Terceros:</strong> Los datos jamás son compartidos, transferidos ni comercializados bajo ninguna circunstancia.</li>
-                    <li><strong className="text-[#00e5ff]">Derechos ARCO:</strong> El cliente puede exigir en cualquier momento la revocación o borrado seguro de su huella digital.</li>
-                  </ul>
-                </>
-              ) : (
-                <>
-                  <p className="font-semibold text-[#dce1ff]">
-                    Términos y Condiciones de Alianza Tecnológica & Acuerdos de Nivel de Servicio (SLA)
-                  </p>
-                  <p>
-                    Al solicitar una cuenta corporativa en MRCA Solutions, la entidad solicitante acepta los siguientes compromisos y directrices operativas:
-                  </p>
-                  <ul className="list-disc pl-5 flex flex-col gap-1.5 text-[12px] font-['JetBrains_Mono']">
-                    <li><strong className="text-[#00fe66]">Validación de Identidad Previa:</strong> El acceso a los enclaves y repositorios está sujeto a la validación técnica previa por el Jefe y Socio.</li>
-                    <li><strong className="text-[#00fe66]">Adaptabilidad Presupuestal:</strong> MRCA Solutions evalúa la viabilidad técnica y ajusta arquitecturas para maximizar el retorno de inversión sin comprometer la seguridad.</li>
-                    <li><strong className="text-[#00fe66]">Propiedad Intelectual:</strong> Los desarrollos a medida son de exclusiva propiedad del cliente una vez concluidos los hitos pactados.</li>
-                    <li><strong className="text-[#00fe66]">Responsabilidad de Auditoría:</strong> Las pruebas de penetración y escaneos de vulnerabilidades se ejecutan bajo estricta autorización bilateral.</li>
-                  </ul>
-                </>
-              )}
-            </div>
-
-            {/* Modal Footer */}
-            <div className="pt-3 border-t border-[#222941] flex justify-end">
-              <button
-                onClick={() => {
-                  if (activeLegalModal === 'privacy') setPrivacyAccepted(true);
-                  if (activeLegalModal === 'terms') setTermsAccepted(true);
-                  setActiveLegalModal(null);
-                }}
-                className="px-5 py-2.5 rounded-xl bg-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold shadow-[0_0_15px_rgba(0,229,255,0.4)]"
-              >
-                Comprendido y Aceptar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
-
-export default ClientAuthModule;

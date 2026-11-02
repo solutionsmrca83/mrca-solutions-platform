@@ -11,6 +11,7 @@ import { Login } from './components/Login';
 import { LegalFooter } from './components/LegalFooter';
 import { SystemStatusBadge } from './components/SystemStatusBadge';
 import { TermsAndConditions, PrivacyPolicy, SLA, AcceptableUse } from './pages/legal';
+import { CookieConsent } from './components/CookieConsent';
 import { supabase } from './lib/supabase/client';
 import { isUserAdmin, resolveUserRole, getEnrichedUser } from './lib/auth';
 import { ActiveView } from './types';
@@ -23,6 +24,14 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [sessionUser, setSessionUser] = useState<any>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isCookieAccepted, setIsCookieAccepted] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    try {
+      return localStorage.getItem('mrca_cookie_consent') === 'accepted';
+    } catch {
+      return false;
+    }
+  });
 
   useEffect(() => {
     let mounted = true;
@@ -65,6 +74,49 @@ export default function App() {
       const hostname = window.location.hostname.toLowerCase();
       const path = window.location.pathname;
       const hash = window.location.hash;
+
+      const consentGiven = (() => {
+        try {
+          return localStorage.getItem('mrca_cookie_consent') === 'accepted';
+        } catch {
+          return false;
+        }
+      })();
+
+      // STRICT COOKIE GATE: If cookie consent is not granted, block all portal and login routes
+      if (!consentGiven) {
+        if (path.startsWith('/legal') || hash.startsWith('#legal')) {
+          // Allow reading legal policies (Terms, Privacy, SLA, AUP)
+        } else if (
+          hostname.startsWith('admin.') ||
+          hostname.startsWith('clientes.') ||
+          hostname.startsWith('estudiantes.') ||
+          path === '/admin' ||
+          path.startsWith('/admin') ||
+          path === '/enclave' ||
+          path.startsWith('/enclave') ||
+          path === '/clientes' ||
+          path.startsWith('/clientes') ||
+          path === '/dashboard' ||
+          path === '/portal' ||
+          path.startsWith('/portal') ||
+          path === '/academy' ||
+          path.startsWith('/academy') ||
+          path === '/estudiantes' ||
+          path.startsWith('/estudiantes') ||
+          path === '/login' ||
+          path === '/register' ||
+          hash.startsWith('#admin') ||
+          hash.startsWith('#portal') ||
+          hash.startsWith('#client') ||
+          hash.startsWith('#academy') ||
+          hash.startsWith('#estudiantes') ||
+          hash.startsWith('#login')
+        ) {
+          setActiveView('public');
+          return;
+        }
+      }
 
       // 1. ADMIN SUBDOMAIN & ROUTES (admin.mrcasolutions.com, /admin, /enclave, #admin)
       if (
@@ -201,6 +253,10 @@ export default function App() {
   };
 
   const handlePortalClientesClick = () => {
+    if (!isCookieAccepted) {
+      showToast('[BLOQUEO ZERO-TRUST] Debe aceptar las cookies de seguridad antes de acceder a los portales.');
+      return;
+    }
     if (sessionUser) {
       if (window.location.pathname !== '/clientes') {
         window.history.pushState(null, '', '/clientes');
@@ -212,6 +268,10 @@ export default function App() {
   };
 
   const navigateToAdmin = async () => {
+    if (!isCookieAccepted) {
+      showToast('[BLOQUEO ZERO-TRUST] Debe aceptar las cookies de seguridad antes de acceder al Enclave Admin.');
+      return;
+    }
     let user = sessionUser;
     if (!user) {
       const { data: { session } } = await supabase.auth.getSession();
@@ -281,6 +341,11 @@ export default function App() {
   // Render ONLY the splash preloader during boot.
   if (showSplash) {
     return <SplashPreloader onComplete={() => setShowSplash(false)} />;
+  }
+
+  // ── STRICT COOKIE GATE FOR PROTECTED VIEWS ──────────────────────────
+  if (!isCookieAccepted && (activeView === 'admin' || activeView === 'client' || activeView === 'academy' || activeView === 'login')) {
+    setActiveView('public');
   }
 
   // ── SUBDOMAIN STRUCTURE ISOLATION GATES (Strict Separation) ─────────
@@ -451,13 +516,13 @@ export default function App() {
   return (
     <div className="bg-[#0b1229] min-h-screen text-[#dce1ff] flex flex-col relative font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d]">
       {/* GLOBAL TOP NAVIGATION HEADER */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#060d24]/90 border-b border-[#181e36] backdrop-blur-xl shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 border-b border-cyan-500/20 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
           {/* Brand Logo & Title */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileDrawerOpen(true)}
-              className="md:hidden w-10 h-10 flex items-center justify-center text-[#00e5ff] hover:text-[#c3f5ff] transition-colors p-1"
+              className="md:hidden w-10 h-10 flex items-center justify-center text-cyan-400 hover:text-cyan-300 transition-colors p-1"
               aria-label="Abrir menú"
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[24px]">menu</span>
@@ -467,12 +532,12 @@ export default function App() {
               onClick={() => setActiveView('public')}
               className="flex items-center gap-2.5 group text-left"
             >
-              <div className="w-9 h-9 rounded-xl bg-[#181e36] border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.25)] group-hover:border-[#00e5ff] transition-all">
+              <div className="w-9 h-9 rounded-xl bg-slate-900 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.25)] group-hover:border-cyan-400 group-hover:shadow-[0_0_18px_rgba(6,182,212,0.5)] transition-all duration-300">
                 <span translate="no" className="notranslate material-symbols-outlined text-[20px]">hexagon</span>
               </div>
 
               {/* Static High-Res Brand Preview */}
-              <div className="relative w-24 h-7 rounded-lg overflow-hidden border border-[#00E5FF]/40 shadow-[0_0_10px_rgba(0,229,255,0.25)] shrink-0 hidden sm:flex items-center justify-center bg-[#0A1128] px-1">
+              <div className="relative w-24 h-7 rounded-lg overflow-hidden border border-cyan-500/40 shadow-[0_0_10px_rgba(6,182,212,0.25)] shrink-0 hidden sm:flex items-center justify-center bg-slate-900/90 px-1">
                 <img
                   src="/MRCA.SVG"
                   alt="MRCA Logo"
@@ -481,10 +546,10 @@ export default function App() {
               </div>
 
               <div className="flex flex-col">
-                <span className="font-['Space_Grotesk'] text-[18px] font-bold tracking-tight text-[#dce1ff] leading-none group-hover:text-[#00e5ff] transition-colors">
+                <span className="font-['Space_Grotesk'] text-[18px] font-bold tracking-tight text-slate-100 leading-none group-hover:text-cyan-400 transition-colors">
                   MRCA
                 </span>
-                <span className="font-['JetBrains_Mono'] text-[9px] text-[#00daf3] uppercase tracking-widest leading-none mt-1">
+                <span className="font-['JetBrains_Mono'] text-[9px] text-cyan-400 uppercase tracking-widest leading-none mt-1">
                   SOLUTIONS
                 </span>
               </div>
@@ -500,10 +565,10 @@ export default function App() {
           <nav className="hidden md:flex items-center gap-2">
             <button
               onClick={() => setActiveView('public')}
-              className={`px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all ${
+              className={`px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all duration-300 ${
                 activeView === 'public'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                  : 'text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#141a32]'
+                  ? 'bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)] font-bold'
+                  : 'text-slate-300 hover:text-cyan-400 hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30'
               }`}
             >
               Overview & Trust Center
@@ -511,10 +576,10 @@ export default function App() {
             <button
               id="nav-btn-portal-clientes"
               onClick={handlePortalClientesClick}
-              className={`px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-lg font-['Space_Grotesk'] text-[14px] uppercase tracking-wider font-semibold transition-all duration-300 flex items-center gap-1.5 ${
                 (activeView as string) === 'client'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                  : 'text-[#bac9cc] hover:text-[#00e5ff] hover:bg-[#141a32]'
+                  ? 'bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)] font-bold'
+                  : 'text-slate-300 hover:text-cyan-400 hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[16px]">domain</span>
@@ -527,9 +592,9 @@ export default function App() {
           {/* Right Action Area */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Zero Trust Status */}
-            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#141a32] border border-[#00e5ff]/20 text-[#bac9cc]">
-              <span translate="no" className="notranslate material-symbols-outlined text-[15px] text-[#00e5ff]">lock</span>
-              <span className="font-['JetBrains_Mono'] text-[10px] uppercase font-semibold text-[#00daf3]">
+            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900/80 border border-cyan-500/30 text-slate-300 shadow-[0_0_10px_rgba(6,182,212,0.15)]">
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px] text-cyan-400">lock</span>
+              <span className="font-['JetBrains_Mono'] text-[10px] uppercase font-semibold text-cyan-300">
                 Zero Trust v2.4
               </span>
             </div>
@@ -537,6 +602,10 @@ export default function App() {
             {/* User Avatar Profile */}
             <button
               onClick={async () => {
+                if (!isCookieAccepted) {
+                  showToast('[BLOQUEO ZERO-TRUST] Acepte las cookies de seguridad antes de autenticarse.');
+                  return;
+                }
                 if (!sessionUser) {
                   setIsLoginModalOpen(true);
                 } else {
@@ -568,12 +637,12 @@ export default function App() {
                   }
                 }
               }}
-              className="relative w-9 h-9 rounded-full bg-[#00e5ff] text-[#00363d] flex items-center justify-center hover:bg-[#c3f5ff] transition-all shadow-[0_0_10px_rgba(0,229,255,0.3)] cursor-pointer"
+              className="relative w-9 h-9 rounded-full bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 flex items-center justify-center hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transition-all duration-300 cursor-pointer"
               title={sessionUser ? `Sesión Activa: ${sessionUser.email} (${sessionUser.role || 'usuario'})` : 'Autenticación Supabase'}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[20px]">person</span>
               {sessionUser && (
-                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#00fe66] border-2 border-[#060d24] rounded-full shadow-[0_0_6px_#00fe66]"></span>
+                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#00fe66] border-2 border-slate-950 rounded-full shadow-[0_0_6px_#00fe66]"></span>
               )}
             </button>
           </div>
@@ -582,13 +651,13 @@ export default function App() {
 
       {/* MOBILE DRAWER NAVIGATION (Exact to Image 1) */}
       <div
-        className={`fixed inset-0 z-50 bg-[#060d24]/80 backdrop-blur-sm transition-opacity duration-300 ${
+        className={`fixed inset-0 z-50 bg-black/80 backdrop-blur-sm transition-opacity duration-300 ${
           isMobileDrawerOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setIsMobileDrawerOpen(false)}
       />
       <aside
-        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 bg-[#141a32]/95 border-l border-[#00e5ff]/30 backdrop-blur-2xl shadow-[-8px_0_32px_rgba(0,0,0,0.7)] transform transition-transform duration-300 ease-out flex flex-col justify-between pt-safe pb-safe ${
+        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] z-50 bg-slate-950/95 border-l border-cyan-500/30 backdrop-blur-2xl shadow-[-8px_0_32px_rgba(0,0,0,0.8)] transform transition-transform duration-300 ease-out flex flex-col justify-between pt-safe pb-safe ${
           isMobileDrawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -839,6 +908,19 @@ export default function App() {
         }}
         showToast={showToast}
       />
+
+      {/* STRICT COOKIE CONSENT GATE (BLOCKER) */}
+      {!isCookieAccepted && (
+        <CookieConsent
+          onAccept={() => {
+            setIsCookieAccepted(true);
+            showToast('[ZERO-TRUST AUTORIZADO] Consentimiento registrado. Portales habilitados.');
+          }}
+          onNavigateToPrivacy={() => {
+            setActiveView('legal-privacidad');
+          }}
+        />
+      )}
     </div>
   );
 }

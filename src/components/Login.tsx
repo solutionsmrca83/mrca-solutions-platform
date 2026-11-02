@@ -297,7 +297,7 @@ export const Login: React.FC<LoginProps> = ({
         </motion.div>
 
         {/* ── ROLE SELECTOR TAB BAR ─────────────────────────────────────── */}
-        <div className="w-full mb-4 flex items-center justify-between gap-2 p-1.5 rounded-2xl bg-[#060d24]/90 border border-[#222941] backdrop-blur-md">
+        <div className="w-full mb-4 flex items-center justify-between gap-2 p-1.5 rounded-2xl bg-slate-900/60 border border-cyan-500/30 backdrop-blur-xl shadow-[0_0_15px_rgba(6,182,212,0.2)]">
           {authRole === 'admin' ? (
             <div className="w-full flex items-center justify-between px-2 py-1">
               <div className="flex items-center gap-2">
@@ -306,7 +306,7 @@ export const Login: React.FC<LoginProps> = ({
                   ENCLAVE SOCIOS // ACCESO CRIPTOGRÁFICO
                 </span>
               </div>
-              <span className="font-['JetBrains_Mono'] text-[10px] text-[#566366] uppercase tracking-wider font-semibold">
+              <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
                 ENCLAVE AISLADO
               </span>
             </div>
@@ -316,10 +316,10 @@ export const Login: React.FC<LoginProps> = ({
               <button
                 type="button"
                 onClick={() => setAuthRole('client')}
-                className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-2 font-bold cursor-pointer ${
+                className={`py-2 px-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold cursor-pointer ${
                   authRole === 'client'
-                    ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_15px_rgba(0,229,255,0.4)]'
-                    : 'text-[#bac9cc] hover:text-[#dce1ff] bg-transparent'
+                    ? 'bg-gradient-to-r from-cyan-500 to-[#00daf3] text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.4)]'
+                    : 'text-slate-400 hover:text-white bg-transparent'
                 }`}
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[16px]">domain</span>
@@ -329,10 +329,10 @@ export const Login: React.FC<LoginProps> = ({
               <button
                 type="button"
                 onClick={() => setAuthRole('student')}
-                className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center gap-2 font-bold cursor-pointer ${
+                className={`py-2 px-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 font-bold cursor-pointer ${
                   authRole === 'student'
-                    ? 'bg-[#00FF66] text-[#00363d] shadow-[0_0_15px_rgba(0,255,102,0.4)]'
-                    : 'text-[#bac9cc] hover:text-[#dce1ff] bg-transparent'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 shadow-[0_0_15px_rgba(16,185,129,0.4)]'
+                    : 'text-slate-400 hover:text-white bg-transparent'
                 }`}
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[16px]">school</span>
@@ -374,7 +374,7 @@ export const Login: React.FC<LoginProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="w-full rounded-3xl bg-[#0a1128]/95 border border-[#00FF66]/30 p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
+                className="w-full rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-emerald-500/30 hover:border-emerald-400 p-6 sm:p-8 shadow-[0_0_20px_rgba(16,185,129,0.25)] transition-all duration-300"
               >
                 <StudentAuthModule
                   onSuccess={async (user) => {
@@ -400,7 +400,7 @@ export const Login: React.FC<LoginProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="w-full rounded-3xl bg-[#0a1128]/95 border border-[#00daf3]/40 p-6 sm:p-8 shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl flex flex-col gap-4"
+                className="w-full rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-cyan-500/30 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.3)] flex flex-col gap-4 transition-all duration-300"
               >
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2 mb-1">
@@ -409,30 +409,30 @@ export const Login: React.FC<LoginProps> = ({
                       SUPABASE ZERO-TRUST AUTH // ENCLAVE GATE
                     </span>
                   </div>
-                  <h3 className="font-['Space_Grotesk'] text-[24px] font-bold text-[#dce1ff]">
+                  <h3 className="font-['Space_Grotesk'] text-[24px] font-bold text-white">
                     Acceso Restringido /admin
                   </h3>
-                  <p className="font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed mt-1">
+                  <p className="font-['Inter'] text-[13px] text-slate-300 leading-relaxed mt-1">
                     El Enclave de Administración requiere una sesión criptográfica validada para Jefe (CISO) y Socios autorizados.
                   </p>
                 </div>
 
                 {adminError && (
-                  <div className="p-3 rounded-lg bg-[#ffb4ab]/10 border border-[#ffb4ab]/30 flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-[#ffb4ab]">
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-2 text-[12px] font-['JetBrains_Mono'] text-red-300">
                     <span translate="no" className="notranslate material-symbols-outlined text-[16px]">error</span>
                     <span>{adminError}</span>
                   </div>
                 )}
 
                 {/* Tab switch password / magic-link */}
-                <div className="flex bg-[#060d24] p-1 rounded-lg border border-[#222941] text-[11px] font-['JetBrains_Mono']">
+                <div className="flex bg-slate-950/80 p-1.5 rounded-xl border border-slate-800 text-[11px] font-['JetBrains_Mono']">
                   <button
                     type="button"
                     onClick={() => setAdminAuthMode('password')}
-                    className={`flex-1 py-1.5 rounded transition-all ${
+                    className={`flex-1 py-1.5 rounded-lg transition-all duration-300 font-bold cursor-pointer ${
                       adminAuthMode === 'password'
-                        ? 'bg-[#00e5ff] text-[#00363d] font-bold'
-                        : 'text-[#bac9cc] hover:text-[#dce1ff]'
+                        ? 'bg-gradient-to-r from-cyan-500 to-[#00daf3] text-slate-950 shadow-[0_0_12px_rgba(6,182,212,0.4)]'
+                        : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     Contraseña Segura
@@ -440,10 +440,10 @@ export const Login: React.FC<LoginProps> = ({
                   <button
                     type="button"
                     onClick={() => setAdminAuthMode('magic-link')}
-                    className={`flex-1 py-1.5 rounded transition-all ${
+                    className={`flex-1 py-1.5 rounded-lg transition-all duration-300 font-bold cursor-pointer ${
                       adminAuthMode === 'magic-link'
-                        ? 'bg-[#00e5ff] text-[#00363d] font-bold'
-                        : 'text-[#bac9cc] hover:text-[#dce1ff]'
+                        ? 'bg-gradient-to-r from-cyan-500 to-[#00daf3] text-slate-950 shadow-[0_0_12px_rgba(6,182,212,0.4)]'
+                        : 'text-slate-400 hover:text-white'
                     }`}
                   >
                     Magic Link OTP
@@ -453,11 +453,11 @@ export const Login: React.FC<LoginProps> = ({
                 <form onSubmit={handleAdminAuth} className="flex flex-col gap-3">
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc]">
+                      <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300">
                         Correo Electrónico Autorizado
                       </label>
                       {adminEmail.trim().toLowerCase() === 'solutionsmrca83@gmail.com' && (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#00e5ff]/15 border border-[#00e5ff]/40 text-[#00e5ff] text-[10px] font-['JetBrains_Mono'] font-semibold shadow-[0_0_10px_rgba(0,229,255,0.25)] animate-pulse">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 text-[10px] font-['JetBrains_Mono'] font-semibold shadow-[0_0_10px_rgba(0,229,255,0.25)] animate-pulse">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] shadow-[0_0_6px_#00fe66]"></span>
                           Llave Raíz CISO Validada
                         </span>
@@ -469,13 +469,13 @@ export const Login: React.FC<LoginProps> = ({
                       placeholder="solutionsmrca83@gmail.com"
                       value={adminEmail}
                       onChange={(e) => setAdminEmail(e.target.value)}
-                      className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-lg px-3 py-2 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
+                      className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl px-3.5 py-2 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"
                     />
                   </div>
 
                   {adminAuthMode === 'password' && (
                     <div>
-                      <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
+                      <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
                         Credencial de Acceso / Token
                       </label>
                       <div className="relative">
@@ -485,12 +485,12 @@ export const Login: React.FC<LoginProps> = ({
                           placeholder="••••••••••••"
                           value={adminPassword}
                           onChange={(e) => setAdminPassword(e.target.value)}
-                          className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-lg pl-3 pr-10 py-2 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] transition-colors"
+                          className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-3.5 pr-10 py-2 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"
                         />
                         <button
                           type="button"
                           onClick={() => setShowAdminPassword(!showAdminPassword)}
-                          className="notranslate absolute right-3 top-2.5 text-[#849396] hover:text-[#00e5ff] transition-colors p-0.5 focus:outline-none"
+                          className="notranslate absolute right-3 top-2.5 text-slate-400 hover:text-cyan-400 transition-colors p-0.5 focus:outline-none cursor-pointer"
                           translate="no"
                           aria-label={showAdminPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
                         >
@@ -503,7 +503,7 @@ export const Login: React.FC<LoginProps> = ({
                   <button
                     type="submit"
                     disabled={adminLoading}
-                    className="w-full py-2.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2 mt-1 cursor-pointer"
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.01] flex items-center justify-center gap-2 mt-1 cursor-pointer disabled:opacity-50"
                   >
                     <span translate="no" className="notranslate material-symbols-outlined text-[18px]">vpn_key</span>
                     <span>
@@ -520,7 +520,7 @@ export const Login: React.FC<LoginProps> = ({
                   <button
                     type="button"
                     onClick={handleAdminBypassDemo}
-                    className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00fe66]/10 hover:bg-[#00fe66]/20 border border-[#00fe66]/30 text-[#00fe66] transition-all font-['JetBrains_Mono'] text-[10px] font-semibold cursor-pointer"
+                    className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 transition-all duration-300 font-['JetBrains_Mono'] text-[10px] font-semibold cursor-pointer"
                   >
                     <span translate="no" className="notranslate material-symbols-outlined text-[14px]">shield</span>
                     <span>Simular Llave Raíz de Desarrollador (Zero-Trust Sandbox)</span>
@@ -530,16 +530,16 @@ export const Login: React.FC<LoginProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsSetupModalOpen(true)}
-                    className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all font-['JetBrains_Mono'] text-[10px] font-bold cursor-pointer"
+                    className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all duration-300 font-['JetBrains_Mono'] text-[10px] font-bold cursor-pointer"
                   >
                     <Key className="w-3.5 h-3.5 text-amber-400" />
                     <span>Inicializar Cuenta Root CISO (Master Setup Key)</span>
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] font-['JetBrains_Mono'] text-[#849396] pt-2 border-t border-[#181e36]">
+                <div className="flex items-center justify-between text-[10px] font-['JetBrains_Mono'] text-slate-400 pt-2 border-t border-slate-800">
                   <span>SUPABASE RLS POLICY</span>
-                  <span className="text-[#00daf3]">ENFORCED: JWT HS256/RS256</span>
+                  <span className="text-cyan-400">ENFORCED: JWT HS256/RS256</span>
                 </div>
               </motion.div>
             )}
