@@ -367,15 +367,15 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
           </div>
         </section>
 
-        {/* QUICK NAVIGATION CHIPS (TOUCH-SCROLLABLE) */}
-        <nav className="w-full bg-[#141a32]/60 border border-[#222941] rounded-xl p-2 overflow-x-auto no-scrollbar">
+        {/* QUICK NAVIGATION CHIPS (EXECUTIVE COMMAND CENTER) */}
+        <nav className="w-full bg-slate-900/80 border border-white/10 rounded-xl p-2 overflow-x-auto no-scrollbar shadow-sm">
           <div className="flex items-center gap-2 w-max">
             <button
               onClick={() => setActiveTab('principal')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'principal'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">grid_view</span>
@@ -384,35 +384,35 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             <button
               id="admin-tab-finanzas"
               onClick={() => setActiveTab('finanzas')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'finanzas'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">account_balance</span>
               <span>FINANZAS (SPEI)</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
               id="admin-tab-soporte"
               onClick={() => setActiveTab('soporte')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'soporte'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">support_agent</span>
               <span>SOPORTE IT</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
               onClick={() => setActiveTab('kali')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'kali'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">terminal</span>
@@ -420,10 +420,10 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('proyectos')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'proyectos'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">account_tree</span>
@@ -431,87 +431,87 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('sla')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'sla'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">verified_user</span>
-              <span>SLA & SEGURIDAD</span>
+              <span>SLA &amp; SEGURIDAD</span>
             </button>
             <button
               id="admin-tab-aprobaciones"
               onClick={() => setActiveTab('aprobaciones')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'aprobaciones'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">assignment_turned_in</span>
-              <span>SOLICITUDES & APROBACIÓN</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
+              <span>SOLICITUDES &amp; APROBACIÓN</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
               id="admin-tab-contratos"
               onClick={() => setActiveTab('contratos')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'contratos'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">description</span>
-              <span>CONTRATOS & NDA</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
+              <span>CONTRATOS &amp; NDA</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
               id="admin-tab-boveda"
               onClick={() => setActiveTab('boveda')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'boveda'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">folder_zip</span>
               <span>BÓVEDA ENTREGABLES</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
               id="admin-tab-auditoria"
               onClick={() => setActiveTab('auditoria')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'auditoria'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">security</span>
               <span>AUDITORÍA ZERO-TRUST</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
               id="admin-tab-presupuestos"
               onClick={() => setActiveTab('presupuestos')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'presupuestos'
-                  ? 'bg-[#00e5ff] text-[#00363d] shadow-[0_0_10px_rgba(0,229,255,0.3)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-[#00e5ff]'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">price_change</span>
               <span>SOLICITUDES DE PRESUPUESTO</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
               id="admin-tab-usuarios"
               onClick={() => setActiveTab('usuarios')}
-              className={`px-3 py-1 rounded font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
                 activeTab === 'usuarios'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-[0_0_12px_rgba(245,158,11,0.4)]'
-                  : 'bg-[#222941] text-[#dce1ff] hover:text-amber-400'
+                  ? 'bg-amber-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(245,158,11,0.4)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-amber-400 hover:bg-slate-750 border border-white/5'
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">manage_accounts</span>
@@ -552,266 +552,244 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
         ) : (
 
           <>
-        {/* KPI CARDS (BENTO GRID STACK: 4 TILES) */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+        {/* KPI CARDS (EXECUTIVE COMMAND CENTER - 4 TILES) */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           {/* KPI 1: Ganancias Netas */}
-          <div className="relative overflow-hidden rounded-xl bg-[#222941]/90 border border-[#00e5ff]/20 p-4 backdrop-blur-md shadow-lg flex flex-col justify-between">
+          <div className="relative overflow-hidden rounded-xl bg-slate-900 border border-white/10 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-cyan-500/30 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[18px]">query_stats</span>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase font-medium">
-                  GANANCIAS NETAS
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400 uppercase font-semibold">
+                  INGRESOS CONSOLIDADOS
                 </span>
               </div>
-              <span className="px-1.5 py-0.5 rounded bg-[#00fe66]/15 text-[#00fe66] font-['JetBrains_Mono'] text-[10px] font-bold">
+              <span className="px-2 py-0.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-['JetBrains_Mono'] text-[10px] font-bold">
                 +28.4% MES
               </span>
             </div>
-            <div className="mt-2 flex items-baseline justify-between">
+            <div className="mt-3 flex items-baseline justify-between">
               <div>
-                <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-[#dce1ff] font-bold tracking-tight">
+                <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-white font-bold tracking-tight">
                   $1,428,950
                 </div>
-                <div className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3]">MXN // FONDOS CONSOLIDADOS</div>
+                <div className="font-['JetBrains_Mono'] text-[10px] text-cyan-400">MXN // DISPERSIÓN BANXICO</div>
               </div>
               <div className="w-24 h-9">
-                <svg translate="no" className="notranslate w-full h-full stroke-[#00e5ff] fill-none" preserveAspectRatio="none" viewBox="0 0 100 36">
+                <svg translate="no" className="notranslate w-full h-full stroke-cyan-400 fill-none" preserveAspectRatio="none" viewBox="0 0 100 36">
                   <path d="M0,32 Q15,26 28,30 T55,14 T80,18 T100,4" strokeLinecap="round" strokeWidth="2.5"></path>
-                  <path d="M0,32 Q15,26 28,30 T55,14 T80,18 T100,4 L100,36 L0,36 Z" fill="rgba(0, 229, 255, 0.12)" stroke="none"></path>
+                  <path d="M0,32 Q15,26 28,30 T55,14 T80,18 T100,4 L100,36 L0,36 Z" fill="rgba(6, 182, 212, 0.12)" stroke="none"></path>
                 </svg>
               </div>
             </div>
-            <div className="flex items-center justify-between text-[10px] font-['JetBrains_Mono'] text-[#bac9cc] pt-2 mt-2 border-t border-[#181e36]">
+            <div className="flex items-center justify-between text-[10.5px] font-['JetBrains_Mono'] text-slate-400 pt-2.5 mt-3 border-t border-white/5">
               <span>Cierre proyectado 30d</span>
-              <span className="text-[#00daf3] font-semibold">$1,850,000 MXN</span>
+              <span className="text-cyan-300 font-semibold">$1,850,000 MXN</span>
             </div>
           </div>
 
           {/* KPI 2: Dual Gateway Dispersion */}
-          <div className="rounded-xl bg-[#222941]/90 border border-[#00e5ff]/20 p-4 backdrop-blur-md shadow-lg flex flex-col justify-between">
+          <div className="rounded-xl bg-slate-900 border border-white/10 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-cyan-500/30 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[18px]">hub</span>
-                <span className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase font-medium">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400 uppercase font-semibold">
                   DISPERSIÓN DUAL GATEWAY
                 </span>
               </div>
-              <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff] font-semibold">LEDGER SYNCHRONIZED</span>
+              <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-400 font-semibold bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30">
+                LEDGER OK
+              </span>
             </div>
-            <div className="mt-2 flex flex-col gap-1.5">
-              <div className="w-full h-2.5 rounded bg-[#060d24] overflow-hidden flex border border-[#181e36]">
-                <div className="bg-[#00e5ff] h-full shadow-[0_0_8px_rgba(0,229,255,0.4)]" style={{ width: '64%' }}></div>
-                <div className="bg-[#00fe66] h-full shadow-[0_0_8px_rgba(0,254,102,0.4)]" style={{ width: '36%' }}></div>
+            <div className="mt-3 flex flex-col gap-2">
+              <div className="w-full h-2.5 rounded-full bg-slate-950 overflow-hidden flex border border-white/10">
+                <div className="bg-cyan-400 h-full shadow-[0_0_8px_rgba(6,182,212,0.4)]" style={{ width: '64%' }}></div>
+                <div className="bg-emerald-400 h-full shadow-[0_0_8px_rgba(16,185,129,0.4)]" style={{ width: '36%' }}></div>
               </div>
               <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono'] pt-1">
-                <div className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded bg-[#00e5ff]"></span>
-                  <span className="text-[#dce1ff]">Stripe:</span>
-                  <span className="text-[#00e5ff] font-bold">$914.5k</span>
-                  <span className="text-[#849396]">(64%)</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
+                  <span className="text-slate-300">Stripe:</span>
+                  <span className="text-cyan-400 font-bold">$914.5k</span>
+                  <span className="text-slate-500">(64%)</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded bg-[#00fe66]"></span>
-                  <span className="text-[#dce1ff]">SPEI:</span>
-                  <span className="text-[#00fe66] font-bold">$514.4k</span>
-                  <span className="text-[#849396]">(36%)</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span className="text-slate-300">SPEI:</span>
+                  <span className="text-emerald-400 font-bold">$514.4k</span>
+                  <span className="text-slate-500">(36%)</span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-between text-[10px] font-['JetBrains_Mono'] text-[#bac9cc] pt-2 mt-2 border-t border-[#181e36]">
-              <span>Liquidación automatizada</span>
-              <span className="text-[#00fe66] font-semibold">T+0 INMEDIATO</span>
+            <div className="flex items-center justify-between text-[10.5px] font-['JetBrains_Mono'] text-slate-400 pt-2.5 mt-3 border-t border-white/5">
+              <span>Liquidación bancaria</span>
+              <span className="text-emerald-400 font-semibold">T+0 INMEDIATO</span>
             </div>
           </div>
 
           {/* KPI 3: Proyectos & Leads */}
-          <div className="rounded-xl bg-[#222941]/90 border border-[#00e5ff]/20 p-4 backdrop-blur-md shadow-lg flex flex-col justify-between">
+          <div className="rounded-xl bg-slate-900 border border-white/10 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-cyan-500/30 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase font-medium">
-                NUEVOS LEADS / PROSPECTOS
+              <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400 uppercase font-semibold">
+                PIPELINE DE CLIENTES B2B
               </span>
-              <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[18px]">task_alt</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </div>
-            <div className="my-1">
-              <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-[#dce1ff] font-bold">
-                34 <span className="text-[14px] text-[#bac9cc] font-normal">LEADS B2B</span>
+            <div className="my-2">
+              <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-white font-bold">
+                34 <span className="text-[14px] text-slate-400 font-normal">LEADS ACTIVOS</span>
               </div>
-              <div className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] mt-0.5">
+              <div className="font-['JetBrains_Mono'] text-[10.5px] text-emerald-400 mt-1">
                 +42% sem // 68.2% CONVERSIÓN
               </div>
             </div>
-            <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">
-              <span className="bg-[#060d24] px-1.5 py-0.5 rounded text-[#00daf3]">TikTok: 19</span>
-              <span className="bg-[#060d24] px-1.5 py-0.5 rounded text-[#c0c1ff]">Instagram: 15</span>
+            <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-[10.5px] text-slate-400 pt-2.5 mt-2 border-t border-white/5">
+              <span className="bg-slate-950 px-2 py-0.5 rounded text-cyan-300 border border-white/5">Empresariales: 19</span>
+              <span className="bg-slate-950 px-2 py-0.5 rounded text-purple-300 border border-white/5">FinTech: 15</span>
             </div>
           </div>
 
-          {/* KPI 4: Seguridad Kali NIDS */}
-          <div className="rounded-xl bg-[#222941]/90 border border-[#00e5ff]/20 p-4 backdrop-blur-md shadow-lg flex flex-col justify-between">
+          {/* KPI 4: Seguridad & SLA */}
+          <div className="rounded-xl bg-slate-900 border border-white/10 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-cyan-500/30 transition-all duration-300">
             <div className="flex items-center justify-between">
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase font-medium">
-                KALI NIDS / ESTADO
+              <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400 uppercase font-semibold">
+                CONTINUIDAD &amp; SLA
               </span>
-              <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[18px]">security</span>
+              <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
             </div>
-            <div className="my-1">
-              <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-[#00fe66] font-bold">
-                0 <span className="text-[14px] text-[#bac9cc] font-normal">CRÍTICOS</span>
+            <div className="my-2">
+              <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-emerald-400 font-bold">
+                99.999%
               </div>
-              <div className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff] mt-0.5">
-                14 SCANS // LATENCIA: 1.2ms
+              <div className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 mt-1">
+                0 INCIDENTES // LATENCIA: 1.14ms
               </div>
             </div>
-            <div className="font-['JetBrains_Mono'] text-[10px] text-[#ffdad6] bg-[#93000a]/30 px-2 py-0.5 rounded truncate border border-[#ffb4ab]/20">
-              IPTABLES DROP: 2,410 IP (Cilium Active)
+            <div className="font-['JetBrains_Mono'] text-[10px] text-emerald-300 bg-emerald-950/60 px-2.5 py-1 rounded truncate border border-emerald-500/30">
+              PROTECCIÓN ACTIVA // CILIUM eBPF OK
             </div>
           </div>
         </section>
 
-        {/* CENTRAL SPLIT: FINANZAS & TESORERÍA + KANBAN PIPELINE */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          {/* LEFT COLUMN: TESORERÍA B2B & AUDITED LEDGER (7 COLS) */}
-          <div className="lg:col-span-7 flex flex-col gap-5">
+        {/* CENTRAL SPLIT: TESORERÍA & LEDGER AUDITADO + KANBAN PIPELINE */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* LEFT COLUMN: TESORERÍA B2B & AUDITED LEDGER WITH STICKY HEADERS (7 COLS) */}
+          <div className="lg:col-span-7 flex flex-col gap-6">
             {/* Cash Flow Panel */}
-            <section className="rounded-2xl bg-[#141a32]/90 border border-[#00e5ff]/20 p-4 sm:p-5 backdrop-blur-md flex flex-col gap-4 shadow-xl">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[22px]">account_balance_wallet</span>
-                  <h2 className="font-['Space_Grotesk'] text-[20px] text-[#dce1ff] font-bold tracking-tight">
-                    Tesorería B2B & Liquidez
-                  </h2>
+            <section className="rounded-xl bg-slate-900 border border-white/10 p-5 sm:p-6 backdrop-blur-xl flex flex-col gap-5 shadow-lg">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                    <span translate="no" className="notranslate material-symbols-outlined text-[18px]">account_balance_wallet</span>
+                  </div>
+                  <div>
+                    <h2 className="font-['Space_Grotesk'] text-[18px] sm:text-[20px] text-white font-bold leading-none">
+                      Tesorería B2B &amp; Dispersión de Fondos
+                    </h2>
+                    <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400">Conciliación bancaria SPEI Banxico &amp; Stripe</span>
+                  </div>
                 </div>
-                <span className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] px-2.5 py-1 rounded bg-[#00fe66]/10 border border-[#00fe66]/30 font-bold">
-                  BANXICO SPEI / STRIPE
+                <span className="font-['JetBrains_Mono'] text-[10px] text-emerald-400 px-2.5 py-1 rounded-lg bg-emerald-950/70 border border-emerald-500/40 font-bold">
+                  SPEI NU MÉXICO OK
                 </span>
               </div>
 
-              {/* Area Chart 7D */}
-              <div className="w-full bg-[#060d24] border border-[#222941] rounded-xl p-3 sm:p-4">
-                <div className="flex items-center justify-between mb-2 font-['JetBrains_Mono'] text-[11px] text-[#bac9cc]">
-                  <span>FLUJO ACUMULADO (7D)</span>
-                  <span className="text-[#00e5ff] font-bold">DELTA +$420K MXN</span>
-                </div>
-                <div className="h-32 w-full relative">
-                  <svg translate="no" className="notranslate w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 320 90">
-                    <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="20" y2="20"></line>
-                    <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="50" y2="50"></line>
-                    <line stroke="rgba(255,255,255,0.06)" strokeDasharray="3" x1="0" x2="320" y1="75" y2="75"></line>
-
-                    {/* Stripe Polygon */}
-                    <polygon
-                      fill="rgba(0, 229, 255, 0.15)"
-                      points="0,75 50,60 110,48 160,55 220,30 270,35 320,12 320,85 0,85"
-                    ></polygon>
-                    <polyline
-                      fill="none"
-                      points="0,75 50,60 110,48 160,55 220,30 270,35 320,12"
-                      stroke="#00E5FF"
-                      strokeLinecap="round"
-                      strokeWidth="2.5"
-                    ></polyline>
-
-                    {/* SPEI Curve */}
-                    <polygon
-                      fill="rgba(0, 255, 102, 0.1)"
-                      points="0,80 50,70 110,65 160,40 220,45 270,25 320,20 320,85 0,85"
-                    ></polygon>
-                    <polyline
-                      fill="none"
-                      points="0,80 50,70 110,65 160,40 220,45 270,25 320,20"
-                      stroke="#00FF66"
-                      strokeDasharray="4"
-                      strokeLinecap="round"
-                      strokeWidth="2"
-                    ></polyline>
-                  </svg>
-                </div>
-                <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-[#bac9cc] pt-2 border-t border-[#181e36]">
-                  <span>LUN</span>
-                  <span>MAR</span>
-                  <span>MIÉ</span>
-                  <span>JUE</span>
-                  <span>VIE</span>
-                  <span>SÁB</span>
-                  <span className="text-[#00e5ff] font-bold">DOM</span>
-                </div>
-              </div>
-
-              {/* Audited Billing Ledger Table */}
-              <div className="flex flex-col gap-2 pt-1">
+              {/* Data Table with Sticky Headers */}
+              <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-['JetBrains_Mono'] text-[11px] text-[#dce1ff] font-bold tracking-wide uppercase">
-                    Cobros & Anticipos Auditados
+                  <span className="font-['Space_Grotesk'] text-[15px] text-white font-bold tracking-wide">
+                    Cobros &amp; Anticipos Auditados
                   </span>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff]">SLA ZERO-DEFECT</span>
+                  <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-2 py-0.5 rounded-lg font-bold">
+                    CONCILIACIÓN EN TIEMPO REAL
+                  </span>
                 </div>
 
-                <div className="flex flex-col gap-2.5">
-                  {ledger.map((item) => (
-                    <div
-                      key={item.id}
-                      className="p-3 rounded-xl bg-[#181e36]/90 border border-[#222941] hover:border-[#00e5ff]/40 transition-all flex flex-col gap-1.5 shadow-sm"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
-                          {item.client}
-                        </span>
-                        <span className="font-['JetBrains_Mono'] text-[14px] font-bold text-[#00e5ff]">
-                          ${item.amount.toLocaleString()}{' '}
-                          <span className="text-[10px] text-[#bac9cc]">{item.currency}</span>
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[11px] text-[#bac9cc]">
-                        <span className="truncate pr-2">{item.service}</span>
-                        <span
-                          className={`px-2 py-0.5 rounded text-[10px] shrink-0 ${
-                            item.gatewayType === 'stripe'
-                              ? 'bg-[#222941] text-[#9cf0ff]'
-                              : 'bg-[#222941] text-[#00fe66]'
-                          }`}
-                        >
-                          {item.gateway}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[10px] pt-1 border-t border-[#222941]">
-                        <span className="text-[#00fe66] flex items-center gap-1 font-semibold">
-                          <span translate="no" className="notranslate material-symbols-outlined text-[13px]">check_circle</span>
-                          {item.status}
-                        </span>
-                        <button
-                          onClick={() =>
-                            setInspectModal({
-                              isOpen: true,
-                              title: `Auditoría Contable // ${item.client}`,
-                              hash: item.hash,
-                            })
-                          }
-                          className="text-[#849396] hover:text-[#00e5ff] font-['JetBrains_Mono']"
-                        >
-                          HASH: {item.hash.slice(0, 8)}...{item.hash.slice(-4)}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                <div className="overflow-hidden rounded-xl border border-white/10 bg-slate-950/60 shadow-inner">
+                  <div className="overflow-x-auto max-h-[360px]">
+                    <table className="w-full text-left font-['Inter'] text-[12px]">
+                      <thead className="sticky top-0 bg-slate-900/95 backdrop-blur-md border-b border-white/10 text-slate-400 font-['JetBrains_Mono'] text-[10.5px] uppercase tracking-wider z-10">
+                        <tr>
+                          <th className="py-3 px-4">Cliente / Entidad</th>
+                          <th className="py-3 px-4">Servicio Asignado</th>
+                          <th className="py-3 px-4">Monto</th>
+                          <th className="py-3 px-4">Pasarela</th>
+                          <th className="py-3 px-4">Estado</th>
+                          <th className="py-3 px-4 text-right">Auditoría</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5">
+                        {ledger.map((item) => (
+                          <tr key={item.id} className="hover:bg-slate-850/50 transition-colors">
+                            <td className="py-3.5 px-4 font-bold text-white font-['Space_Grotesk'] whitespace-nowrap">
+                              {item.client}
+                            </td>
+                            <td className="py-3.5 px-4 text-slate-300 whitespace-nowrap">
+                              {item.service}
+                            </td>
+                            <td className="py-3.5 px-4 font-bold text-emerald-400 font-['JetBrains_Mono'] whitespace-nowrap">
+                              ${item.amount.toLocaleString()}{' '}
+                              <span className="text-[10px] text-slate-400 font-normal">{item.currency}</span>
+                            </td>
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <span
+                                className={`px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-medium ${
+                                  item.gatewayType === 'stripe'
+                                    ? 'bg-cyan-950/70 text-cyan-300 border border-cyan-500/30'
+                                    : 'bg-emerald-950/70 text-emerald-300 border border-emerald-500/30'
+                                }`}
+                              >
+                                {item.gateway}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              <span className="text-emerald-400 font-['JetBrains_Mono'] text-[10.5px] flex items-center gap-1 font-semibold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                {item.status}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                              <button
+                                onClick={() =>
+                                  setInspectModal({
+                                    isOpen: true,
+                                    title: `Auditoría Contable // ${item.client}`,
+                                    hash: item.hash,
+                                  })
+                                }
+                                className="font-['JetBrains_Mono'] text-[10.5px] text-cyan-400 hover:text-cyan-300 hover:underline"
+                              >
+                                {item.hash.slice(0, 8)}...
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </section>
           </div>
 
-          {/* RIGHT COLUMN: KANBAN PIPELINE, SPRINT 24-B & DAEMON LOGS (5 COLS) */}
-          <div className="lg:col-span-5 flex flex-col gap-5">
+          {/* RIGHT COLUMN: KANBAN PIPELINE & GOBERNANZA RAÍZ (5 COLS) */}
+          <div className="lg:col-span-5 flex flex-col gap-6">
             {/* Pipeline & Proyectos */}
-            <section className="rounded-2xl bg-[#141a32]/90 border border-[#00e5ff]/20 p-4 sm:p-5 backdrop-blur-md flex flex-col gap-3 shadow-xl">
-              <div className="flex items-center justify-between">
+            <section className="rounded-xl bg-slate-900 border border-white/10 p-5 sm:p-6 backdrop-blur-xl flex flex-col gap-4 shadow-lg">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
                 <div className="flex items-center gap-2">
-                  <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[20px]">code</span>
-                  <h2 className="font-['Space_Grotesk'] text-[18px] text-[#dce1ff] font-bold">
-                    Pipeline & Proyectos
-                  </h2>
+                  <div className="w-8 h-8 rounded-lg bg-emerald-950/80 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                    <span translate="no" className="notranslate material-symbols-outlined text-[18px]">account_tree</span>
+                  </div>
+                  <div>
+                    <h2 className="font-['Space_Grotesk'] text-[18px] text-white font-bold leading-none">
+                      Pipeline &amp; Proyectos B2B
+                    </h2>
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">Control de entregables y negociaciones</span>
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsNewTicketModalOpen(true)}
-                  className="px-2.5 py-1 rounded bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[10px] font-bold flex items-center gap-1 uppercase transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-['JetBrains_Mono'] text-[11px] font-bold flex items-center gap-1 uppercase transition-all shadow-[0_0_12px_rgba(6,182,212,0.3)]"
                 >
                   <span translate="no" className="notranslate material-symbols-outlined text-[14px]">add</span>
                   <span>Nuevo Ticket</span>
@@ -819,78 +797,70 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               </div>
 
               {/* Kanban Cards Stack */}
-              <div className="flex flex-col gap-2 pt-1">
+              <div className="flex flex-col gap-2.5">
                 {tickets.map((t) => (
                   <div
                     key={t.id}
-                    className="p-3 rounded-xl bg-[#181e36] border border-[#222941] flex flex-col gap-1"
+                    className="p-3.5 rounded-xl bg-slate-950/80 border border-white/5 hover:border-cyan-500/30 transition-all duration-300 flex flex-col gap-1.5 shadow-sm"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="px-2 py-0.5 rounded bg-[#222941] text-[#00e5ff] font-['JetBrains_Mono'] text-[10px]">
+                      <span className="px-2 py-0.5 rounded-md bg-slate-900 text-cyan-300 border border-white/5 font-['JetBrains_Mono'] text-[10px] font-semibold">
                         {t.categoryBadge}
                       </span>
-                      <span className="font-['JetBrains_Mono'] text-[10px] text-[#849396]">#{t.id}</span>
+                      <span className="font-['JetBrains_Mono'] text-[10px] text-slate-500 font-medium">#{t.id}</span>
                     </div>
-                    <span className="font-['Space_Grotesk'] text-[14px] font-semibold text-[#dce1ff]">
+                    <span className="font-['Space_Grotesk'] text-[14px] font-bold text-white">
                       {t.title}
                     </span>
-                    <p className="font-['Inter'] text-[12px] text-[#bac9cc]">{t.description}</p>
-                    <div className="flex items-center justify-between pt-1 border-t border-[#222941] text-[10px] font-['JetBrains_Mono']">
-                      <span className="text-[#00fe66] font-semibold">{t.amountEst || 'En SLA'}</span>
-                      {t.leadScore && <span className="text-[#849396]">Score: {t.leadScore}</span>}
-                      {t.slaNote && <span className="text-[#00daf3]">{t.slaNote}</span>}
+                    <p className="font-['Inter'] text-[12px] text-slate-300 leading-relaxed">{t.description}</p>
+                    <div className="flex items-center justify-between pt-1.5 mt-1 border-t border-white/5 text-[10.5px] font-['JetBrains_Mono']">
+                      <span className="text-emerald-400 font-bold">{t.amountEst || 'En SLA'}</span>
+                      {t.leadScore && <span className="text-slate-400">Score: <strong className="text-white">{t.leadScore}</strong></span>}
+                      {t.slaNote && <span className="text-cyan-400">{t.slaNote}</span>}
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Engineering SPRINT 24-B Progress */}
-              <div className="flex flex-col gap-2 pt-2 border-t border-[#222941]">
+              <div className="flex flex-col gap-3 pt-3 border-t border-white/10">
                 <div className="flex items-center justify-between">
-                  <span className="font-['JetBrains_Mono'] text-[11px] text-[#dce1ff] font-bold uppercase">
-                    Progreso Ingeniería Sprint 24-B
+                  <span className="font-['Space_Grotesk'] text-[13px] text-white font-bold uppercase tracking-wide">
+                    Progreso de Sprints Activos
                   </span>
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">4 TAREAS</span>
+                  <span className="font-['JetBrains_Mono'] text-[10px] text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30 font-bold">
+                    SPRINT 24-B EN CURSO
+                  </span>
                 </div>
 
-                <div className="space-y-2 font-['Inter'] text-[12px]">
+                <div className="space-y-3 font-['Inter'] text-[12px]">
                   <div>
-                    <div className="flex justify-between text-[#dce1ff] mb-1">
-                      <span>Estructuración DB SQL & Supabase RLS</span>
-                      <span className="font-['JetBrains_Mono'] text-[#00e5ff] font-bold">85%</span>
+                    <div className="flex justify-between text-slate-200 mb-1">
+                      <span>Estructuración DB SQL &amp; Supabase RLS</span>
+                      <span className="font-['JetBrains_Mono'] text-cyan-400 font-bold">85%</span>
                     </div>
-                    <div className="w-full h-1.5 rounded-full bg-[#060d24] overflow-hidden">
-                      <div className="bg-[#00e5ff] h-full" style={{ width: '85%' }}></div>
+                    <div className="w-full h-2 rounded-full bg-slate-950 overflow-hidden border border-white/5">
+                      <div className="bg-cyan-400 h-full rounded-full" style={{ width: '85%' }}></div>
                     </div>
                   </div>
 
                   <div>
-                    <div className="flex justify-between text-[#dce1ff] mb-1">
-                      <span>Landing Page Online & Three.js Cluster</span>
-                      <span className="font-['JetBrains_Mono'] text-[#00fe66] font-bold">100%</span>
+                    <div className="flex justify-between text-slate-200 mb-1">
+                      <span>Despliegue Plataforma &amp; Portal B2B</span>
+                      <span className="font-['JetBrains_Mono'] text-emerald-400 font-bold">100%</span>
                     </div>
-                    <div className="w-full h-1.5 rounded-full bg-[#060d24] overflow-hidden">
-                      <div className="bg-[#00fe66] h-full" style={{ width: '100%' }}></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[#dce1ff] mb-1">
-                      <span>Microservicios mTLS & Vault HW</span>
-                      <span className="font-['JetBrains_Mono'] text-[#00e5ff] font-bold">72%</span>
-                    </div>
-                    <div className="w-full h-1.5 rounded-full bg-[#060d24] overflow-hidden">
-                      <div className="bg-[#00e5ff] h-full" style={{ width: '72%' }}></div>
+                    <div className="w-full h-2 rounded-full bg-slate-950 overflow-hidden border border-white/5">
+                      <div className="bg-emerald-400 h-full rounded-full" style={{ width: '100%' }}></div>
                     </div>
                   </div>
 
                   <div>
-                    <div className="flex justify-between text-[#dce1ff] mb-1">
-                      <span>Pipeline CI/CD Cero-Trust con Cosign</span>
-                      <span className="font-['JetBrains_Mono'] text-[#00fe66] font-bold">91%</span>
+                    <div className="flex justify-between text-slate-200 mb-1">
+                      <span>Cifrado mTLS &amp; Enclave HSM FIPS 140-3</span>
+                      <span className="font-['JetBrains_Mono'] text-cyan-400 font-bold">72%</span>
                     </div>
-                    <div className="w-full h-1.5 rounded-full bg-[#060d24] overflow-hidden">
-                      <div className="bg-[#00fe66] h-full" style={{ width: '91%' }}></div>
+                    <div className="w-full h-2 rounded-full bg-slate-950 overflow-hidden border border-white/5">
+                      <div className="bg-cyan-400 h-full rounded-full" style={{ width: '72%' }}></div>
                     </div>
                   </div>
                 </div>
@@ -901,28 +871,28 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             <KaliTerminal compact={true} />
 
             {/* GESTOR DE GOBERNANZA RAÍZ & PERMISOS SLA */}
-            <section className="rounded-2xl bg-[#141a32]/90 border border-[#00e5ff]/20 p-4 sm:p-5 backdrop-blur-md flex flex-col gap-3 shadow-xl">
-              <div className="flex items-center gap-2">
-                <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[20px]">
+            <section className="rounded-xl bg-slate-900 border border-white/10 p-5 sm:p-6 backdrop-blur-xl flex flex-col gap-4 shadow-lg">
+              <div className="flex items-center gap-2 pb-2 border-b border-white/10">
+                <span translate="no" className="notranslate material-symbols-outlined text-cyan-400 text-[20px]">
                   admin_panel_settings
                 </span>
-                <h3 className="font-['Space_Grotesk'] text-[18px] text-[#dce1ff] font-bold">
-                  Gestor de Gobernanza Raíz
-                </h3>
+                <div>
+                  <h3 className="font-['Space_Grotesk'] text-[17px] text-white font-bold leading-none">
+                    Gobernanza Raíz &amp; Seguridad de Enclave
+                  </h3>
+                  <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">Controles de ejecución restringidos a Superadmin</span>
+                </div>
               </div>
-              <p className="font-['Inter'] text-[12px] text-[#bac9cc]">
-                Interruptores de seguridad de ejecución inmediata exclusivos para credenciales de Jefe y Socio.
-              </p>
 
               <div className="flex flex-col gap-2.5 pt-1">
                 {/* Switch 1: Revocación */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#181e36] border border-[#222941]">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/80 border border-white/5">
                   <div className="flex flex-col pr-2">
-                    <span className="font-['Space_Grotesk'] text-[13px] text-[#dce1ff] font-semibold">
+                    <span className="font-['Space_Grotesk'] text-[13px] text-white font-semibold">
                       Revocación Global de Sesiones
                     </span>
-                    <span className="font-['Inter'] text-[11px] text-[#bac9cc]">
-                      Invalida instantáneamente todos los JWT y cookies Supabase.
+                    <span className="font-['Inter'] text-[11px] text-slate-400">
+                      Invalida instantáneamente todos los JWT y tokens de acceso.
                     </span>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -932,18 +902,18 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                       onChange={(e) => handleToggleRevoke(e.target.value === 'true' || e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-[#2d344c] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ffb4ab]"></div>
+                    <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-400"></div>
                   </label>
                 </div>
 
                 {/* Switch 2: Biometría FIDO2 */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#181e36] border border-[#222941]">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/80 border border-white/5">
                   <div className="flex flex-col pr-2">
-                    <span className="font-['Space_Grotesk'] text-[13px] text-[#dce1ff] font-semibold">
-                      Exigir Clave Biométrica / WebAuthn
+                    <span className="font-['Space_Grotesk'] text-[13px] text-white font-semibold">
+                      Exigir Autenticación Biométrica WebAuthn
                     </span>
-                    <span className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66]">
-                      FIDO2 Habilitado para Jefe/Socio
+                    <span className="font-['JetBrains_Mono'] text-[11px] text-emerald-400">
+                      FIDO2 Habilitado para Enclave
                     </span>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -953,26 +923,26 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                       onChange={(e) => handleToggleFido2(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-11 h-6 bg-[#2d344c] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00fe66]"></div>
+                    <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-400"></div>
                   </label>
                 </div>
 
                 {/* Regenerate Terms */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#181e36] border border-[#222941]">
+                <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950/80 border border-white/5">
                   <div className="flex flex-col pr-2">
-                    <span className="font-['Space_Grotesk'] text-[13px] text-[#dce1ff] font-semibold">
-                      Regenerar Firma Términos
+                    <span className="font-['Space_Grotesk'] text-[13px] text-white font-semibold">
+                      Sello Criptográfico de Términos
                     </span>
-                    <span className="font-['JetBrains_Mono'] text-[11px] text-[#00e5ff] truncate max-w-[200px]">
+                    <span className="font-['JetBrains_Mono'] text-[11px] text-cyan-400 truncate max-w-[200px]">
                       SHA-256: {termsHash}
                     </span>
                   </div>
                   <button
                     onClick={handleRegenerateTerms}
                     disabled={isSigningTerms}
-                    className="px-3 py-1.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold tracking-wider transition-colors shrink-0"
+                    className="px-3.5 py-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-['JetBrains_Mono'] text-[11px] font-bold tracking-wider transition-colors shrink-0"
                   >
-                    {isSigningTerms ? 'FIRMANDO...' : 'FIRMAR'}
+                    {isSigningTerms ? 'SELLANDO...' : 'SELLAR'}
                   </button>
                 </div>
               </div>

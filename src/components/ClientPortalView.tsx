@@ -299,93 +299,181 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
       onSignOut={onSignOut}
       onOpenContractsModal={() => setIsContractsModalOpen(true)}
     >
-      <div className="w-full flex flex-col gap-6">
+      <div className="w-full flex flex-col gap-6 font-['Inter']">
         {/* ================================================================== */}
-        {/* 1. BUDGET ADAPTATION BANNER (Trust-Building Glowing Hero)          */}
+        {/* EXECUTIVE CLIENT STATUS CENTER: PROGRESS, CONTRACTS & PAYMENTS     */}
         {/* ================================================================== */}
-        <div className="relative w-full rounded-3xl bg-gradient-to-r from-[#141a32]/95 via-[#0d163a]/90 to-[#141a32]/95 border-2 border-[#00e5ff]/40 p-6 sm:p-7 shadow-[0_10px_40px_rgba(0,229,255,0.2)] overflow-hidden backdrop-blur-xl">
-          {/* Subtle Cybernetic Background Glow */}
-          <div className="absolute top-0 right-0 w-96 h-full bg-gradient-to-l from-[#00fe66]/10 to-transparent pointer-events-none"></div>
-
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-            <div className="flex flex-col gap-2 max-w-3xl">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          {/* 1. PROGRESO GENERAL DEL PROYECTO (LARGE READABLE PROGRESS BAR) */}
+          <div className="rounded-xl bg-slate-900 border border-white/10 p-5 sm:p-6 backdrop-blur-xl shadow-lg flex flex-col justify-between gap-4 hover:border-cyan-500/30 transition-all duration-300">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2">
-                <span className="px-3 py-1 rounded-full bg-[#00fe66]/15 border border-[#00fe66]/30 text-[#00fe66] font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider uppercase">
-                  ALIANZA ESTRATÉGICA // ROI TECNOLÓGICO SEGURO
+                <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-cyan-400 font-bold uppercase tracking-wider">
+                  AVANCE DE INGENIERÍA
                 </span>
-                <span className="hidden sm:inline font-['JetBrains_Mono'] text-[11px] text-[#00daf3]">
-                  • SIN BARRERAS DE ENTRADA
+              </div>
+              <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 bg-slate-950 px-2.5 py-0.5 rounded border border-white/5">
+                SPRINT 2 DE 4
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline justify-between">
+                <span className="font-['Space_Grotesk'] text-[32px] sm:text-[36px] font-extrabold text-white leading-none">
+                  68<span className="text-[20px] text-cyan-400">%</span>
+                </span>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-emerald-400 font-semibold">
+                  EN TIEMPO &amp; FORMA
                 </span>
               </div>
 
-              <h2 className="font-['Space_Grotesk'] text-[20px] sm:text-[23px] font-bold text-[#dce1ff] leading-snug">
-                "Alianza Estratégica: Analizamos la viabilidad y nos adaptamos a tu presupuesto para escalar tu tecnología de forma segura."
-              </h2>
+              {/* Large, High-Contrast Progress Bar */}
+              <div className="w-full h-3.5 rounded-full bg-slate-950 p-0.5 border border-white/10 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-teal-400 shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-500"
+                  style={{ width: '68%' }}
+                ></div>
+              </div>
 
-              <p className="font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed">
-                En <strong>MRCA Solutions</strong> creemos que la ingeniería de primer nivel no debe comprometer la salud financiera de tu empresa. Evaluamos tus requerimientos en sprints modulares, optimizando arquitecturas para que obtengas la máxima seguridad con un costo altamente competitivo.
+              <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-slate-400 pt-1">
+                <span>Hito Alpha: Completado ✓</span>
+                <span className="text-cyan-300">Próximo: UAT Beta</span>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11.5px] font-['Inter'] text-slate-300">
+              <span>SLA Activo:</span>
+              <strong className="text-emerald-400 font-['JetBrains_Mono']">99.999% Five-Nines VIP</strong>
+            </div>
+          </div>
+
+          {/* 2. ESTADO DEL CONTRATO B2B & ACUERDOS LEGALES */}
+          <div className="rounded-xl bg-slate-900 border border-white/10 p-5 sm:p-6 backdrop-blur-xl shadow-lg flex flex-col justify-between gap-4 hover:border-cyan-500/30 transition-all duration-300">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-cyan-400" />
+                <span className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-bold uppercase tracking-wider">
+                  ESTATUS CONTRACTUAL
+                </span>
+              </div>
+              <span
+                className={`px-2.5 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold ${
+                  pendingContractsCount === 0
+                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                    : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 animate-pulse'
+                }`}
+              >
+                {pendingContractsCount === 0 ? 'FIRMADO & SELLADO' : 'REQUIERE FIRMA'}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <h3 className="font-['Space_Grotesk'] text-[16px] font-bold text-white leading-snug">
+                Contrato Marco de Servicios &amp; Acuerdo SLA
+              </h3>
+              <p className="font-['Inter'] text-[12.5px] text-slate-400 leading-relaxed">
+                Obra por Encargo (Arts. 83-84 LFDA), facturación CFDI 4.0 SAT y estipulación de pena convencional no reembolsable.
               </p>
             </div>
 
-            <div className="flex sm:flex-col items-center gap-2.5 shrink-0">
+            <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-3">
+              <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400">
+                Folio: <strong className="text-white">CTR-2026-904</strong>
+              </span>
               <button
-                onClick={() => {
-                  setActiveTab('chat');
-                  setInputMessage('Hola equipo MRCA Solutions, me gustaría agendar una evaluación de viabilidad adaptada a nuestro presupuesto.');
-                }}
-                className="w-full px-5 py-3 rounded-xl bg-[#00fe66] hover:bg-[#5aff96] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,254,102,0.4)] flex items-center justify-center gap-2"
+                onClick={() => setIsContractsModalOpen(true)}
+                className="px-4 py-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-400 hover:text-slate-950 text-cyan-300 border border-cyan-500/40 font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all duration-300 shadow-sm"
               >
-                <span translate="no" className="notranslate material-symbols-outlined text-[18px]">handshake</span>
-                <span>Evaluar Proyecto a Medida</span>
+                {pendingContractsCount > 0 ? 'Firmar Ahora' : 'Ver Documento'}
               </button>
+            </div>
+          </div>
 
-              <button
-                onClick={() => setActiveTab('inbox')}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#181e36] hover:bg-[#222941] text-[#00e5ff] border border-[#00e5ff]/30 font-['JetBrains_Mono'] text-[11px] font-semibold transition-all flex items-center justify-center gap-1.5"
-              >
-                <span translate="no" className="notranslate material-symbols-outlined text-[16px]">lock</span>
-                <span>Enviar Carga Útil Cifrada</span>
-              </button>
+          {/* 3. CONTROL FINANCIERO & PAGOS SPEI NU MÉXICO */}
+          <div className="rounded-xl bg-slate-900 border border-white/10 p-5 sm:p-6 backdrop-blur-xl shadow-lg flex flex-col justify-between gap-4 hover:border-cyan-500/30 transition-all duration-300">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <DollarSign className="w-4 h-4 text-emerald-400" />
+                <span className="font-['JetBrains_Mono'] text-[11px] text-emerald-400 font-bold uppercase tracking-wider">
+                  PAGOS &amp; FINANZAS
+                </span>
+              </div>
+              <span className="font-['JetBrains_Mono'] text-[10px] text-slate-300 bg-slate-950 px-2.5 py-0.5 rounded border border-white/5 font-semibold">
+                SPEI BANXICO
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-baseline justify-between">
+                <div>
+                  <span className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] font-bold text-white leading-none">
+                    $140,000
+                  </span>
+                  <span className="text-[11px] text-slate-400 font-['JetBrains_Mono'] ml-1">/ $350,000 MXN</span>
+                </div>
+                <span className="font-['JetBrains_Mono'] text-[11px] text-cyan-400 font-bold">
+                  40% ANTICIPO OK
+                </span>
+              </div>
+
+              {/* Payment Progress Bar */}
+              <div className="w-full h-2.5 rounded-full bg-slate-950 border border-white/10 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.4)] transition-all duration-500"
+                  style={{ width: '40%' }}
+                ></div>
+              </div>
+
+              <div className="flex items-center justify-between text-[10.5px] font-['JetBrains_Mono'] text-slate-400 pt-0.5">
+                <span>Anticipo: <strong>Transferido</strong></span>
+                <span>Saldo pendiente: <strong>$210,000 MXN</strong></span>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-white/5 flex flex-col gap-0.5 font-['JetBrains_Mono'] text-[10.5px]">
+              <span className="text-slate-400">CLABE SPEI: <strong className="text-white">638180010197163103</strong></span>
+              <span className="text-emerald-400 font-semibold">Institución Receptora: Nu México</span>
             </div>
           </div>
         </div>
 
         {/* ALERTA LEGAL // CONTRATOS PENDIENTES DE FIRMA */}
         {pendingContractsCount > 0 && (
-          <div className="w-full rounded-2xl bg-gradient-to-r from-[#ff9900]/20 via-[#ff9900]/10 to-[#ff9900]/05 border-2 border-[#ffb020]/70 p-4 shadow-[0_0_30px_rgba(255,176,32,0.25)] flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="w-full rounded-xl bg-slate-900 border-2 border-amber-500/50 p-4 sm:p-5 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-xl animate-in fade-in duration-300">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#261708] border border-[#ffb020]/50 flex items-center justify-center text-[#ffb020] animate-pulse shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
                 <FileText className="w-5 h-5" />
               </div>
               <div>
-                <div className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+                <div className="font-['Space_Grotesk'] text-[15px] font-bold text-white">
                   ¡Atención! Tiene {pendingContractsCount} Contrato(s) o Acuerdos NDA Pendientes de Firma
                 </div>
-                <div className="font-['JetBrains_Mono'] text-[11px] text-[#ffb020]">
-                  MRCA Solutions ha emitido un documento legal que requiere su firma digital vectorial con hash SHA-256.
+                <div className="font-['Inter'] text-[12px] text-slate-300">
+                  MRCA Solutions ha emitido un instrumento legal que requiere su suscripción (digital o física).
                 </div>
               </div>
             </div>
 
             <button
               onClick={() => setIsContractsModalOpen(true)}
-              className="px-4 py-2.5 rounded-xl bg-[#ff9900] hover:bg-[#ffaa22] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(255,176,32,0.5)] flex items-center justify-center gap-1.5 shrink-0"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(245,158,11,0.3)] flex items-center justify-center gap-2 shrink-0"
             >
               <FileCheck className="w-4 h-4" />
-              <span>Revisar y Firmar Ahora</span>
+              <span>Revisar y Firmar</span>
             </button>
           </div>
         )}
 
         {/* View Mode Navigation Pills */}
-        <div className="flex items-center gap-2 border-b border-[#222941] pb-3 font-['JetBrains_Mono'] text-[12px] overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-2 border-b border-white/10 pb-3 font-['JetBrains_Mono'] text-[12px] overflow-x-auto no-scrollbar">
           <button
             id="tab-btn-capacidades"
             onClick={() => setActiveTab('capacidades')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'capacidades'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
             <span translate="no" className="notranslate material-symbols-outlined text-[17px]">hub</span>
@@ -395,92 +483,92 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           <button
             id="tab-btn-roadmap"
             onClick={() => setActiveTab('roadmap')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'roadmap'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
             <Activity className="w-4 h-4" />
-            <span>Roadmap & Entregables</span>
-            <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse"></span>
+            <span>Roadmap &amp; Entregables</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           </button>
 
           <button
             id="tab-btn-apikeys"
             onClick={() => setActiveTab('api-keys')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'api-keys'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
             <Key className="w-4 h-4" />
-            <span>API Keys & Telemetría</span>
+            <span>API Keys &amp; Telemetría</span>
           </button>
 
           <button
             id="tab-btn-finanzas"
             onClick={() => setActiveTab('finanzas')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'finanzas'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
-            <DollarSign className="w-4 h-4 text-[#00FF66]" />
+            <DollarSign className="w-4 h-4 text-emerald-400" />
             <span>Finanzas SPEI</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00FF66] animate-pulse"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           </button>
 
           <button
             id="tab-btn-soporte"
             onClick={() => setActiveTab('soporte')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'soporte'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
-            <LifeBuoy className="w-4 h-4 text-[#00e5ff]" />
+            <LifeBuoy className="w-4 h-4 text-cyan-400" />
             <span>Soporte IT</span>
           </button>
 
           <button
             id="tab-btn-chat"
             onClick={() => setActiveTab('chat')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'chat'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
             <span translate="no" className="notranslate material-symbols-outlined text-[17px]">chat</span>
             <span>Canal Seguro Admins</span>
-            <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           </button>
 
           <button
             id="tab-btn-boveda"
             onClick={() => setActiveTab('boveda')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'boveda'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
-            <FolderArchive className="w-4 h-4 text-[#00FF66]" />
+            <FolderArchive className="w-4 h-4 text-emerald-400" />
             <span>Bóveda Entregables</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00FF66] animate-pulse"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           </button>
 
           <button
             id="tab-btn-inbox"
             onClick={() => setActiveTab('inbox')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'inbox'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
             <span translate="no" className="notranslate material-symbols-outlined text-[17px]">enhanced_encryption</span>
@@ -490,27 +578,27 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           <button
             id="tab-btn-auditoria"
             onClick={() => setActiveTab('auditoria')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'auditoria'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
             <ShieldAlert className="w-4 h-4 text-cyan-400" />
             <span>Auditoría Zero-Trust</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           </button>
 
           <button
             id="tab-btn-facturas"
             onClick={() => setActiveTab('facturas')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
               activeTab === 'facturas'
-                ? 'bg-[#00e5ff] text-[#00363d] font-bold shadow-[0_0_15px_rgba(0,229,255,0.3)]'
-                : 'text-[#bac9cc] hover:text-[#dce1ff] hover:bg-[#141a32]'
+                ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-white/5'
             }`}
           >
-            <Receipt className="w-4 h-4 text-[#00FF66]" />
+            <Receipt className="w-4 h-4 text-emerald-400" />
             <span>Bóveda de Facturas</span>
           </button>
 
@@ -518,16 +606,16 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
           <button
             id="tab-btn-contratos-modal"
             onClick={() => setIsContractsModalOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#141d3b] hover:bg-[#1f2d5c] text-[#00e5ff] border border-[#00e5ff]/40 shadow-[0_0_15px_rgba(0,229,255,0.2)] transition-all shrink-0 font-bold ml-auto"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/40 shadow-sm transition-all duration-300 shrink-0 font-bold ml-auto"
           >
             <FileText className="w-4 h-4" />
             <span>Contratos y NDA</span>
             {pendingContractsCount > 0 ? (
-              <span className="px-2 py-0.5 rounded-full bg-[#ff9900]/20 border border-[#ffb020]/50 text-[#ffb020] text-[10px] animate-pulse font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-300 text-[10px] animate-pulse font-bold">
                 {pendingContractsCount} Pendiente
               </span>
             ) : (
-              <span className="px-2 py-0.5 rounded-full bg-[#00fe66]/20 border border-[#00fe66]/50 text-[#00fe66] text-[10px] font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-[10px] font-bold">
                 Firmado ✓
               </span>
             )}

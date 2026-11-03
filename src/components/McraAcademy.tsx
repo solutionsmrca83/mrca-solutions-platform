@@ -277,41 +277,41 @@ export const MrcaAcademy: React.FC = () => {
             {MODULAR_SERVICES.map((serv) => (
               <div
                 key={serv.id}
-                className="rounded-3xl bg-[#0c1533]/70 border border-[#1c274a] hover:border-[#00e5ff]/50 p-6 sm:p-7 backdrop-blur-xl shadow-lg transition-all flex flex-col justify-between gap-6 group hover:shadow-[0_10px_40px_rgba(0,229,255,0.12)]"
+                className="rounded-xl bg-slate-900 border border-white/10 hover:border-cyan-500/40 p-6 sm:p-7 backdrop-blur-xl shadow-lg transition-all duration-300 flex flex-col justify-between gap-6 group hover:-translate-y-1"
               >
                 <div className="flex flex-col gap-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-[#121c3d] border border-[#23315a] group-hover:border-[#00e5ff]/40 flex items-center justify-center transition-colors">
+                    <div className="w-12 h-12 rounded-xl bg-slate-950 border border-white/10 group-hover:border-cyan-500/40 flex items-center justify-center transition-all duration-300">
                       {serv.icon}
                     </div>
                     <span
-                      className={`px-3 py-1 rounded-full text-[10px] font-['JetBrains_Mono'] font-bold border tracking-wider uppercase ${serv.badgeColor}`}
+                      className={`px-3 py-1 rounded-lg text-[10px] font-['JetBrains_Mono'] font-bold border tracking-wider uppercase ${serv.badgeColor}`}
                     >
                       {serv.badge}
                     </span>
                   </div>
 
                   <div>
-                    <span className="font-['JetBrains_Mono'] text-[10px] text-[#849396] uppercase tracking-wider block">
+                    <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400 uppercase tracking-wider block">
                       {serv.category}
                     </span>
-                    <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff] mt-1 group-hover:text-[#00e5ff] transition-colors">
+                    <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-white mt-1 group-hover:text-cyan-300 transition-colors">
                       {serv.title}
                     </h3>
-                    <p className="font-['Inter'] text-[13px] text-[#bac9cc] mt-2 leading-relaxed">
+                    <p className="font-['Inter'] text-[13px] text-slate-300 mt-2 leading-relaxed">
                       {serv.description}
                     </p>
                   </div>
 
                   {/* Capabilities List */}
                   <div className="flex flex-col gap-1.5 pt-2">
-                    <span className="text-[11px] font-['JetBrains_Mono'] uppercase tracking-wider text-[#00daf3] font-semibold">
+                    <span className="text-[11px] font-['JetBrains_Mono'] uppercase tracking-wider text-cyan-400 font-semibold">
                       Alcance del módulo:
                     </span>
-                    <ul className="flex flex-col gap-1 text-[12px] font-['Inter'] text-[#bac9cc]">
+                    <ul className="flex flex-col gap-1.5 text-[12px] font-['Inter'] text-slate-300">
                       {serv.capabilities.map((c, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#00fe66] shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                           <span>{c}</span>
                         </li>
                       ))}
@@ -319,14 +319,14 @@ export const MrcaAcademy: React.FC = () => {
                   </div>
 
                   {/* Deliverables Box */}
-                  <div className="p-3.5 rounded-2xl bg-[#060c20] border border-[#1c274a] flex flex-col gap-1">
-                    <span className="text-[10px] font-['JetBrains_Mono'] uppercase tracking-wider text-[#00fe66] font-bold">
+                  <div className="p-3.5 rounded-xl bg-slate-950/80 border border-white/5 flex flex-col gap-1">
+                    <span className="text-[10px] font-['JetBrains_Mono'] uppercase tracking-wider text-emerald-400 font-bold">
                       Entregables incluidos:
                     </span>
-                    <ul className="text-[11px] font-['Inter'] text-[#dce1ff] flex flex-col gap-0.5">
+                    <ul className="text-[11px] font-['Inter'] text-slate-200 flex flex-col gap-0.5">
                       {serv.deliverables.map((d, dIdx) => (
                         <li key={dIdx} className="flex items-center gap-1.5">
-                          <span className="text-[#00e5ff]">•</span>
+                          <span className="text-cyan-400">•</span>
                           <span>{d}</span>
                         </li>
                       ))}
@@ -334,15 +334,15 @@ export const MrcaAcademy: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-[#1c274a] flex items-center justify-between">
-                  <span className="font-['JetBrains_Mono'] text-[10px] text-[#849396]">
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                  <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400">
                     Materias: {serv.commonCourses}
                   </span>
                   <button
                     onClick={scrollToCalculator}
-                    className="font-['JetBrains_Mono'] text-[11px] text-[#00e5ff] font-bold hover:underline flex items-center gap-1"
+                    className="font-['JetBrains_Mono'] text-[11px] text-cyan-400 font-bold hover:underline flex items-center gap-1 transition-all"
                   >
-                    <span>Cotizar</span>
+                    <span>Cotizar Módulo</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -354,70 +354,70 @@ export const MrcaAcademy: React.FC = () => {
         {/* ==================================================================== */}
         {/* 3. VALUE PROPOSITION SECTION: Guías & Garantías para el Estudiante    */}
         {/* ==================================================================== */}
-        <section className="rounded-3xl bg-gradient-to-r from-[#0d1633] via-[#101b3d] to-[#0d1633] border-2 border-[#00fe66]/30 p-6 sm:p-10 shadow-2xl flex flex-col gap-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <section className="rounded-xl bg-slate-900 border border-emerald-500/30 p-6 sm:p-8 backdrop-blur-xl shadow-xl flex flex-col gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
             <div className="flex flex-col gap-1">
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66] uppercase tracking-wider font-bold">
+              <span className="font-['JetBrains_Mono'] text-[11px] text-emerald-400 uppercase tracking-wider font-bold">
                 MÁS QUE CÓDIGO // FORMACIÓN Y SEGURIDAD AL EXPONER
               </span>
-              <h2 className="font-['Space_Grotesk'] text-[24px] sm:text-[30px] font-bold text-[#ffffff]">
+              <h2 className="font-['Space_Grotesk'] text-[22px] sm:text-[28px] font-bold text-white">
                 Nuestras 4 Garantías para tu Aprobación
               </h2>
             </div>
-            <div className="px-3.5 py-1.5 rounded-full bg-[#00fe66]/10 border border-[#00fe66]/40 text-[#00fe66] font-['JetBrains_Mono'] text-[11px] font-bold shrink-0 self-start sm:self-auto">
+            <div className="px-3.5 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-['JetBrains_Mono'] text-[11px] font-bold shrink-0 self-start sm:self-auto">
               CERO PLAGIO • CERO DUDAS
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Guarantee 1: Código 100% Comentado */}
-            <div className="p-5 rounded-2xl bg-[#060c20]/80 border border-[#1c274a] flex flex-col gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#00fe66]/10 border border-[#00fe66]/30 flex items-center justify-center text-[#00fe66]">
-                <FileCode className="w-5 h-5 text-[#00fe66]" />
+            <div className="p-5 rounded-xl bg-slate-950/80 border border-white/5 flex flex-col gap-2.5 transition-all duration-300 hover:border-emerald-500/30">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <FileCode className="w-5 h-5 text-emerald-400" />
               </div>
-              <h4 className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
+              <h4 className="font-['Space_Grotesk'] text-[15px] font-bold text-white">
                 Código 100% Comentado
               </h4>
-              <p className="font-['Inter'] text-[12px] text-[#bac9cc] leading-relaxed">
+              <p className="font-['Inter'] text-[12px] text-slate-300 leading-relaxed">
                 Cada función, variable y llamada a base de datos cuenta con comentarios claros en español. Aprenderás exactamente cómo funciona el flujo sin memorizar a ciegas.
               </p>
             </div>
 
             {/* Guarantee 2: Guía de Defensa para el Profesor */}
-            <div className="p-5 rounded-2xl bg-[#060c20]/80 border border-[#1c274a] flex flex-col gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#00e5ff]/10 border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff]">
-                <BookOpen className="w-5 h-5 text-[#00e5ff]" />
+            <div className="p-5 rounded-xl bg-slate-950/80 border border-white/5 flex flex-col gap-2.5 transition-all duration-300 hover:border-cyan-500/30">
+              <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                <BookOpen className="w-5 h-5 text-cyan-400" />
               </div>
-              <h4 className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
+              <h4 className="font-['Space_Grotesk'] text-[15px] font-bold text-white">
                 Guía de Defensa para el Profesor
               </h4>
-              <p className="font-['Inter'] text-[12px] text-[#bac9cc] leading-relaxed">
+              <p className="font-['Inter'] text-[12px] text-slate-300 leading-relaxed">
                 Anticipamos las preguntas de sínodo: "¿Por qué normalizaste hasta 3FN?", "¿Cómo gestionas la concurrencia?", "¿Qué pasa si se cae el socket?". Te damos las respuestas fundamentadas.
               </p>
             </div>
 
             {/* Guarantee 3: Garantía de Funcionamiento en Vivo */}
-            <div className="p-5 rounded-2xl bg-[#060c20]/80 border border-[#1c274a] flex flex-col gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#00daf3]/10 border border-[#00daf3]/30 flex items-center justify-center text-[#00daf3]">
-                <ShieldCheck className="w-5 h-5 text-[#00daf3]" />
+            <div className="p-5 rounded-xl bg-slate-950/80 border border-white/5 flex flex-col gap-2.5 transition-all duration-300 hover:border-cyan-500/30">
+              <div className="w-10 h-10 rounded-lg bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-300">
+                <ShieldCheck className="w-5 h-5 text-teal-300" />
               </div>
-              <h4 className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
+              <h4 className="font-['Space_Grotesk'] text-[15px] font-bold text-white">
                 Garantía de Ejecución en Vivo
               </h4>
-              <p className="font-['Inter'] text-[12px] text-[#bac9cc] leading-relaxed">
+              <p className="font-['Inter'] text-[12px] text-slate-300 leading-relaxed">
                 El proyecto se entrega probado y con comandos limpios. Si tienes problemas al correrlo en tu máquina o sistema operativo, te asistimos hasta que corra impecable.
               </p>
             </div>
 
             {/* Guarantee 4: Soporte de Ajustes por Rúbrica */}
-            <div className="p-5 rounded-2xl bg-[#060c20]/80 border border-[#1c274a] flex flex-col gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#c084fc]/10 border border-[#c084fc]/30 flex items-center justify-center text-[#c084fc]">
-                <HelpCircle className="w-5 h-5 text-[#c084fc]" />
+            <div className="p-5 rounded-xl bg-slate-950/80 border border-white/5 flex flex-col gap-2.5 transition-all duration-300 hover:border-purple-500/30">
+              <div className="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-300">
+                <HelpCircle className="w-5 h-5 text-purple-300" />
               </div>
-              <h4 className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
+              <h4 className="font-['Space_Grotesk'] text-[15px] font-bold text-white">
                 Ajustes Gratuitos de Rúbrica
               </h4>
-              <p className="font-['Inter'] text-[12px] text-[#bac9cc] leading-relaxed">
+              <p className="font-['Inter'] text-[12px] text-slate-300 leading-relaxed">
                 Si tras la revisión preliminar tu docente solicita una adaptación específica, la ajustamos para que tu rúbrica obtenga el puntaje más alto posible.
               </p>
             </div>

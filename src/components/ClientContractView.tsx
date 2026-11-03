@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { ClientContract } from '../types';
 import { supabase } from '../lib/supabase/client';
+import { sendContractSignedEmailNotification } from '../lib/emailNotification';
 
 export interface ClientContractViewProps {
   contract?: ClientContract;
@@ -225,6 +226,16 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
         // local fallback
       }
 
+      // Dispatch email alert to solutionsmrca83@gmail.com
+      sendContractSignedEmailNotification({
+        clientName: effectiveName,
+        clientCompany: effectiveCompany,
+        clientEmail: effectiveEmail,
+        contractId: activeContract.id,
+        contractTitle: activeContract.title,
+        signatureType: 'digital',
+      });
+
       setIsProcessingSignature(false);
       setIsSignModalOpen(false);
 
@@ -306,6 +317,17 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
       } catch {
         // Local fallback
       }
+
+      // Dispatch email alert to solutionsmrca83@gmail.com
+      sendContractSignedEmailNotification({
+        clientName: effectiveName,
+        clientCompany: effectiveCompany,
+        clientEmail: effectiveEmail,
+        contractId: activeContract.id,
+        contractTitle: activeContract.title,
+        fileName: file.name,
+        signatureType: 'physical_pdf',
+      });
 
       setIsUploadingPhysical(false);
       if (showToast) {
