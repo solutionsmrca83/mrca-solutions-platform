@@ -34,9 +34,9 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
 
         {/* Status Text */}
         <span className="text-[#00fe66] font-semibold tracking-wide flex items-center gap-1.5">
-          <span>All Systems Operational</span>
+          <span>Sistemas Operativos en Línea</span>
           <span className="text-[#849396] font-normal">//</span>
-          <span className="text-cyan-300">99.9% Uptime</span>
+          <span className="text-cyan-300">99.9% Disponibilidad</span>
         </span>
 
         {showDetailsOnHover && (
@@ -96,12 +96,12 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
                   Red Global Edge CDN
                 </span>
-                <span className="text-[#00fe66] font-bold">14ms latency</span>
+                <span className="text-[#00fe66] font-bold">14ms latencia</span>
               </div>
             </div>
 
             <div className="pt-2 border-t border-[#181e36] text-[10px] font-['JetBrains_Mono'] text-[#849396] flex items-center justify-between">
-              <span>SLA CONTRACTUAL: 99.9%</span>
+              <span>SLA CONTRACTUAL: 99.9% DISPONIBILIDAD</span>
               <span className="text-[#00daf3]">BANXICO & AWS MX</span>
             </div>
           </motion.div>

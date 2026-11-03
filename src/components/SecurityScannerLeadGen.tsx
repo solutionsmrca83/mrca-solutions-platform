@@ -169,7 +169,7 @@ export const SecurityScannerLeadGen: React.FC<SecurityScannerLeadGenProps> = ({ 
             <button
               type="submit"
               disabled={isScanning || !url.trim()}
-              className="px-6 py-3.5 rounded-xl bg-[#00E5FF] hover:bg-[#c3f5ff] text-[#00363D] font-['JetBrains_Mono'] text-[13px] font-bold tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shrink-0"
+              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shrink-0 cursor-pointer"
             >
               <Search className="w-4 h-4" />
               <span>{isScanning ? 'ESCANEANDO...' : 'INICIAR ESCANEO'}</span>
@@ -289,7 +289,7 @@ export const SecurityScannerLeadGen: React.FC<SecurityScannerLeadGenProps> = ({ 
               <button
                 type="submit"
                 disabled={isSaving || !email.trim()}
-                className="w-full py-2.5 rounded-lg bg-[#00FF66] hover:bg-[#80ffaa] text-[#00363D] font-['JetBrains_Mono'] text-[12px] font-bold tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(0,255,102,0.4)] disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-lg bg-gradient-to-r from-emerald-400 to-teal-400 hover:from-emerald-300 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(0,255,102,0.4)] hover:shadow-[0_0_20px_rgba(16,185,129,0.8)] hover:scale-105 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <FileText className="w-4 h-4" />
                 <span>{isSaving ? 'GENERANDO ENLACE...' : 'DESBLOQUEAR REPORTE PDF'}</span>

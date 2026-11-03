@@ -131,7 +131,7 @@ const INITIAL_ROADMAP: RoadmapItem[] = [
     ],
     commitHash: '0xpending_dual_signature',
     architectLead: 'Equipo Core Enclave',
-    slaVerification: '99.99% UPTIME CONVENIDO POR CONTRATO',
+    slaVerification: '99.99% DISPONIBILIDAD CONVENIDA POR CONTRATO',
   },
 ];
 

@@ -64,7 +64,7 @@ Toda información compartida se considera Carga Útil Confidencial Nivel 4 (FIPS
 CLÁUSULA TERCERA — VIGENCIA Y PENALIZACIÓN CONVENCIONAL:
 Vigencia ininterrumpida de cinco (5) años a partir de la firma digital. La parte infractora responderá ante el Enclave Arbitral Tecnológico de la Ciudad de México.
 
-SLA ASIGNADO: 99.98% UPTIME // ENCLAVE mTLS
+SLA ASIGNADO: 99.98% DISPONIBILIDAD // ENCLAVE mTLS
 FECHA DE EMISIÓN: 12 de Octubre de 2026
 SELLO SHA-256 PREVIO: 0x9f41b8a72e90c8a1b490f840139b8192`,
     status: 'pending_signature',
@@ -81,7 +81,7 @@ const CAPABILITIES: EngineeringCapability[] = [
       'Sistemas distribuidos de ultra-baja latencia, arquitecturas SPA/SSR seguras, integración mTLS y rendimiento FCP < 0.5s.',
     icon: 'web',
     technologies: ['Next.js', 'React 19', 'Rust', 'Tailwind', 'TypeScript', 'Vite'],
-    sla: '99.98% UPTIME',
+    sla: '99.98% DISPONIBILIDAD',
     badge: 'CORE INGENIERÍA',
   },
   {

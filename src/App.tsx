@@ -514,7 +514,7 @@ export default function App() {
   }
 
   return (
-    <div className="bg-[#0b1229] min-h-screen text-[#dce1ff] flex flex-col relative font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d]">
+    <div className="bg-transparent min-h-screen text-[#dce1ff] flex flex-col relative font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d]">
       {/* GLOBAL TOP NAVIGATION HEADER */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 border-b border-cyan-500/20 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
@@ -571,7 +571,7 @@ export default function App() {
                   : 'text-slate-300 hover:text-cyan-400 hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30'
               }`}
             >
-              Overview & Trust Center
+              Centro de Confianza
             </button>
             <button
               id="nav-btn-portal-clientes"

@@ -708,7 +708,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                   </a>{' '}
                   y el{' '}
                   <a href="#legal-sla" className="text-cyan-400 underline font-semibold">
-                    SLA B2B (99.9% Uptime)
+                    SLA B2B (99.9% Disponibilidad)
                   </a>
                   .
                 </span>

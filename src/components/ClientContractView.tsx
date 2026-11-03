@@ -796,7 +796,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
       {/* ===================================================================== */}
       {/* CENTRO DE FIRMA (SIGNATURE CENTER) - DUAL OPTIONS                     */}
       {/* ===================================================================== */}
-      <div className="w-full bg-[#0A1128]/95 border-2 border-cyan-500/40 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-[0_12px_45px_rgba(0,229,255,0.18)] flex flex-col gap-6 no-print">
+      <div className="w-full bg-[#0A1128]/95 border-2 border-cyan-500/40 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-[0_12px_45px_rgba(0,229,255,0.18)] flex flex-col gap-6 no-print animate-border-pulse">
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-cyan-900/40">
           <div className="flex items-center gap-3">
@@ -981,7 +981,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
       {/* ===================================================================== */}
       {isSignModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#040817]/90 backdrop-blur-2xl p-4 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
-          <div className="relative w-full max-w-2xl bg-[#091129]/95 border-2 border-cyan-400 rounded-3xl shadow-[0_0_50px_rgba(0,229,255,0.3)] backdrop-blur-2xl flex flex-col overflow-hidden">
+          <div className="relative w-full max-w-2xl bg-[#091129]/95 border-2 border-cyan-400 rounded-3xl shadow-[0_0_50px_rgba(0,229,255,0.3)] backdrop-blur-2xl flex flex-col overflow-hidden animate-border-pulse">
             {/* Modal Header */}
             <div className="px-6 py-4 bg-[#070e24] border-b border-cyan-900/50 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">

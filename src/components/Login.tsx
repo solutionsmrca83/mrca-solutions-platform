@@ -297,7 +297,7 @@ export const Login: React.FC<LoginProps> = ({
         </motion.div>
 
         {/* ── ROLE SELECTOR TAB BAR ─────────────────────────────────────── */}
-        <div className="w-full mb-4 flex items-center justify-between gap-2 p-1.5 rounded-2xl bg-slate-900/60 border border-cyan-500/30 backdrop-blur-xl shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+        <div className="w-full mb-4 flex items-center justify-between gap-2 p-1.5 rounded-2xl bg-slate-900/60 border border-cyan-500/30 backdrop-blur-xl shadow-[0_0_15px_rgba(6,182,212,0.2)] animate-border-pulse">
           {authRole === 'admin' ? (
             <div className="w-full flex items-center justify-between px-2 py-1">
               <div className="flex items-center gap-2">
@@ -323,7 +323,7 @@ export const Login: React.FC<LoginProps> = ({
                 }`}
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[16px]">domain</span>
-                <span>Corporate Client</span>
+                <span>Cliente Corporativo</span>
               </button>
 
               <button
@@ -336,7 +336,7 @@ export const Login: React.FC<LoginProps> = ({
                 }`}
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[16px]">school</span>
-                <span>Student / Academic</span>
+                <span>Academia / Estudiantes</span>
               </button>
             </div>
           )}
@@ -564,7 +564,7 @@ export const Login: React.FC<LoginProps> = ({
               className="text-[#849396] hover:text-[#00daf3] transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg hover:bg-[#141a32]/60 cursor-pointer text-[10px]"
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[13px]">lock</span>
-              <span>Partner Enclave (Acceso Socios)</span>
+              <span>Enclave de Socios (Acceso Seguro)</span>
             </button>
           </div>
         )}

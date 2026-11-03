@@ -17,7 +17,7 @@ export const SLA: React.FC<SLAProps> = ({ onBack, onNavigate }) => {
     >
       <section className="space-y-4">
         <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400 border-b border-cyan-900/40 pb-2">
-          1. Alcance y Compromiso de Disponibilidad (99.9% Uptime)
+          1. Alcance y Compromiso de Disponibilidad (99.9% Disponibilidad Continua)
         </h2>
         <p>
           <strong>MRCA Solutions</strong> asume frente a EL CLIENTE el compromiso contractual de suministrar una disponibilidad mensual 

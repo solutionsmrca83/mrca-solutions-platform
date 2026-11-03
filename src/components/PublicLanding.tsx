@@ -48,7 +48,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
       subtitle: 'Aceleramos tu negocio con software ágil',
       desc: 'Construimos plataformas web y sistemas de alta concurrencia adaptados exactamente al modelo operativo de tu empresa, eliminando fricción y automatizando procesos clave.',
       icon: 'code_blocks',
-      features: ['Arquitectura Full-Stack Next.js / Rust', 'Velocidad de carga sub-segundo FCP < 0.5s', 'Integración fluida con bases de datos RLS'],
+      features: ['Arquitectura Integral Frontend & Backend', 'Velocidad de carga sub-segundo FCP < 0.5s', 'Integración fluida con bases de datos RLS'],
       tag: 'CRECIMIENTO EMPRESARIAL',
     },
     {
@@ -65,7 +65,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
       desc: 'Operamos bajo estricto apego al marco jurídico mexicano. Facturación CFDI 4.0 con materialidad probatoria, custodia bancaria SPEI y obra por encargo según LFDA.',
       icon: 'gavel',
       features: ['Contratos con firma digital y sello SHA-256', 'Pena convencional y anticipos protegidos', 'Validación ante SAT y Código de Comercio'],
-      tag: 'LEGAL & FISCAL COMPLIANCE',
+      tag: 'CUMPLIMIENTO LEGAL & FISCAL',
     },
   ];
 
@@ -206,10 +206,10 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
                 <button
                   onClick={() => setIsAuditModalOpen(true)}
-                  className="min-h-[52px] px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[16px] font-bold tracking-wide flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:shadow-[0_0_35px_rgba(6,182,212,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+                  className="min-h-[52px] px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[16px] font-bold tracking-wide flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 cursor-pointer"
                 >
                   <Sparkles className="w-5 h-5 text-slate-950" />
-                  <span>Comenzar Proyecto / Asesoría</span>
+                  <span>Comenzar Proyecto</span>
                   <ArrowRight className="w-4 h-4 ml-0.5" />
                 </button>
 
@@ -443,9 +443,9 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 relative z-10 w-full sm:w-auto">
               <button
                 onClick={() => setIsAuditModalOpen(true)}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[15px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(6,182,212,0.4)] flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[15px] font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Agendar Consulta</span>
+                <span>Comenzar Proyecto</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

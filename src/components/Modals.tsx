@@ -18,7 +18,7 @@ export const ReAuthModal: React.FC<ModalProps & { onConfirm: (method: string) =>
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/85 backdrop-blur-xl p-4">
-      <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/30 shadow-2xl flex flex-col gap-4">
+      <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/40 shadow-2xl flex flex-col gap-4 animate-border-pulse">
         <div className="flex items-start justify-between">
           <div className="flex flex-col">
             <div className="flex items-center gap-2 mb-1">
@@ -78,30 +78,30 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
   onSubmit,
 }) => {
   const [email, setEmail] = useState('');
-  const [scope, setScope] = useState('cloud-architecture');
+  const [scope, setScope] = useState('web-saas');
   const [level, setLevel] = useState('tier1');
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/85 backdrop-blur-xl p-4">
-      <div className="relative w-full max-w-lg p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/30 shadow-2xl flex flex-col gap-4">
+      <div className="relative w-full max-w-lg p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/40 shadow-2xl flex flex-col gap-4 animate-border-pulse">
         <div className="flex items-start justify-between">
           <div className="flex flex-col">
             <span className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] uppercase tracking-wider font-semibold">
-              SISTEMA DE AUDITORÍA PROTOCOLO v2.4
+              ASESORÍA ESTRATÉGICA &amp; DESARROLLO B2B
             </span>
             <h3 className="font-['Space_Grotesk'] text-[22px] font-bold text-[#dce1ff]">
-              Desplegar Auditoría de Seguridad B2B
+              Comenzar Proyecto / Consultoría Estratégica
             </h3>
           </div>
-          <button onClick={onClose} className="text-[#bac9cc] hover:text-[#dce1ff]">
+          <button onClick={onClose} className="text-[#bac9cc] hover:text-[#dce1ff] cursor-pointer">
             <span translate="no" className="notranslate material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
-        <p className="font-['Inter'] text-[13px] text-[#bac9cc]">
-          Programe un escaneo criptográfico de perímetro, revisión de microservicios con Cilium eBPF y evaluación de cumplimiento SOC-2 / ISO 27001.
+        <p className="font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed">
+          Agenda una consultoría estratégica para evaluar, proteger y escalar la infraestructura digital de tu empresa.
         </p>
 
         <form
@@ -119,27 +119,27 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
             <input
               type="email"
               required
-              placeholder="ciso@tuempresa.com"
+              placeholder="contacto@tuempresa.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-lg px-3 py-2 text-[13px] text-[#dce1ff] focus:outline-none"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                Alcance Técnico
+                Solución Requerida
               </label>
               <select
                 value={scope}
                 onChange={(e) => setScope(e.target.value)}
                 className="w-full bg-[#060d24] border border-[#3b494c] rounded-lg px-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none"
               >
-                <option value="cloud-architecture">Arquitectura Cloud Zero-Trust</option>
-                <option value="pentest-redteam">Pentesting Red Team Kali</option>
-                <option value="smart-contracts">Ledger & Cifrado Post-Quantum</option>
-                <option value="kubernetes-hardening">Hardening K8s & Cilium</option>
+                <option value="web-saas">Desarrollo Web &amp; SaaS</option>
+                <option value="cybersecurity-audit">Auditoría de Ciberseguridad</option>
+                <option value="cloud-infrastructure">Infraestructura y Nube (Cloud)</option>
+                <option value="technical-support">Soporte y Mantenimiento Técnico</option>
               </select>
             </div>
             <div>
@@ -151,31 +151,31 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
                 onChange={(e) => setLevel(e.target.value)}
                 className="w-full bg-[#060d24] border border-[#3b494c] rounded-lg px-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none"
               >
-                <option value="tier1">Tier-1 Inmediato (24h)</option>
+                <option value="tier1">Prioridad Alta (Inmediato 24h)</option>
                 <option value="scheduled">Programado en Sprint</option>
-                <option value="institutional">Gobernanza Institucional</option>
+                <option value="institutional">Consultoría Institucional</option>
               </select>
             </div>
           </div>
 
           <div className="p-3 bg-[#0b1229] rounded-lg border border-[#222941] flex items-center gap-2 text-[11px] font-['JetBrains_Mono'] text-[#bac9cc]">
             <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">verified</span>
-            <span>Certificado de Inmutabilidad SHA-256 generado al enviar</span>
+            <span>Atención confidencial directa y propuesta técnica en menos de 24 horas</span>
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-[#181e36] text-[#bac9cc] text-[12px] font-['JetBrains_Mono']"
+              className="px-4 py-2 rounded-lg bg-[#181e36] text-[#bac9cc] hover:text-white text-[12px] font-['JetBrains_Mono'] cursor-pointer transition-colors"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-lg bg-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+              className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[13px] font-bold shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 cursor-pointer"
             >
-              Iniciar Despliegue
+              Comenzar Proyecto
             </button>
           </div>
         </form>
@@ -207,7 +207,7 @@ export const HardwareTokenModal: React.FC<ModalProps & { onSuccess: () => void }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/85 backdrop-blur-xl p-4">
-      <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/40 shadow-2xl flex flex-col items-center text-center gap-4">
+      <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/40 shadow-2xl flex flex-col items-center text-center gap-4 animate-border-pulse">
         <div className="w-16 h-16 rounded-full bg-[#181e36] border border-[#00e5ff]/40 flex items-center justify-center text-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.3)]">
           <span translate="no" className="notranslate material-symbols-outlined text-[32px]">
             {step === 'granted' ? 'check_circle' : 'fingerprint'}
@@ -550,7 +550,7 @@ export const LoginModal: React.FC<
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/90 backdrop-blur-xl p-4 overflow-y-auto">
-      <div className="relative w-full max-w-xl max-h-[94vh] overflow-y-auto rounded-3xl bg-[#0a1128] border border-[#00e5ff]/40 shadow-[0_0_60px_rgba(0,229,255,0.2)] p-4 sm:p-6 flex flex-col gap-4">
+      <div className="relative w-full max-w-xl max-h-[94vh] overflow-y-auto rounded-3xl bg-[#0a1128] border border-[#00e5ff]/40 shadow-[0_0_60px_rgba(0,229,255,0.2)] p-4 sm:p-6 flex flex-col gap-4 animate-border-pulse">
         {/* Top Target Selector & Dismiss */}
         <div className="flex items-center justify-between gap-2 border-b border-[#222941] pb-3">
           {authTarget === 'admin' ? (
@@ -577,7 +577,7 @@ export const LoginModal: React.FC<
                 }`}
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[15px]">domain</span>
-                <span>Corporate Client</span>
+                <span>Cliente Corporativo</span>
               </button>
               <button
                 type="button"
@@ -589,7 +589,7 @@ export const LoginModal: React.FC<
                 }`}
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[15px]">school</span>
-                <span>Student / Academic</span>
+                <span>Academia / Estudiantes</span>
               </button>
             </div>
           )}
@@ -746,7 +746,7 @@ export const LoginModal: React.FC<
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2 mt-1"
+                className="w-full py-2.5 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] flex items-center justify-center gap-2 mt-1 cursor-pointer"
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[18px]">vpn_key</span>
                 <span>
@@ -804,7 +804,7 @@ export const LoginModal: React.FC<
               className="text-[#849396] hover:text-[#00daf3] transition-colors flex items-center gap-1.5 py-1 px-2.5 rounded-lg hover:bg-[#141a32]/60 cursor-pointer text-[10px]"
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[13px]">lock</span>
-              <span>Partner Enclave (Acceso Socios)</span>
+              <span>Enclave de Socios (Acceso Seguro)</span>
             </button>
           </div>
         )}

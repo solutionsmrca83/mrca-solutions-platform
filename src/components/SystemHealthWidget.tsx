@@ -102,7 +102,7 @@ export const SystemHealthWidget: React.FC<SystemHealthWidgetProps> = ({ classNam
                 Estado de sus Sistemas
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-[#00FF66]/15 border border-[#00FF66]/40 text-[#00FF66] font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider uppercase">
-                99.9% UPTIME ACTIVO
+                99.9% DISPONIBILIDAD ACTIVA
               </span>
             </div>
             <p className="font-['Inter'] text-[12px] text-[#bac9cc]">
@@ -145,8 +145,8 @@ export const SystemHealthWidget: React.FC<SystemHealthWidgetProps> = ({ classNam
                 </span>
               </div>
 
-              {/* Pulsing Terminal Green Dot indicating 99.9% Uptime */}
-              <div className="flex items-center gap-1.5 shrink-0" title="99.9% Uptime garantizado">
+              {/* Pulsing Terminal Green Dot indicating 99.9% Disponibilidad */}
+              <div className="flex items-center gap-1.5 shrink-0" title="99.9% Disponibilidad garantizada">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF66] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00FF66] shadow-[0_0_8px_#00FF66]"></span>

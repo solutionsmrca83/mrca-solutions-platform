@@ -52,26 +52,26 @@ export interface ServiceOption {
 export const AVAILABLE_SERVICES: ServiceOption[] = [
   {
     id: 'cloud_arch',
-    name: 'Cloud Architecture',
-    description: 'Arquitectura distribuida en AWS/GCP con microservicios de alta concurrencia y orquestación Kubernetes.',
+    name: 'Arquitectura e Infraestructura Cloud',
+    description: 'Arquitectura distribuida en AWS/GCP con microservicios de alta concurrencia y orquestación resiliente.',
     category: 'cloud',
   },
   {
     id: 'zero_trust',
-    name: 'Zero-Trust Deployment',
-    description: 'Aislamiento mTLS, eBPF/Cilium, microsegmentación perimetral y autenticación con llaves criptográficas FIPS 140-3.',
+    name: 'Seguridad Perimetral & Redundancia',
+    description: 'Aislamiento mTLS, microsegmentación perimetral, redundancia activa y autenticación con llaves criptográficas FIPS 140-3.',
     category: 'security',
   },
   {
     id: 'soc2_audit',
-    name: 'SOC-2 Audit',
-    description: 'Auditoría forense, hardening de infraestructura, análisis estático SAST y cumplimiento regulatorio NIST CSF.',
+    name: 'Auditoría de Ciberseguridad & SOC-2',
+    description: 'Auditoría forense, hardening de infraestructura, análisis estático SAST y cumplimiento regulatorio.',
     category: 'audit',
   },
   {
     id: 'webapp_dev',
-    name: 'Web App Development',
-    description: 'Desarrollo full-stack con Next.js 15, React 19, Tailwind CSS y backends blindados en Rust/PostgreSQL RLS.',
+    name: 'Desarrollo de Aplicaciones Web & SaaS',
+    description: 'Desarrollo integral de plataformas de alta velocidad con Next.js 15, React 19 y bases de datos blindadas.',
     category: 'dev',
   },
   {
@@ -1069,7 +1069,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                 {/* Uptime Guarantee */}
                 <div className="flex flex-col gap-1.5">
                   <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium">
-                    Garantía Uptime Mensual
+                    Garantía de Disponibilidad Mensual
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -1087,7 +1087,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                       }`}
                     >
                       99.9%
-                      <span className="block text-[9px] text-slate-400 font-normal">Estándar Cloud</span>
+                      <span className="block text-[9px] text-slate-400 font-normal">Disponibilidad Cloud</span>
                     </button>
                     <button
                       type="button"
@@ -1104,7 +1104,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                       }`}
                     >
                       99.999%
-                      <span className="block text-[9px] text-emerald-400 font-normal">Five-Nines VIP</span>
+                      <span className="block text-[9px] text-emerald-400 font-normal">Misión Crítica VIP</span>
                     </button>
                   </div>
                 </div>
@@ -1175,7 +1175,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
             {/* PREVIEW LEGAL PAPER CONTAINER */}
             <div
               id="printable-contract-document"
-              className="relative w-full rounded-2xl bg-[#050B1E] border-2 border-cyan-500/40 p-6 sm:p-8 shadow-[0_15px_40px_rgba(0,0,0,0.8)] backdrop-blur-2xl flex flex-col gap-6 text-[#dce1ff] overflow-hidden"
+              className="relative w-full rounded-2xl bg-[#050B1E] border-2 border-cyan-500/40 p-6 sm:p-8 shadow-[0_15px_40px_rgba(0,0,0,0.8)] backdrop-blur-2xl flex flex-col gap-6 text-[#dce1ff] overflow-hidden animate-border-pulse"
               style={{
                 backgroundImage:
                   'radial-gradient(ellipse at 80% 10%, rgba(0, 229, 255, 0.05), transparent 60%)',

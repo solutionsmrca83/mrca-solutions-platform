@@ -44,7 +44,7 @@ export const BASE_TEMPLATES: ContractTemplate[] = [
     title: 'Contrato Marco de Desarrollo de Software & Microservicios Cloud',
     category: 'software_dev',
     categoryLabel: 'DESARROLLO DE SOFTWARE & CLOUD',
-    defaultSla: '99.98% Uptime // Sprint Quincenal',
+    defaultSla: '99.98% Disponibilidad // Sprint Quincenal',
     description:
       'Construcción de aplicaciones web de alta concurrencia en Next.js/Rust, microservicios blindados y pipelines CI/CD seguros.',
     base_content: `CONTRATO MARCO DE INGENIERÍA DE SOFTWARE & ARQUITECTURA DISTRIBUIDA B2B`,
