@@ -2,13 +2,13 @@ import { supabase } from './supabase/client';
 import { sendSupportEscalationEmailNotification } from './emailNotification';
 import {
   MRCA_SERVICES,
-  MRCA_SCOPE_TIERS,
   SCOPE_TIER_META,
-  getQuoteEstimate,
+  fetchLiveServicePricing,
+  buildQuoteEstimateFromPricing,
   type MrcaServiceName,
   type MrcaScopeTier,
   type QuoteEstimateResult,
-} from './mrcaPricingConfig';
+} from './mrcaPricingFallback';
 import type {
   CrmLeadRecord,
   CrmLeadStatus,
@@ -18,13 +18,14 @@ import type {
 } from '../types';
 
 /**
- * MRCA SOLUTIONS — MOTOR CONVERSACIONAL CRM, COTIZADOR ESTIMADO Y SOPORTE NIVEL 1 ($0 API)
- * 100% local en TypeScript: máquina de estados determinista + coincidencia difusa
- * en español (insensible a acentos á, é, í, ó, ú, ñ) + persistencia en Supabase.
+ * MRCA SOLUTIONS — MOTOR CONVERSACIONAL CRM, COTIZADOR DINÁMICO Y SOPORTE NIVEL 1 ($0 API)
+ * Carga precios en vivo desde Supabase `service_pricing` (respaldo automático en `mrcaPricingFallback.ts`).
  *
- * REGLA ESTRICTA DE SEGURIDAD BANCARIA:
- * Nunca incluir ni revelar la cuenta CLABE en el chat público; los datos de transferencia
- * aparecen exclusivamente dentro del contrato formal emitido al cliente.
+ * REGLAS ESTRICTAS:
+ * 1. Cero APIs de IA pagas; 100% determinista local con coincidencia difusa en español.
+ * 2. Nunca revelar la cuenta CLABE en el chat público (solo aparece dentro del contrato formal).
+ * 3. Aislamiento total de estudiantes: si `isStudentSession === true`, jamás mostrar ni referenciar
+ *    el Catálogo de Puntos de Venta / Software Listo.
  */
 
 export const BOT_SERVICE_OPTIONS = MRCA_SERVICES;
@@ -52,13 +53,13 @@ export interface BotQuickReply {
 }
 
 export interface BotConfirmationCard {
-  type: 'lead_accepted' | 'lead_registered' | 'ticket_resolved' | 'ticket_escalated';
+  type: 'lead_accepted' | 'lead_registered' | 'ticket_resolved' | 'ticket_escalated' | 'pos_catalog';
   title: string;
   subtitle: string;
   folio: string;
   details: { label: string; value: string }[];
   ctaLabel?: string;
-  ctaAction?: 'open_portal' | 'new_quote' | 'reset';
+  ctaAction?: 'open_portal' | 'open_pos_catalog' | 'new_quote' | 'reset';
 }
 
 export interface BotMessageItem {
@@ -81,6 +82,7 @@ export interface BotSessionState {
   step: BotFlowStep;
   userEmail?: string;
   userId?: string | null;
+  isStudentSession?: boolean;
   quote: {
     serviceType: MrcaServiceName | '';
     projectScope: MrcaScopeTier | '';
@@ -100,9 +102,6 @@ export interface BotSessionState {
   };
 }
 
-// ============================================================================
-// CLAVES DE ALMACENAMIENTO LOCAL (Sincronización instantánea y respaldo offline)
-// ============================================================================
 export const STORAGE_KEYS = {
   LEADS: 'mrca_crm_leads_v1',
   TICKETS: 'mrca_bot_support_tickets_v1',
@@ -251,7 +250,7 @@ export async function updateAutoAcceptSetting(
 }
 
 // ============================================================================
-// PERSISTENCIA EN SUPABASE + RESPALDO LOCAL (LEADS, TICKETS Y LOGS DE CHAT)
+// PERSISTENCIA EN SUPABASE + RESPALDO LOCAL
 // ============================================================================
 
 export function mapServiceTypeToContractServices(serviceType: string): string[] {
@@ -331,6 +330,7 @@ export async function createAutomatedCrmLead(params: {
     service_type: params.serviceType,
     project_scope: params.projectScope,
     estimated_budget: params.estimatedBudget,
+    custom_adjusted_price: null,
     advance_percentage: params.advancePercentage,
     status,
     bot_notes: botNotes,
@@ -350,6 +350,7 @@ export async function createAutomatedCrmLead(params: {
         service_type: finalRecord.service_type,
         project_scope: finalRecord.project_scope,
         estimated_budget: finalRecord.estimated_budget,
+        custom_adjusted_price: null,
         advance_percentage: finalRecord.advance_percentage,
         status: finalRecord.status,
         bot_notes: finalRecord.bot_notes,
@@ -450,7 +451,7 @@ export async function createBotSupportTicket(params: {
 }
 
 // ============================================================================
-// BASE DE CONOCIMIENTO DE SOPORTE NIVEL 1 (100% ESPAÑOL CORPORATIVO)
+// BASE DE CONOCIMIENTO DE SOPORTE NIVEL 1 (100% ESPAÑOL EJECUTIVO)
 // ============================================================================
 
 const SUPPORT_GUIDES: Record<
@@ -467,9 +468,9 @@ const SUPPORT_GUIDES: Record<
     subject: 'Asistencia de acceso al portal y consentimiento de cookies',
     response:
       'Para acceder sin inconvenientes a tu Portal de Clientes sigue estos pasos:\n\n' +
-      '1. **Consentimiento de Cookies:** Verifica haber presionado **"Aceptar Cookies"** en la ventana inicial de privacidad. El acceso a los portales corporativos permanece bloqueado hasta aceptar las cookies técnicas de seguridad.\n' +
+      '1. **Consentimiento de Cookies:** Verifica haber presionado **"Aceptar Cookies"** en la ventana inicial de privacidad. Los portales corporativos permanecen bloqueados hasta aceptar las cookies técnicas de seguridad.\n' +
       '2. **Verificación de Credenciales:** Confirma que ingresas tu correo corporativo registrado sin espacios adicionales.\n' +
-      '3. **Recuperación de Contraseña:** Si necesitas restablecer tu clave, ingresa a **Portal Clientes → Iniciar Sesión** y selecciona la recuperación de acceso para recibir un enlace seguro en tu correo.\n\n' +
+      '3. **Recuperación de Contraseña:** Si necesitas restablecer tu clave, ingresa a **Portal Clientes → Iniciar Sesión** y solicita el enlace seguro de recuperación a tu correo.\n\n' +
       '¿Esto resolvió tu problema?',
     resolutionSummary:
       'Se explicó el desbloqueo mediante CookieConsent, verificación de credenciales y recuperación de contraseña.',
@@ -479,7 +480,7 @@ const SUPPORT_GUIDES: Record<
     subject: 'Guía de firma digital y carga de contrato PDF firmado',
     response:
       'Desde tu **Portal de Clientes → Contratos** puedes formalizar tu documento con cualquiera de estas dos opciones válidas:\n\n' +
-      '1. **Firma Digital en Pantalla (Lienzo Interactivo):** Abre tu contrato pendiente, dibuja tu firma en el recuadro interactivo y presiona **"Sellar y Firmar Contrato"** para emitir su constancia criptográfica SHA-256 al instante.\n' +
+      '1. **Firma Digital en Pantalla (Lienzo Interactivo):** Abre tu contrato pendiente, traza tu firma en el recuadro interactivo y presiona **"Sellar y Firmar Contrato"** para emitir su constancia criptográfica SHA-256 al instante.\n' +
       '2. **Firma Física (Descargar / Subir PDF Firmado):** Descarga el PDF oficial, fírmalo de manera autógrafa y cárgalo en la pestaña **"Subir Contrato Firmado (PDF)"** para notificación automática a nuestro equipo.\n\n' +
       '¿Esto resolvió tu problema?',
     resolutionSummary:
@@ -489,11 +490,11 @@ const SUPPORT_GUIDES: Record<
     categoryLabel: 'Pagos y Facturación',
     subject: 'Consulta sobre CFDI 4.0, Obra por Encargo y reglas de anticipo SPEI',
     response:
-      'Aquí tienes el resumen claro de nuestras políticas fiscales, legales y de pagos empresariales:\n\n' +
+      'Aquí tienes el resumen oficial de nuestras políticas fiscales, legales y de pago empresarial:\n\n' +
       '• **Facturación CFDI 4.0 (SAT):** Emitimos facturas electrónicas CFDI 4.0 conforme a los requisitos vigentes del SAT, respaldadas con entregables mensuales como prueba de materialidad.\n' +
       '• **Propiedad Intelectual (Obra por Encargo — LFDA):** Todo desarrollo se formaliza bajo la figura de *Obra por Encargo* (Art. 83 y 84 LFDA), cediendo de forma exclusiva los derechos patrimoniales al cliente.\n' +
       '• **Reglas de Anticipo SPEI:** Los proyectos de alcance *Esencial* o *Empresarial* inician con un **25% de anticipo**, mientras que los proyectos de *Alto Alcance / A la Medida* requieren un **40% de anticipo** mediante transferencia electrónica **SPEI**.\n' +
-      '• **Seguridad Bancaria:** Por protección corporativa, nunca compartimos datos bancarios ni la cuenta CLABE en el chat público; los datos oficiales de pago aparecen exclusivamente dentro de tu **contrato formal emitido**.\n\n' +
+      '• **Seguridad Bancaria:** Por protección corporativa, nunca compartimos datos bancarios ni la cuenta CLABE en el chat público; los datos oficiales de transferencia aparecen exclusivamente dentro de tu **contrato formal emitido**.\n\n' +
       '¿Esto resolvió tu problema?',
     resolutionSummary:
       'Se detallaron CFDI 4.0 SAT, Obra por Encargo LFDA y reglas de anticipo SPEI 25%/40% protegiendo confidencialidad bancaria.',
@@ -529,13 +530,18 @@ export const SUPPORT_TREE_QUICK_REPLIES: BotQuickReply[] = [
 // ESTADO INICIAL Y MENSAJE DE BIENVENIDA
 // ============================================================================
 
-export function createInitialBotSession(userEmail?: string, userId?: string | null): BotSessionState {
+export function createInitialBotSession(
+  userEmail?: string,
+  userId?: string | null,
+  isStudentSession = false
+): BotSessionState {
   const sessionId = `mrca_sess_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
   return {
     sessionId,
     step: 'idle',
     userEmail,
     userId: userId || null,
+    isStudentSession,
     quote: {
       serviceType: '',
       projectScope: '',
@@ -556,24 +562,36 @@ export function createInitialBotSession(userEmail?: string, userId?: string | nu
   };
 }
 
-export function createWelcomeMessage(scope: 'public' | 'client' | 'admin' = 'public'): BotMessageItem {
+export function createWelcomeMessage(
+  scope: 'public' | 'client' | 'admin' | 'student' = 'public',
+  isStudentSession = false
+): BotMessageItem {
+  const hidePos = scope === 'student' || isStudentSession;
+
   const greeting =
     scope === 'admin'
-      ? '¡Hola! Soy el **Asistente Ejecutivo MRCA** (Consola CRM). Aquí puedes probar el **Cotizador Estimado en MXN**, la **Auto-Aceptación de Clientes** y el **Soporte Nivel 1** con costo operativo **$0 MXN**.'
+      ? '¡Hola! Soy el **Asistente Ejecutivo MRCA** (Consola CRM). Puedes probar aquí el **Cotizador Dinámico en MXN** conectado a `service_pricing`, la **Auto-Aceptación de Clientes** y el **Soporte Nivel 1** con costo operativo **$0 MXN**.'
       : scope === 'client'
-      ? '¡Bienvenido a tu Portal Corporativo! Soy el **Asistente Ejecutivo MRCA**. Puedo generar un **estimado inmediato en MXN** para un nuevo proyecto o ayudarte al instante con accesos, firmas de contratos y facturación CFDI 4.0.'
-      : '¡Hola! Bienvenido a **MRCA Solutions**. Soy tu Asistente Ejecutivo Automatizado. En menos de 1 minuto puedo darte una **cotización estimada transparente en MXN**, registrar tu proyecto en nuestro CRM o resolver dudas de soporte al instante.';
+      ? '¡Bienvenido a tu Portal Corporativo! Soy el **Asistente Ejecutivo MRCA**. Puedo generar un **estimado en MXN**, guiarte al **Catálogo de Puntos de Venta Listos (.ZIP + Manual)** o resolver dudas de contratos y facturación al instante.'
+      : hidePos
+      ? '¡Hola! Soy el **Asistente MRCA**. Puedo ayudarte con dudas de acceso, soporte técnico o cotizaciones de servicios.'
+      : '¡Hola! Bienvenido a **MRCA Solutions**. Soy tu Asistente Ejecutivo Automatizado. En menos de 1 minuto puedo darte una **cotización estimada transparente en MXN**, mostrarte nuestros **Puntos de Venta listos para instalar** o resolver soporte al instante.';
+
+  const quickReplies: BotQuickReply[] = [
+    { label: '💰 Cotizar Proyecto (Estimado)', value: '__START_QUOTE__', variant: 'primary' },
+    ...(!hidePos
+      ? [{ label: '🛒 Ver Puntos de Venta Listos', value: '__VIEW_POS_CATALOG__' } as BotQuickReply]
+      : []),
+    { label: '🛠️ Resolver un Problema', value: '__START_SUPPORT__' },
+    { label: '📄 Contratos y Facturación', value: '__SUPPORT_PAGOS__' },
+  ];
 
   return {
     id: `bot_welcome_${Date.now()}`,
     sender: 'bot',
     text: greeting,
     timestamp: formatNowTime(),
-    quickReplies: [
-      { label: '💰 Cotizar Proyecto (Estimado)', value: '__START_QUOTE__', variant: 'primary' },
-      { label: '🛠️ Resolver un Problema', value: '__START_SUPPORT__' },
-      { label: '📄 Contratos y Facturación', value: '__SUPPORT_PAGOS__' },
-    ],
+    quickReplies,
   };
 }
 
@@ -778,11 +796,58 @@ export async function processBotTurn(
       actionTriggered: 'flow_cancelled',
       quickReplies: [
         { label: '💰 Cotizar Proyecto (Estimado)', value: '__START_QUOTE__', variant: 'primary' },
+        ...(!nextState.isStudentSession
+          ? [{ label: '🛒 Ver Puntos de Venta Listos', value: '__VIEW_POS_CATALOG__' } as BotQuickReply]
+          : []),
         { label: '🛠️ Resolver un Problema', value: '__START_SUPPORT__' },
         { label: '📄 Contratos y Facturación', value: '__SUPPORT_PAGOS__' },
-        { label: '👤 Hablar con un Especialista', value: '__START_ESCALATION__' },
       ],
     });
+  }
+
+  // Catálogo de Puntos de Venta y Software Listo (BLOQUEADO para estudiantes)
+  if (trimmed === '__VIEW_POS_CATALOG__') {
+    if (nextState.isStudentSession) {
+      return makeReply(
+        'Esa sección está reservada exclusivamente para empresas dentro del Portal de Clientes B2B. ¿Deseas ayuda con otra consulta?',
+        {
+          actionTriggered: 'pos_catalog_restricted_student',
+          quickReplies: [
+            { label: '💰 Cotizar Proyecto (Estimado)', value: '__START_QUOTE__', variant: 'primary' },
+            { label: '🛠️ Resolver un Problema', value: '__START_SUPPORT__' },
+          ],
+        }
+      );
+    }
+
+    nextState.step = 'idle';
+    return makeReply(
+      'En MRCA Solutions contamos con **Soluciones Listas y Puntos de Venta (POS)** empaquetados para instalación inmediata (`.ZIP` + Manual de Instalación y Uso paso a paso) exclusivamente en el **Portal de Clientes B2B**.',
+      {
+        actionTriggered: 'pos_catalog_guided',
+        badge: {
+          text: '🛒 Catálogo Empresarial Disponible',
+          tone: 'cyan',
+        },
+        confirmationCard: {
+          type: 'pos_catalog',
+          title: 'Soluciones Listas & Puntos de Venta',
+          subtitle: 'Descarga directa de paquetes .ZIP y manuales desde tu Portal de Clientes.',
+          folio: 'POS-B2B',
+          details: [
+            { label: 'Destacado', value: 'Punto de Venta MRCA Pro (POS)' },
+            { label: 'Incluye', value: 'Instalador .ZIP + Manual de Usuario' },
+            { label: 'Acceso', value: 'Portal de Clientes → Soluciones Listas' },
+          ],
+          ctaLabel: 'Abrir Catálogo de Puntos de Venta →',
+          ctaAction: 'open_pos_catalog',
+        },
+        quickReplies: [
+          { label: '💰 Cotizar Proyecto a la Medida', value: '__START_QUOTE__', variant: 'primary' },
+          { label: '📄 Contratos y Facturación', value: '__SUPPORT_PAGOS__' },
+        ],
+      }
+    );
   }
 
   if (trimmed === '__START_QUOTE__' || trimmed === '__START_PROJECT__') {
@@ -793,7 +858,7 @@ export async function processBotTurn(
       estimate: null,
     };
     return makeReply(
-      '¡Con gusto calculamos tu **estimado transparente en MXN** al instante!\n\n**Paso 1 de 2:** ¿Qué **servicio** necesita tu empresa?',
+      '¡Con gusto calculamos tu **estimado transparente en MXN** con nuestra lista de precios vigente!\n\n**Paso 1 de 2:** ¿Qué **servicio** necesita tu empresa?',
       {
         actionTriggered: 'start_quote_flow',
         quickReplies: SERVICE_QUICK_REPLIES,
@@ -812,7 +877,7 @@ export async function processBotTurn(
       email: nextState.userEmail || '',
     };
     return makeReply(
-      `¡Excelente! Guardaremos tu cotización estimada para **${nextState.quote.serviceType} (${nextState.quote.projectScope})** y daremos de alta tu proyecto automáticamente en nuestro CRM.\n\n**Paso 1 de 3:** ¿Cuál es tu **nombre completo**?`,
+      `¡Excelente! Guardaremos tu cotización estimada para **${nextState.quote.serviceType} (${nextState.quote.projectScope})** y registraremos tu proyecto automáticamente en nuestro CRM.\n\n**Paso 1 de 3:** ¿Cuál es tu **nombre completo**?`,
       {
         actionTriggered: 'quote_accepted_start_onboarding',
         quickReplies: [{ label: 'Cancelar registro', value: '__CANCEL__' }],
@@ -947,7 +1012,7 @@ export async function processBotTurn(
   }
 
   // ==========================================================================
-  // 2. FLUJO A — COTIZADOR ESTIMADO + AUTO-ACEPTACIÓN DE CLIENTES
+  // 2. FLUJO A — COTIZADOR ESTIMADO (VIVO DESDE SUPABASE) + AUTO-ACEPTACIÓN
   // ==========================================================================
 
   if (state.step === 'quote_service') {
@@ -983,7 +1048,9 @@ export async function processBotTurn(
     }
 
     const serviceName = (nextState.quote.serviceType || 'Desarrollo Web & SaaS') as MrcaServiceName;
-    const estimate = getQuoteEstimate(serviceName, matchedScope);
+    const { rows: livePricingRows } = await fetchLiveServicePricing();
+    const estimate = buildQuoteEstimateFromPricing(livePricingRows, serviceName, matchedScope);
+
     nextState.quote.projectScope = matchedScope;
     nextState.quote.estimate = estimate;
     nextState.step = 'quote_review';
@@ -1079,7 +1146,12 @@ export async function processBotTurn(
     nextState.onboarding.email = trimmed.toLowerCase();
     nextState.userEmail = trimmed.toLowerCase();
 
-    const fallbackEstimate = getQuoteEstimate('Desarrollo Web & SaaS', 'Profesional / Empresarial');
+    const { rows: livePricingRows } = await fetchLiveServicePricing();
+    const fallbackEstimate = buildQuoteEstimateFromPricing(
+      livePricingRows,
+      'Desarrollo Web & SaaS',
+      'Profesional / Empresarial'
+    );
     const activeEstimate = nextState.quote.estimate || fallbackEstimate;
 
     const { record, autoAccepted } = await createAutomatedCrmLead({
@@ -1278,7 +1350,25 @@ export async function processBotTurn(
   // 4. DETECCIÓN INTELIGENTE DE INTENCIONES (IDLE O MENÚ DE SOPORTE)
   // ==========================================================================
 
-  // A) Intención de cotizar / precio / proyecto
+  // A) Intención de Puntos de Venta / Software Listo (solo si NO es estudiante)
+  if (
+    !nextState.isStudentSession &&
+    matchesFuzzyKeywords(trimmed, [
+      'punto de venta',
+      'puntos de venta',
+      'pos',
+      'software listo',
+      'soluciones listas',
+      'descargar software',
+      'paquete zip',
+      'caja registradora',
+      'inventario listo',
+    ])
+  ) {
+    return processBotTurn('__VIEW_POS_CATALOG__', nextState, trimmed, true);
+  }
+
+  // B) Intención de cotizar / precio / proyecto
   if (
     matchesFuzzyKeywords(trimmed, [
       'cotizar',
@@ -1305,7 +1395,6 @@ export async function processBotTurn(
       'proyecto',
     ])
   ) {
-    // Si mencionó un servicio directo en su primera frase, adelantamos al Paso 2 (alcance)
     const directService = matchServiceSelection(trimmed);
     if (directService) {
       nextState.quote.serviceType = directService;
@@ -1321,7 +1410,7 @@ export async function processBotTurn(
     return processBotTurn('__START_QUOTE__', nextState, trimmed, true);
   }
 
-  // B) Intención específica de Soporte Nivel 1 (Acceso, Firmas o Pagos/Facturación)
+  // C) Intención específica de Soporte Nivel 1 (Acceso, Firmas o Pagos/Facturación)
   const detectedTopic = detectSupportTopic(trimmed);
   if (detectedTopic) {
     const cmd =
@@ -1333,7 +1422,7 @@ export async function processBotTurn(
     return processBotTurn(cmd, nextState, trimmed, true);
   }
 
-  // C) Intención de hablar con humano / especialista
+  // D) Intención de hablar con humano / especialista
   if (
     matchesFuzzyKeywords(trimmed, [
       'hablar con un especialista',
@@ -1352,7 +1441,7 @@ export async function processBotTurn(
     return processBotTurn('__START_ESCALATION__', nextState, trimmed, true);
   }
 
-  // D) Intención general de soporte / problema
+  // E) Intención general de soporte / problema
   if (
     matchesFuzzyKeywords(trimmed, [
       'problema',
@@ -1370,7 +1459,7 @@ export async function processBotTurn(
     return processBotTurn('__START_SUPPORT__', nextState, trimmed, true);
   }
 
-  // E) Saludos
+  // F) Saludos
   if (matchesFuzzyKeywords(trimmed, ['hola', 'buenos dias', 'buenas tardes', 'buenas noches', 'saludos', 'que tal', 'hey'])) {
     return makeReply(
       '¡Hola! Qué gusto saludarte. Puedo calcular un **estimado inmediato en MXN** para tu proyecto o ayudarte con cualquier duda sobre accesos, contratos y facturación. ¿Con qué empezamos?',
@@ -1378,21 +1467,26 @@ export async function processBotTurn(
         actionTriggered: 'greeting_reply',
         quickReplies: [
           { label: '💰 Cotizar Proyecto (Estimado)', value: '__START_QUOTE__', variant: 'primary' },
+          ...(!nextState.isStudentSession
+            ? [{ label: '🛒 Ver Puntos de Venta Listos', value: '__VIEW_POS_CATALOG__' } as BotQuickReply]
+            : []),
           { label: '🛠️ Resolver un Problema', value: '__START_SUPPORT__' },
           { label: '📄 Contratos y Facturación', value: '__SUPPORT_PAGOS__' },
-          { label: '👤 Hablar con un Especialista', value: '__START_ESCALATION__' },
         ],
       }
     );
   }
 
-  // F) Menú guiado por defecto
+  // G) Menú guiado por defecto
   return makeReply(
     'Gracias por escribirnos. Selecciona una opción rápida para atenderte al instante —ya sea **cotizar tu proyecto en MXN**, resolver temas de **acceso/cookies**, **firmas de contratos**, **facturación CFDI 4.0** o contactar a un especialista:',
     {
       actionTriggered: 'fallback_guided_menu',
       quickReplies: [
         { label: '💰 Cotizar Proyecto (Estimado)', value: '__START_QUOTE__', variant: 'primary' },
+        ...(!nextState.isStudentSession
+          ? [{ label: '🛒 Ver Puntos de Venta Listos', value: '__VIEW_POS_CATALOG__' } as BotQuickReply]
+          : []),
         { label: '🔐 Acceso y Cookies', value: '__SUPPORT_ACCESO__' },
         { label: '✍️ Firmas de Contratos', value: '__SUPPORT_FIRMAS__' },
         { label: '🧾 Pagos y Facturación', value: '__SUPPORT_PAGOS__' },

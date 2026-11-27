@@ -49,7 +49,7 @@ export interface QuoteEstimateResult {
  * Aviso obligatorio de transparencia comercial mostrado en toda Tarjeta de Cotización Estimada.
  */
 export const MANDATORY_QUOTE_DISCLAIMER =
-  'Nota importante: Este monto es únicamente un estimado referencial. El precio final se establece —y puede mantenerse o incluso disminuir— al platicar los detalles exactos directamente con el director o el líder asignado a tu proyecto.';
+  'Nota importante: Este monto es únicamente un estimado referencial. El precio final se establece —y puede mantenerse, ajustarse o incluso disminuir— al platicar los detalles exactos directamente con el director o el líder asignado a tu proyecto.';
 
 export const SCOPE_TIER_META: Record<
   MrcaScopeTier,

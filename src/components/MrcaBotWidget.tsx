@@ -27,19 +27,21 @@ import {
 } from '../lib/mrcaBotEngine';
 
 export interface MrcaBotWidgetProps {
-  scope?: 'public' | 'client' | 'admin';
+  scope?: 'public' | 'client' | 'admin' | 'student';
   userEmail?: string;
   userId?: string | null;
+  userRole?: string | null;
   isCookieAccepted?: boolean;
   onOpenPortal?: () => void;
+  onOpenSoftwareCatalog?: () => void;
   className?: string;
 }
 
-const PERSISTENT_QUICK_ACTIONS: { label: string; command: string }[] = [
+const ALL_PERSISTENT_QUICK_ACTIONS: { label: string; command: string; hideForStudents?: boolean }[] = [
   { label: '💰 Cotizar Proyecto (Estimado)', command: '__START_QUOTE__' },
+  { label: '🛒 Ver Puntos de Venta Listos', command: '__VIEW_POS_CATALOG__', hideForStudents: true },
   { label: '🛠️ Resolver un Problema', command: '__START_SUPPORT__' },
   { label: '📄 Contratos y Facturación', command: '__SUPPORT_PAGOS__' },
-  { label: '👤 Hablar con un Especialista', command: '__START_ESCALATION__' },
 ];
 
 /**
@@ -88,10 +90,19 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
   scope = 'public',
   userEmail,
   userId,
+  userRole,
   isCookieAccepted: cookieProp,
   onOpenPortal,
+  onOpenSoftwareCatalog,
   className = '',
 }) => {
+  const isStudent =
+    scope === 'student' || (userRole || '').toString().toLowerCase().trim() === 'student';
+
+  const visibleQuickActions = ALL_PERSISTENT_QUICK_ACTIONS.filter(
+    (item) => !(isStudent && item.hideForStudents)
+  );
+
   const [cookieGranted, setCookieGranted] = useState<boolean>(() => {
     if (typeof cookieProp === 'boolean') return cookieProp;
     if (typeof window === 'undefined') return true;
@@ -107,10 +118,10 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [sessionState, setSessionState] = useState<BotSessionState>(() =>
-    createInitialBotSession(userEmail, userId)
+    createInitialBotSession(userEmail, userId, isStudent)
   );
   const [messages, setMessages] = useState<BotMessageItem[]>(() => [
-    createWelcomeMessage(scope),
+    createWelcomeMessage(scope, isStudent),
   ]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -139,14 +150,13 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
   }, [cookieProp]);
 
   useEffect(() => {
-    if (userEmail || userId) {
-      setSessionState((prev) => ({
-        ...prev,
-        userEmail: userEmail || prev.userEmail,
-        userId: userId ?? prev.userId,
-      }));
-    }
-  }, [userEmail, userId]);
+    setSessionState((prev) => ({
+      ...prev,
+      userEmail: userEmail || prev.userEmail,
+      userId: userId ?? prev.userId,
+      isStudentSession: isStudent,
+    }));
+  }, [userEmail, userId, isStudent]);
 
   useEffect(() => {
     if (isOpen && !isMinimized) {
@@ -221,12 +231,24 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
   };
 
   const handleResetChat = () => {
-    setSessionState(createInitialBotSession(userEmail, userId));
-    setMessages([createWelcomeMessage(scope)]);
+    setSessionState(createInitialBotSession(userEmail, userId, isStudent));
+    setMessages([createWelcomeMessage(scope, isStudent)]);
     setInputValue('');
   };
 
-  const handleCardCta = (action?: 'open_portal' | 'new_quote' | 'reset') => {
+  const handleCardCta = (action?: 'open_portal' | 'open_pos_catalog' | 'new_quote' | 'reset') => {
+    if (action === 'open_pos_catalog' && !isStudent) {
+      setIsOpen(false);
+      if (onOpenSoftwareCatalog) {
+        onOpenSoftwareCatalog();
+      } else if (onOpenPortal) {
+        window.location.hash = 'soluciones-pos';
+        onOpenPortal();
+      } else if (typeof window !== 'undefined') {
+        window.location.hash = 'soluciones-pos';
+      }
+      return;
+    }
     if (action === 'open_portal') {
       setIsOpen(false);
       if (onOpenPortal) {
@@ -407,10 +429,10 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
 
             {!isMinimized && (
               <div className="flex-1 flex flex-col min-h-0">
-                {/* CHIPS PERSISTENTES DE ACCIÓN RÁPIDA */}
+                {/* CHIPS PERSISTENTES DE ACCIÓN RÁPIDA (POS OCULTO PARA ESTUDIANTES) */}
                 <div className="px-3 py-2 bg-slate-950/75 border-b border-cyan-500/20 shrink-0">
                   <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
-                    {PERSISTENT_QUICK_ACTIONS.map((action) => (
+                    {visibleQuickActions.map((action) => (
                       <button
                         key={action.command}
                         type="button"

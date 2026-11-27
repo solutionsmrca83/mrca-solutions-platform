@@ -249,6 +249,10 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     loading: false,
   });
 
+  // Estado de ajuste de costo final en línea por lead (solo Superadmin)
+  const [inlinePriceDrafts, setInlinePriceDrafts] = useState<Record<string, string>>({});
+  const [savingPriceLeadId, setSavingPriceLeadId] = useState<string | null>(null);
+
   // Modal de edición de datos protegidos (client_name, company_name, estimated_budget) — SOLO Superadmin
   const [editingLead, setEditingLead] = useState<CrmLeadRecord | null>(null);
   const [editClientName, setEditClientName] = useState('');
@@ -475,7 +479,56 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     showToast?.('Datos protegidos del prospecto actualizados con privilegios Superadmin.');
   };
 
-  // Enviar Lead al Generador de Contratos en 1 clic (incluyendo anticipo 25% o 40%)
+  // Guardar ajuste en línea de Costo Final MXN (custom_adjusted_price — SOLO Superadmin)
+  const handleSaveInlineAdjustedPrice = async (lead: CrmLeadRecord) => {
+    if (!isSuper) {
+      showToast?.('Acceso denegado: Solo Superadmin puede ajustar el costo final de un cliente.');
+      return;
+    }
+    const rawDraft = (inlinePriceDrafts[lead.id] ?? '').replace(/[^0-9.]/g, '');
+    if (!rawDraft) {
+      showToast?.('Ingresa un monto numérico válido en MXN.');
+      return;
+    }
+    const numericVal = Number(rawDraft);
+    if (Number.isNaN(numericVal) || numericVal < 0) {
+      showToast?.('El monto ajustado debe ser un número mayor o igual a 0.');
+      return;
+    }
+
+    setSavingPriceLeadId(lead.id);
+    setLeads((prev) =>
+      prev.map((l) => (l.id === lead.id ? { ...l, custom_adjusted_price: numericVal } : l))
+    );
+
+    try {
+      await supabase
+        .from('crm_leads')
+        .update({ custom_adjusted_price: numericVal })
+        .eq('id', lead.id);
+    } catch {
+      // local fallback
+    }
+
+    try {
+      const local = loadLocalLeads();
+      if (local.some((l) => l.id === lead.id)) {
+        localStorage.setItem(
+          STORAGE_KEYS.LEADS,
+          JSON.stringify(
+            local.map((l) => (l.id === lead.id ? { ...l, custom_adjusted_price: numericVal } : l))
+          )
+        );
+      }
+    } catch {}
+
+    setSavingPriceLeadId(null);
+    showToast?.(
+      `Costo final ajustado para ${lead.company_name}: $${numericVal.toLocaleString('es-MX')} MXN.`
+    );
+  };
+
+  // Enviar Lead al Generador de Contratos en 1 clic (usa costo ajustado si existe + anticipo 25%/40%)
   const handleSendLeadToContract = async (lead: CrmLeadRecord) => {
     await handleUpdateLeadStatus(lead.id, 'En Contrato');
     const suggestedAdvance: 25 | 40 =
@@ -483,6 +536,11 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       (lead.project_scope || '').toLowerCase().includes('alto alcance')
         ? 40
         : 25;
+
+    const finalBudgetLabel =
+      typeof lead.custom_adjusted_price === 'number' && lead.custom_adjusted_price > 0
+        ? `$${lead.custom_adjusted_price.toLocaleString('es-MX')} MXN`
+        : lead.estimated_budget;
 
     if (onSendToContractGenerator) {
       onSendToContractGenerator({
@@ -492,7 +550,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
         email: lead.email,
         serviceType: lead.service_type,
         projectScope: lead.project_scope,
-        estimatedBudget: lead.estimated_budget,
+        estimatedBudget: finalBudgetLabel,
         advancePercentage: suggestedAdvance,
         botNotes: lead.bot_notes,
       });
@@ -989,13 +1047,72 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
                         </td>
 
                         <td className="py-3.5 px-4">
-                          <div className="flex flex-col gap-0.5">
+                          <div className="flex flex-col gap-1.5">
                             <span className="font-['JetBrains_Mono'] font-bold text-[12px] text-emerald-400 whitespace-nowrap">
                               {lead.estimated_budget || 'Por definir'}
                             </span>
                             <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-300">
                               Anticipo sugerido: {advancePct}% SPEI
                             </span>
+
+                            {/* Ajuste en línea de Costo Final MXN — EXCLUSIVO SUPERADMIN */}
+                            {isSuper ? (
+                              <div className="mt-1 flex items-center gap-1.5">
+                                <input
+                                  type="number"
+                                  min={0}
+                                  step={500}
+                                  value={
+                                    inlinePriceDrafts[lead.id] ??
+                                    (lead.custom_adjusted_price != null
+                                      ? String(lead.custom_adjusted_price)
+                                      : '')
+                                  }
+                                  onChange={(e) =>
+                                    setInlinePriceDrafts((prev) => ({
+                                      ...prev,
+                                      [lead.id]: e.target.value,
+                                    }))
+                                  }
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      void handleSaveInlineAdjustedPrice(lead);
+                                    }
+                                  }}
+                                  placeholder="Ajustar Costo Final MXN"
+                                  aria-label={`Ajustar Costo Final MXN para ${lead.company_name}`}
+                                  className="w-40 bg-slate-950 border border-amber-500/40 focus:border-cyan-400 rounded-lg px-2 py-1 text-[11px] text-amber-200 font-['JetBrains_Mono'] placeholder-slate-500 focus:outline-none"
+                                />
+                                <button
+                                  type="button"
+                                  disabled={savingPriceLeadId === lead.id}
+                                  onClick={() => void handleSaveInlineAdjustedPrice(lead)}
+                                  className="px-2 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/35 border border-amber-400/50 text-amber-200 font-['JetBrains_Mono'] text-[10px] font-bold transition-all cursor-pointer disabled:opacity-50"
+                                >
+                                  {savingPriceLeadId === lead.id ? '...' : 'Fijar'}
+                                </button>
+                              </div>
+                            ) : lead.custom_adjusted_price != null ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-950/50 border border-amber-500/30 font-['JetBrains_Mono'] text-[10px] text-amber-300 w-fit">
+                                <Lock className="w-2.5 h-2.5" />
+                                Costo Final: ${Number(lead.custom_adjusted_price).toLocaleString('es-MX')} MXN
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 font-['JetBrains_Mono'] text-[9.5px] text-slate-500">
+                                <Lock className="w-2.5 h-2.5 text-amber-400/70" />
+                                Ajuste final solo Superadmin
+                              </span>
+                            )}
+
+                            {typeof lead.custom_adjusted_price === 'number' &&
+                              lead.custom_adjusted_price > 0 &&
+                              isSuper && (
+                                <span className="font-['JetBrains_Mono'] text-[10px] text-amber-300 font-semibold">
+                                  ✓ Final fijado: ${lead.custom_adjusted_price.toLocaleString('es-MX')} MXN
+                                </span>
+                              )}
+
                             <span className="font-['JetBrains_Mono'] text-[9.5px] text-slate-500">
                               {formatDateTime(lead.created_at)}
                             </span>

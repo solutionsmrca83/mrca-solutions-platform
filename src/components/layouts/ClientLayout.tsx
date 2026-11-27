@@ -16,6 +16,7 @@ import {
   LogOut,
   ChevronRight,
   FileText,
+  Package,
 } from 'lucide-react';
 import { MrcaBotWidget } from '../MrcaBotWidget';
 import { ClientPortalTab } from '../ClientPortalView';
@@ -25,6 +26,7 @@ interface ClientLayoutProps {
   onTabChange: (tab: ClientPortalTab) => void;
   clientEmail?: string;
   clientCompany?: string;
+  userRole?: string | null;
   pendingContractsCount?: number;
   onSignOut?: () => void;
   onOpenContractsModal?: () => void;
@@ -41,6 +43,7 @@ interface ClientNavItem {
 
 const CLIENT_NAV_ITEMS: ClientNavItem[] = [
   { id: 'capacidades', label: 'Capacidades de Ingeniería', icon: <Code className="w-4 h-4" /> },
+  { id: 'soluciones-pos', label: 'Soluciones Listas & Puntos de Venta', icon: <Package className="w-4 h-4" />, badge: 'POS .ZIP', badgeColor: 'text-emerald-300 bg-emerald-950/70 border-emerald-500/40' },
   { id: 'roadmap', label: 'Plan de Entregas', icon: <span translate="no" className="notranslate material-symbols-outlined text-[16px]">timeline</span>, badge: 'Fases', badgeColor: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30' },
   { id: 'api-keys', label: 'Claves de Integración (API)', icon: <Key className="w-4 h-4" /> },
   { id: 'finanzas', label: 'Finanzas & Pagos SPEI', icon: <DollarSign className="w-4 h-4" />, badge: 'SPEI Activo', badgeColor: 'text-[#00fe66] bg-emerald-950/60 border-emerald-500/30' },
@@ -57,12 +60,17 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
   onTabChange,
   clientEmail = 'cliente@enterprise.corp',
   clientCompany = 'FinTech Global B2B',
+  userRole = 'client',
   pendingContractsCount = 0,
   onSignOut,
   onOpenContractsModal,
   children,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isStudent = (userRole || '').toLowerCase().trim() === 'student';
+  const filteredNavItems = isStudent
+    ? CLIENT_NAV_ITEMS.filter((item) => item.id !== 'soluciones-pos')
+    : CLIENT_NAV_ITEMS;
 
   const handleSelectTab = (tab: ClientPortalTab) => {
     onTabChange(tab);
@@ -176,7 +184,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
               PORTAL CORPORATIVO B2B
             </div>
 
-            {CLIENT_NAV_ITEMS.map((item) => {
+            {filteredNavItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
                 <button
@@ -275,7 +283,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
 
                   {/* Navigation List */}
                   <div className="flex flex-col gap-1.5">
-                    {CLIENT_NAV_ITEMS.map((item) => {
+                    {filteredNavItems.map((item) => {
                       const isActive = activeTab === item.id;
                       return (
                         <button
@@ -326,7 +334,12 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
       </div>
 
       {/* ASISTENTE AUTOMATIZADO CRM & SOPORTE MRCA (CLIENT SCOPE) */}
-      <MrcaBotWidget scope="client" userEmail={clientEmail} />
+      <MrcaBotWidget
+        scope="client"
+        userEmail={clientEmail}
+        userRole={userRole}
+        onOpenSoftwareCatalog={() => onTabChange('soluciones-pos')}
+      />
     </div>
   );
 };

@@ -159,17 +159,20 @@ export default function App() {
         }
       }
 
-      // 2. CLIENTES SUBDOMAIN & ROUTES (clientes.mrcasolutions.com, /clientes, /dashboard, /portal)
+      // 2. CLIENTES SUBDOMAIN & ROUTES (clientes.mrcasolutions.com, /clientes, /client, /dashboard, /portal)
       if (
         hostname.startsWith('clientes.') ||
         path === '/clientes' ||
+        path === '/client' ||
         path === '/dashboard' ||
         path.startsWith('/clientes') ||
+        path.startsWith('/client') ||
         path === '/portal' ||
         path.startsWith('/portal') ||
         hash === '#clientes' ||
         hash === '#portal' ||
         hash === '#client' ||
+        hash === '#soluciones-pos' ||
         hash === '#api-keys' ||
         hash === '#roadmap' ||
         hash === '#contratos' ||
@@ -183,14 +186,17 @@ export default function App() {
         return;
       }
 
-      // 3. ESTUDIANTES SUBDOMAIN & ROUTES (estudiantes.mrcasolutions.com, /estudiantes, /academy)
+      // 3. ESTUDIANTES SUBDOMAIN & ROUTES (estudiantes.mrcasolutions.com, /estudiantes, /student, /academy)
       if (
         hostname.startsWith('estudiantes.') ||
         path === '/estudiantes' ||
         path.startsWith('/estudiantes') ||
+        path === '/student' ||
+        path.startsWith('/student') ||
         path === '/academy' ||
         path.startsWith('/academy') ||
         hash === '#estudiantes' ||
+        hash === '#student' ||
         hash === '#academy'
       ) {
         setActiveView('academy');
@@ -256,6 +262,12 @@ export default function App() {
   const handlePortalClientesClick = () => {
     if (!isCookieAccepted) {
       showToast('[SEGURIDAD ACTIVA] Debe aceptar las cookies de seguridad antes de acceder a los portales.');
+      return;
+    }
+    const role = (sessionUser?.granularRole || sessionUser?.role || '').toString().toLowerCase();
+    if (role === 'student') {
+      setActiveView('academy');
+      showToast('Acceso redirigido: tu cuenta corresponde exclusivamente a MRCA Academy.');
       return;
     }
     if (sessionUser) {
@@ -372,10 +384,18 @@ export default function App() {
   }
 
   if (activeView === 'client') {
+    const detectedRole = (sessionUser?.granularRole || sessionUser?.role || 'client')
+      .toString()
+      .toLowerCase();
+    // AISLAMIENTO ESTRICTO DE ESTUDIANTES: Nunca permitir a estudiantes entrar al Portal Clientes B2B
+    if (detectedRole === 'student') {
+      return <MrcaAcademy />;
+    }
     return (
       <ClientPortalView
         clientEmail={sessionUser?.email || 'cliente@enterprise.corp'}
         clientCompany="FinTech Global B2B"
+        userRole={detectedRole}
         onSignOut={handleSignOut}
         showToast={showToast}
       />
@@ -923,13 +943,18 @@ export default function App() {
         />
       )}
 
-      {/* ASISTENTE AUTOMATIZADO CRM & SOPORTE MRCA (RESPETA COOKIE GATE) */}
+      {/* ASISTENTE AUTOMATIZADO CRM & SOPORTE MRCA (RESPETA COOKIE GATE Y AISLAMIENTO STUDENT) */}
       <MrcaBotWidget
         scope="public"
         userEmail={sessionUser?.email}
         userId={sessionUser?.id}
+        userRole={sessionUser?.granularRole || sessionUser?.role}
         isCookieAccepted={isCookieAccepted}
         onOpenPortal={handlePortalClientesClick}
+        onOpenSoftwareCatalog={() => {
+          window.location.hash = 'soluciones-pos';
+          handlePortalClientesClick();
+        }}
       />
     </div>
   );

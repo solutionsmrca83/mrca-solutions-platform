@@ -9,6 +9,8 @@ import { ContractGenerator } from './ContractGenerator';
 import { AdminFinances } from './AdminFinances';
 import { AdminSupportTickets } from './AdminSupportTickets';
 import { AdminCrmConsole } from './admin/AdminCrmConsole';
+import { AdminPricingManager } from './admin/AdminPricingManager';
+import { AdminCatalogManager } from './admin/AdminCatalogManager';
 import { ClientFileVault } from './ClientFileVault';
 import { AdminAuditLogs } from './AdminAuditLogs';
 import { AdminBudgetNegotiations } from './AdminBudgetNegotiations';
@@ -164,6 +166,12 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
       }
       if (path.includes('aprobaciones') || hash === '#aprobaciones') {
         return 'aprobaciones';
+      }
+      if (path.includes('precios') || hash === '#precios') {
+        return 'precios';
+      }
+      if (path.includes('catalogo') || hash === '#catalogo') {
+        return 'catalogo';
       }
     }
     return 'principal';
@@ -461,6 +469,30 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
+              id="admin-tab-precios"
+              onClick={() => setActiveTab('precios')}
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
+                activeTab === 'precios'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
+              }`}
+            >
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">tune</span>
+              <span>MATRIZ DE PRECIOS BOT</span>
+            </button>
+            <button
+              id="admin-tab-catalogo"
+              onClick={() => setActiveTab('catalogo')}
+              className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
+                activeTab === 'catalogo'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-750 border border-white/5'
+              }`}
+            >
+              <span translate="no" className="notranslate material-symbols-outlined text-[15px]">inventory_2</span>
+              <span>CATÁLOGO SOFTWARE &amp; POS</span>
+            </button>
+            <button
               id="admin-tab-contratos"
               onClick={() => setActiveTab('contratos')}
               className={`px-3.5 py-1.5 rounded-xl font-['JetBrains_Mono'] text-[11px] font-semibold tracking-wider flex items-center gap-1.5 transition-all duration-300 ${
@@ -558,6 +590,10 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             />
             <AdminProjectApprovals onToast={showToast} />
           </div>
+        ) : activeTab === 'precios' ? (
+          <AdminPricingManager sessionUser={sessionUser} showToast={showToast} />
+        ) : activeTab === 'catalogo' ? (
+          <AdminCatalogManager sessionUser={sessionUser} showToast={showToast} />
         ) : activeTab === 'finanzas' ? (
           <AdminFinances showToast={showToast} />
         ) : activeTab === 'soporte' ? (

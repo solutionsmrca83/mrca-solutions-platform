@@ -391,12 +391,54 @@ export interface CrmLeadRecord {
   service_type: string;
   project_scope?: string | null;
   estimated_budget?: string | null;
+  custom_adjusted_price?: number | null;
   advance_percentage?: 25 | 40 | number;
   status: CrmLeadStatus;
   bot_notes?: string | null;
   contract_terms?: string | null;
   auto_accepted: boolean;
   session_id?: string | null;
+  created_at: string;
+  updated_at?: string;
+}
+
+export type ServiceScopeTier =
+  | 'Esencial / PyME'
+  | 'Profesional / Empresarial'
+  | 'Alto Alcance / A la Medida';
+
+export interface ServicePricingRecord {
+  id: string;
+  service_type: string;
+  scope_tier: ServiceScopeTier;
+  min_price_mxn: number;
+  max_price_mxn: number;
+  delivery_time: string;
+  advance_percentage: 25 | 40;
+  is_monthly?: boolean;
+  summary?: string | null;
+  updated_at?: string;
+}
+
+export type SoftwareCatalogCategory =
+  | 'Punto de Venta (POS)'
+  | 'Gestión e Inventario'
+  | 'Automatización'
+  | 'Sistema Empresarial';
+
+export interface SoftwareCatalogProduct {
+  id: string;
+  title: string;
+  category: SoftwareCatalogCategory;
+  version: string;
+  short_description: string;
+  features: string[];
+  system_requirements: string;
+  price_mxn: number;
+  zip_download_url: string;
+  manual_download_url?: string | null;
+  installation_guide_md: string;
+  is_active: boolean;
   created_at: string;
   updated_at?: string;
 }

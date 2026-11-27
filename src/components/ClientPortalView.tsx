@@ -10,18 +10,21 @@ import { ClientSupportTickets } from './ClientSupportTickets';
 import { ClientFileVault } from './ClientFileVault';
 import { SecurityAuditLogs } from './SecurityAuditLogs';
 import { InvoiceVault } from './InvoiceVault';
+import { ClientSoftwareCatalog } from './client/ClientSoftwareCatalog';
 import { ClientLayout } from './layouts/ClientLayout';
-import { FileText, Key, Activity, ShieldCheck, FileCheck, DollarSign, LifeBuoy, FolderArchive, ShieldAlert, Receipt } from 'lucide-react';
+import { FileText, Key, Activity, ShieldCheck, FileCheck, DollarSign, LifeBuoy, FolderArchive, ShieldAlert, Receipt, Package } from 'lucide-react';
 
 interface ClientPortalViewProps {
   clientEmail?: string;
   clientCompany?: string;
+  userRole?: string | null;
   onSignOut?: () => void;
   showToast?: (msg: string) => void;
 }
 
 export type ClientPortalTab =
   | 'capacidades'
+  | 'soluciones-pos'
   | 'roadmap'
   | 'api-keys'
   | 'finanzas'
@@ -152,13 +155,19 @@ const INITIAL_CHAT: ClientChatMessage[] = [
 export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
   clientEmail = 'cliente@enterprise.corp',
   clientCompany = 'FinTech Global B2B',
+  userRole = 'client',
   onSignOut,
   showToast,
 }) => {
+  const isStudent = (userRole || '').toLowerCase().trim() === 'student';
+
   const [activeTab, setActiveTab] = useState<ClientPortalTab>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       const hash = window.location.hash;
+      if (!isStudent && (path.includes('soluciones-pos') || hash === '#soluciones-pos')) {
+        return 'soluciones-pos';
+      }
       if (path === '/portal/client/finanzas' || hash === '#finanzas') return 'finanzas';
       if (path === '/portal/client/soporte' || hash === '#soporte') return 'soporte';
       if (path === '/portal/client/boveda' || hash === '#boveda') return 'boveda';
@@ -295,6 +304,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
       onTabChange={setActiveTab}
       clientEmail={clientEmail}
       clientCompany={clientCompany}
+      userRole={userRole}
       pendingContractsCount={pendingContractsCount}
       onSignOut={onSignOut}
       onOpenContractsModal={() => setIsContractsModalOpen(true)}
@@ -479,6 +489,22 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             <span translate="no" className="notranslate material-symbols-outlined text-[17px]">hub</span>
             <span>Capacidades ({CAPABILITIES.length})</span>
           </button>
+
+          {!isStudent && (
+            <button
+              id="tab-btn-soluciones-pos"
+              onClick={() => setActiveTab('soluciones-pos')}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl transition-all duration-300 shrink-0 ${
+                activeTab === 'soluciones-pos'
+                  ? 'bg-cyan-400 text-slate-950 font-bold shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/70 border border-emerald-500/25'
+              }`}
+            >
+              <Package className="w-4 h-4 text-emerald-400" />
+              <span>Soluciones Listas &amp; Puntos de Venta</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </button>
+          )}
 
           <button
             id="tab-btn-roadmap"
@@ -711,6 +737,13 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               ))}
             </div>
           </div>
+        )}
+
+        {/* ================================================================== */}
+        {/* 2.0 SOLUCIONES LISTAS & PUNTOS DE VENTA (EXCLUSIVO CLIENTES B2B)   */}
+        {/* ================================================================== */}
+        {activeTab === 'soluciones-pos' && !isStudent && (
+          <ClientSoftwareCatalog userRole={userRole} showToast={showToast} />
         )}
 
         {/* ================================================================== */}
