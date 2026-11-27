@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CheckCircle2,
   Clock,
@@ -15,6 +15,7 @@ import {
   Filter,
   Sparkles
 } from 'lucide-react';
+import { supabase } from '../lib/supabase/client';
 import { RoadmapItem, RoadmapStatus } from '../types';
 
 interface LiveRoadmapProps {
@@ -22,137 +23,108 @@ interface LiveRoadmapProps {
   showToast?: (msg: string) => void;
 }
 
-const INITIAL_ROADMAP: RoadmapItem[] = [
-  {
-    id: 'sprint-01',
-    phaseCode: 'FASE 01 // DIAGNÓSTICO Y DISEÑO',
-    title: 'Arquitectura de Seguridad y Levantamiento de Requerimientos',
-    subtitle: 'Diseño de Arquitectura, Análisis de Riesgos y Cifrado Corporativo',
-    category: 'architecture',
-    status: 'completed',
-    progress: 100,
-    startDate: '15 Sep 2026',
-    targetDate: '28 Sep 2026',
-    description:
-      'Revisión exhaustiva de la superficie de operación, delimitación de accesos y diseño de arquitectura distribuida con seguridad integrada desde el origen.',
-    deliverables: [
-      { text: 'Diagrama de Arquitectura Corporativa en Entorno Cifrado', done: true },
-      { text: 'Modelado de Riesgos y Estándares OWASP Top 10', done: true },
-      { text: 'Especificación de cifrado mutuo y certificados TLS 1.3', done: true },
-      { text: 'Acuerdo de Confidencialidad Criptográfico (NDA) Firmado', done: true },
-    ],
-    commitHash: '0x7a81be492a01948bd01948c02',
-    architectLead: 'Jefe (CISO)',
-    slaVerification: '100% CUMPLIDO // APROBACIÓN DUAL VERIFICADA',
-  },
-  {
-    id: 'sprint-02',
-    phaseCode: 'FASE 02 // BLINDAJE DE DATOS',
-    title: 'Modelado Relacional PostgreSQL y Aislamiento Empresarial',
-    subtitle: 'Aislamiento estricto por cliente, Particionamiento e Inmutabilidad',
-    category: 'database',
-    status: 'completed',
-    progress: 100,
-    startDate: '29 Sep 2026',
-    targetDate: '10 Oct 2026',
-    description:
-      'Implementación del esquema de base de datos multiempresa en PostgreSQL. Configuración de políticas de seguridad por fila para garantizar aislamiento absoluto entre clientes.',
-    deliverables: [
-      { text: 'Políticas de aislamiento en tablas transaccionales y auditoría', done: true },
-      { text: 'Funciones de seguridad y control de acceso blindadas', done: true },
-      { text: 'Auditoría continua con integridad criptográfica SHA-256', done: true },
-      { text: 'Pruebas de aislamiento superadas sin exposición de datos', done: true },
-    ],
-    commitHash: '0x3b1c8812fa99a0d2491b490f84',
-    architectLead: 'Socio (CTO)',
-    slaVerification: 'CERO FUGAS DE DATOS // VERIFICADO',
-  },
-  {
-    id: 'sprint-03',
-    phaseCode: 'FASE 03 // FASE ACTIVA',
-    title: 'Servicios Cifrados y Bóveda Criptográfica',
-    subtitle: 'Plataforma Web de Alto Rendimiento, Resguardo de Claves y Webhooks',
-    category: 'security',
-    status: 'active',
-    progress: 68,
-    startDate: '11 Oct 2026',
-    targetDate: '24 Oct 2026',
-    description:
-      'Construcción de servicios transaccionales con cifrado asimétrico y firma digital de contratos. Integración del resguardo distribuido de llaves de seguridad.',
-    deliverables: [
-      { text: 'Componente de Firma Digital Vectorial con Sello Criptográfico', done: true },
-      { text: 'Panel de Consumo de Claves API y Métricas en Tiempo Real', done: true },
-      { text: 'Integración de Notificaciones SPEI Banxico y Conciliación', done: false },
-      { text: 'Pruebas de carga de 15,000 solicitudes concurrentes', done: false },
-    ],
-    commitHash: '0x9f41b8a72ec9104810a9f82bc1',
-    architectLead: 'Socio (CTO)',
-    slaVerification: 'EN TIEMPO // LATENCIA ACTUAL: 12.4ms',
-  },
-  {
-    id: 'sprint-04',
-    phaseCode: 'FASE 04 // AUDITORÍA DE SEGURIDAD',
-    title: 'Auditoría Integral de Ciberseguridad y Pruebas de Intrusión',
-    subtitle: 'Simulación de amenazas avanzadas, Revisión de Código y Correcciones',
-    category: 'security',
-    status: 'upcoming',
-    progress: 0,
-    startDate: '25 Oct 2026',
-    targetDate: '07 Nov 2026',
-    description:
-      'Evaluación preventiva automatizada y manual de las aplicaciones web, interfaces de integración e infraestructura en la nube. Emisión de informe ejecutivo bajo estándar SOC-2.',
-    deliverables: [
-      { text: 'Pruebas externas de intrusión y validación perimetral', done: false },
-      { text: 'Análisis de dependencias y vulnerabilidades en la nube', done: false },
-      { text: 'Validación contra inyecciones de código y accesos indebidos', done: false },
-      { text: 'Emisión del Certificado de Seguridad Nivel 4', done: false },
-    ],
-    commitHash: '0xpendiente_validacion',
-    architectLead: 'Jefe (CISO)',
-    slaVerification: 'SLA GARANTIZADO 72H INFORME FORENSE',
-  },
-  {
-    id: 'sprint-05',
-    phaseCode: 'FASE 05 // PUESTA EN PRODUCCIÓN',
-    title: 'Despliegue con Redundancia y Entrega Formal',
-    subtitle: 'Infraestructura en la Nube Blindada y Entrega de Propiedad Intelectual',
-    category: 'production',
-    status: 'upcoming',
-    progress: 0,
-    startDate: '08 Nov 2026',
-    targetDate: '20 Nov 2026',
-    description:
-      'Puesta en marcha en infraestructura de producción de alta disponibilidad. Cierre financiero y entrega formal de activos digitales y documentación.',
-    deliverables: [
-      { text: 'Despliegue multirregión con redundancia activa', done: false },
-      { text: 'Pruebas de aceptación (UAT) con el equipo de la empresa', done: false },
-      { text: 'Transferencia de repositorios y llaves maestras', done: false },
-      { text: 'Liberación final condicionada al SLA 99.99%', done: false },
-    ],
-    commitHash: '0xpendiente_firma_dual',
-    architectLead: 'Equipo Core Enclave',
-    slaVerification: '99.99% DISPONIBILIDAD CONVENIDA POR CONTRATO',
-  },
-];
-
 export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
-  clientCompany = 'FinTech Global B2B',
+  clientCompany = 'Cuenta Corporativa',
   showToast,
 }) => {
-  const [roadmap, setRoadmap] = useState<RoadmapItem[]>(INITIAL_ROADMAP);
-  const [selectedSprintId, setSelectedSprintId] = useState<string>('sprint-03');
+  const [roadmap, setRoadmap] = useState<RoadmapItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedSprintId, setSelectedSprintId] = useState<string>('');
   const [filterCategory, setFilterCategory] = useState<string>('all');
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadRealRoadmap() {
+      setIsLoading(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          if (mounted) setRoadmap([]);
+          return;
+        }
+        const { data, error } = await supabase
+          .from('client_project_proposals')
+          .select('*')
+          .eq('client_id', user.id)
+          .order('submitted_at', { ascending: true });
+
+        if (mounted && !error && Array.isArray(data) && data.length > 0) {
+          const mapped: RoadmapItem[] = data.map((row: any, idx: number) => {
+            const st: RoadmapStatus =
+              row.status === 'accepted' ? 'active' : 'upcoming';
+            const cat =
+              row.category === 'databases'
+                ? 'database'
+                : row.category === 'security'
+                ? 'security'
+                : 'architecture';
+            return {
+              id: String(row.id),
+              phaseCode: `FASE 0${idx + 1} // ${row.status === 'accepted' ? 'EN EJECUCIÓN' : 'EN REVISIÓN'}`,
+              title: row.project_title || 'Proyecto Corporativo B2B',
+              subtitle: row.budget_tier || 'Alcance técnico en curso',
+              category: cat,
+              status: st,
+              progress: row.status === 'accepted' ? 50 : 0,
+              startDate: row.submitted_at
+                ? new Date(row.submitted_at).toLocaleDateString('es-MX')
+                : 'Por definir',
+              targetDate: 'Según cronograma contractual',
+              description: row.description || 'Proyecto registrado en Supabase.',
+              deliverables: [
+                { text: 'Levantamiento y registro oficial en Supabase', done: true },
+                { text: 'Validación técnica por Dirección de Ingeniería', done: row.status === 'accepted' },
+              ],
+              commitHash: String(row.id).slice(0, 12),
+              architectLead: row.reviewer_notes || 'Equipo MRCA Solutions',
+              slaVerification: row.status === 'accepted' ? 'PROYECTO AUTORIZADO' : 'EN REVISIÓN',
+            };
+          });
+          setRoadmap(mapped);
+          setSelectedSprintId(mapped[0].id);
+        } else if (mounted) {
+          setRoadmap([]);
+          setSelectedSprintId('');
+        }
+      } catch {
+        if (mounted) setRoadmap([]);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    }
+    void loadRealRoadmap();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const filteredRoadmap = roadmap.filter((item) => {
     if (filterCategory === 'all') return true;
     return item.category === filterCategory;
   });
 
-  const selectedSprint = roadmap.find((item) => item.id === selectedSprintId) || roadmap[2];
+  const selectedSprint = roadmap.find((item) => item.id === selectedSprintId) || roadmap[0] || null;
 
-  const overallProgress = Math.round(
-    roadmap.reduce((acc, curr) => acc + curr.progress, 0) / roadmap.length
-  );
+  const overallProgress =
+    roadmap.length > 0
+      ? Math.round(roadmap.reduce((acc, curr) => acc + curr.progress, 0) / roadmap.length)
+      : 0;
+
+  if (!isLoading && roadmap.length === 0) {
+    return (
+      <div className="w-full rounded-3xl bg-[#091129]/95 border border-[#1b2b52] p-10 text-center flex flex-col items-center justify-center gap-3 shadow-xl">
+        <div className="w-12 h-12 rounded-2xl bg-[#141a32] border border-[#00e5ff]/30 flex items-center justify-center text-[#00e5ff]">
+          <Activity className="w-6 h-6" />
+        </div>
+        <h3 className="font-['Space_Grotesk'] text-[18px] font-bold text-[#dce1ff]">
+          Sin fases de proyecto asignadas aún
+        </h3>
+        <p className="font-['Inter'] text-[13px] text-[#849396] max-w-md">
+          Cuando tu proyecto B2B inicie ejecución con MRCA Solutions, podrás dar seguimiento en vivo a cada fase y entregable desde este panel.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col gap-6 font-['Inter'] text-[#dce1ff]">
@@ -178,7 +150,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
               Plan de Entregas del Proyecto en Tiempo Real
             </h2>
             <p className="font-['Inter'] text-[13px] text-[#bac9cc] max-w-3xl">
-              Monitoree el avance fase por fase con trazabilidad criptográfica. Los hitos completados aparecen en <strong className="text-[#00fe66]">Verde Esmeralda (#00FF66)</strong> y la fase en ejecución activa destaca en <strong className="text-[#00e5ff]">Cian Corporativo (#00E5FF)</strong>.
+              Monitoree el avance real de las fases registradas para su organización en Supabase.
             </p>
           </div>
 
@@ -192,7 +164,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
                 {overallProgress}% COMPLETADO
               </span>
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff]">
-                FASE 3 DE 5 EN PROGRESO
+                {roadmap.length} FASE(S) REGISTRADA(S)
               </span>
             </div>
 
@@ -210,7 +182,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar font-['JetBrains_Mono'] text-[11px]">
           <span className="text-[#849396] mr-1 hidden sm:inline">Filtrar:</span>
           {[
-            { id: 'all', label: 'Todas las Fases (5)' },
+            { id: 'all', label: `Todas las Fases (${roadmap.length})` },
             { id: 'architecture', label: 'Arquitectura' },
             { id: 'database', label: 'Base de Datos Aislada' },
             { id: 'security', label: 'Seguridad y Auditoría' },
@@ -234,11 +206,11 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
         <div className="flex items-center gap-4 font-['JetBrains_Mono'] text-[11px]">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
-            <span className="text-[#00fe66] font-semibold">Completado (#00FF66)</span>
+            <span className="text-[#00fe66] font-semibold">Completado</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] animate-ping shadow-[0_0_8px_#00e5ff]"></span>
-            <span className="text-[#00e5ff] font-semibold">En Ejecución (#00E5FF)</span>
+            <span className="text-[#00e5ff] font-semibold">En Ejecución</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#404d6d]"></span>
@@ -255,7 +227,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
         <div className="lg:col-span-7 flex flex-col gap-4">
           <div className="relative pl-6 sm:pl-8 flex flex-col gap-6 before:content-[''] before:absolute before:left-3 sm:before:left-4 before:top-4 before:bottom-4 before:w-0.5 before:bg-gradient-to-b before:from-[#00fe66] before:via-[#00e5ff] before:to-[#22335f]">
             {filteredRoadmap.map((item) => {
-              const isSelected = item.id === selectedSprint.id;
+              const isSelected = selectedSprint ? item.id === selectedSprint.id : false;
               const isCompleted = item.status === 'completed';
               const isActive = item.status === 'active';
               const isUpcoming = item.status === 'upcoming';
@@ -363,6 +335,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
         </div>
 
         {/* Right Column: Interactive Detail Card (5 cols) */}
+        {selectedSprint && (
         <div className="lg:col-span-5 flex flex-col gap-4">
           <div className="sticky top-20 rounded-2xl bg-[#09112a] border-2 border-[#00e5ff]/50 p-5 sm:p-6 shadow-2xl flex flex-col gap-5 backdrop-blur-xl">
             <div className="flex items-center justify-between pb-3 border-b border-[#1b2b52]">
@@ -469,6 +442,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
             </button>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

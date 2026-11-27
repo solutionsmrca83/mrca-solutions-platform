@@ -336,7 +336,7 @@ export const BudgetNegotiationModal: React.FC<BudgetNegotiationModalProps> = ({
                     required
                     value={institution}
                     onChange={(e) => setInstitution(e.target.value)}
-                    placeholder={selectedType === 'student' ? 'Ej: UNAM / IPN / TecNM' : 'Ej: FinTech Corp S.A.'}
+                    placeholder={selectedType === 'student' ? 'Institución educativa' : 'Razón Social de tu empresa'}
                     className="w-full bg-[#050b1c] border border-[#1e2a52] rounded-xl px-3.5 py-2.5 text-[#dce1ff] font-['Inter'] text-[13px] focus:outline-none focus:border-[#00e5ff]"
                   />
                 </div>

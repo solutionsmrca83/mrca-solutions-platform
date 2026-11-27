@@ -4,18 +4,20 @@ import { SecureMessage } from '../types';
 
 interface SecureClientInboxProps {
   clientEmail?: string;
+  clientCompany?: string;
   onToast?: (msg: string) => void;
 }
 
 export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
-  clientEmail = 'cliente@enterprise.corp',
+  clientEmail = '',
+  clientCompany = '',
   onToast,
 }) => {
   const [activeTab, setActiveTab] = useState<'compose' | 'history'>('compose');
   const [subject, setSubject] = useState('');
   const [payload, setPayload] = useState('');
   const [category, setCategory] = useState<'critical' | 'high' | 'normal' | 'audit'>('high');
-  const [company, setCompany] = useState('FinTech Global MX');
+  const [company, setCompany] = useState(clientCompany);
   const [loading, setLoading] = useState(false);
   const [receipt, setReceipt] = useState<{
     id: string;

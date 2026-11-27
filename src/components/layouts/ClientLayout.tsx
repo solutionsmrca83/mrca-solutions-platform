@@ -58,8 +58,8 @@ const CLIENT_NAV_ITEMS: ClientNavItem[] = [
 export const ClientLayout: React.FC<ClientLayoutProps> = ({
   activeTab,
   onTabChange,
-  clientEmail = 'cliente@enterprise.corp',
-  clientCompany = 'FinTech Global B2B',
+  clientEmail = '',
+  clientCompany = 'Cuenta Corporativa',
   userRole = 'client',
   pendingContractsCount = 0,
   onSignOut,

@@ -24,102 +24,58 @@ interface AdminFinancesProps {
   showToast?: (msg: string) => void;
 }
 
-const DEFAULT_ADMIN_INVOICES: Invoice[] = [
-  {
-    id: 'INV-2026-074',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    amount: 120000,
-    status: 'verification_in_progress',
-    description: 'Anticipo de Auditoría Integral de Ciberseguridad y Blindaje',
-    due_date: '18 Oct 2026',
-    spei_tracking_key: '2026101240014BND00008891230194',
-    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv074.pdf',
-    created_at: '10 Oct 2026',
-  },
-  {
-    id: 'INV-2026-081',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    amount: 185000,
-    status: 'pending',
-    description: 'Fase 03: Infraestructura Cloud Cifrada y Bóveda de Seguridad',
-    due_date: '24 Oct 2026',
-    created_at: '12 Oct 2026',
-  },
-  {
-    id: 'INV-2026-062',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    amount: 350000,
-    status: 'paid',
-    description: 'Fases 01 y 02: Arquitectura de Seguridad y Base de Datos Aislada',
-    due_date: '05 Oct 2026',
-    spei_tracking_key: '2026100540014BND00007712490182',
-    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv062.pdf',
-    created_at: '28 Sep 2026',
-  },
-  {
-    id: 'INV-2026-058',
-    client_id: 'usr_client_aduana_02',
-    client_company: 'Aduana Express Cloud',
-    client_email: 'mortiz@aduanaexpress.mx',
-    amount: 220000,
-    status: 'paid',
-    description: 'Modelado PostgreSQL con RLS y Particionamiento Sharded',
-    due_date: '20 Sep 2026',
-    spei_tracking_key: '2026092040014BND00005519820144',
-    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv058.pdf',
-    created_at: '15 Sep 2026',
-  },
-];
-
 export const AdminFinances: React.FC<AdminFinancesProps> = ({ showToast }) => {
-  const [invoices, setInvoices] = useState<Invoice[]>(() => {
-    try {
-      const saved = localStorage.getItem('mrca_client_invoices');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return DEFAULT_ADMIN_INVOICES;
-  });
-
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'auditoria' | 'todas'>('auditoria');
   const [searchQuery, setSearchQuery] = useState('');
   const [inspectingInvoice, setInspectingInvoice] = useState<Invoice | null>(null);
   const [isProcessingId, setIsProcessingId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Initial fetch from Supabase if connected
+    let mounted = true;
     async function fetchInvoices() {
+      setIsLoading(true);
       try {
         const { data, error } = await supabase
           .from('invoices')
           .select('*')
           .order('created_at', { ascending: false });
-        if (data && data.length > 0 && !error) {
-          setInvoices(data as Invoice[]);
+        if (mounted && !error && Array.isArray(data)) {
+          const normalized: Invoice[] = data.map((row: any) => ({
+            id: String(row.id),
+            client_id: String(row.client_id || ''),
+            client_company: row.client_company || 'Cliente Corporativo',
+            client_email: row.client_email || '',
+            amount: Number(row.amount || 0),
+            status: (row.status || 'pending') as InvoiceStatus,
+            description: row.description || 'Factura de Servicios B2B',
+            due_date: row.due_date ? new Date(row.due_date).toLocaleDateString('es-MX') : 'Por definir',
+            spei_tracking_key: row.spei_tracking_key || undefined,
+            payment_proof_url: row.payment_proof_url || undefined,
+            created_at: row.created_at ? new Date(row.created_at).toLocaleDateString('es-MX') : '',
+            updated_at: row.updated_at || undefined,
+          }));
+          setInvoices(normalized);
+        } else if (mounted) {
+          setInvoices([]);
         }
       } catch {
-        // local state
+        if (mounted) setInvoices([]);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
     }
-    fetchInvoices();
+    void fetchInvoices();
 
     const handleSync = () => {
-      try {
-        const saved = localStorage.getItem('mrca_client_invoices');
-        if (saved) setInvoices(JSON.parse(saved));
-      } catch {
-        // quota
-      }
+      void fetchInvoices();
     };
     window.addEventListener('mrca_invoice_updated', handleSync);
-    return () => window.removeEventListener('mrca_invoice_updated', handleSync);
+    return () => {
+      mounted = false;
+      window.removeEventListener('mrca_invoice_updated', handleSync);
+    };
   }, []);
 
   const handleConfirmPayment = async (invoiceId: string) => {
@@ -445,7 +401,22 @@ export const AdminFinances: React.FC<AdminFinancesProps> = ({ showToast }) => {
           </div>
 
           <div className="flex flex-col gap-2.5">
-            {filteredInvoices.map((inv) => (
+            {isLoading ? (
+              <div className="p-8 text-center rounded-xl bg-[#050b1c] border border-[#1b2b50] font-['JetBrains_Mono'] text-[12px] text-[#849396]">
+                Consultando facturas reales en Supabase...
+              </div>
+            ) : filteredInvoices.length === 0 ? (
+              <div className="p-10 text-center rounded-xl bg-[#050b1c] border border-dashed border-[#1b2b50] flex flex-col items-center justify-center gap-2">
+                <FileText className="w-8 h-8 text-[#849396]" />
+                <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+                  Sin registros aún
+                </span>
+                <p className="font-['Inter'] text-[12px] text-[#849396]">
+                  Los datos reales de facturación SPEI aparecerán aquí automáticamente.
+                </p>
+              </div>
+            ) : (
+              filteredInvoices.map((inv) => (
               <div
                 key={inv.id}
                 className="bg-[#0e1633] rounded-xl p-4 border border-[#1a2850] flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-[#00E5FF]/40 transition-all"
@@ -498,7 +469,8 @@ export const AdminFinances: React.FC<AdminFinancesProps> = ({ showToast }) => {
                   )}
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
         </div>
       )}

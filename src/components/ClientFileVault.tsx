@@ -29,59 +29,13 @@ interface ClientFileVaultProps {
   clientId?: string;
 }
 
-const INITIAL_VAULT_FILES: VaultFile[] = [
-  {
-    id: 'VF-01',
-    filename: 'mrca_core_backend_v2.4_production.tar.gz',
-    file_type: 'TAR.GZ',
-    file_size: '142.8 MB',
-    sha256_hash: '0x8f2a1b94d1837c9e01f28b492a40e1928bc391f049281a98ec38194b19028aef',
-    encryption_type: 'AES-256-GCM / Módulo de Seguridad',
-    download_url: '#download-tar',
-    description: 'Código fuente completo auditado, configuración de nube y redundancia activa.',
-    created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-  },
-  {
-    id: 'VF-02',
-    filename: 'esquema_postgresql_aislamiento_empresarial.sql',
-    file_type: 'SQL',
-    file_size: '18.4 MB',
-    sha256_hash: '0x3c990218ab44019283fec102948bc10948ac01928471bce1094827104928b104',
-    encryption_type: 'AES-256-GCM / Sellado por Cliente',
-    download_url: '#download-sql',
-    description: 'Esquema de base de datos con aislamiento por empresa y funciones cifradas.',
-    created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
-  },
-  {
-    id: 'VF-03',
-    filename: 'informe_auditoria_seguridad_firmado_ciso.pdf',
-    file_type: 'PDF',
-    file_size: '6.2 MB',
-    sha256_hash: '0x17db029481bc2049182bc4019283fe819204bc91029482bc0192840192840192',
-    encryption_type: 'ECDSA P-384 / Sello Digital PDF',
-    download_url: '#download-pdf',
-    description: 'Certificado de auditoría integral de ciberseguridad con validez legal internacional.',
-    created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
-  },
-  {
-    id: 'VF-04',
-    filename: 'credenciales_boveda_infraestructura.enc',
-    file_type: 'ENC',
-    file_size: '840 KB',
-    sha256_hash: '0x4918ef0291823bc019284910293847ac01928374650192837465019283746501',
-    encryption_type: 'Cifrado Asimétrico RSA-4096 / Bóveda',
-    download_url: '#download-enc',
-    description: 'Claves y certificados cifrados para conexión segura a su infraestructura.',
-    created_at: new Date(Date.now() - 86400000 * 10).toISOString(),
-  },
-];
-
 export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
   showToast,
   isAdmin = false,
   clientId,
 }) => {
-  const [files, setFiles] = useState<VaultFile[]>(INITIAL_VAULT_FILES);
+  const [files, setFiles] = useState<VaultFile[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedHash, setCopiedHash] = useState<string | null>(null);
   const [decryptingFileId, setDecryptingFileId] = useState<string | null>(null);
@@ -91,20 +45,34 @@ export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [newFilename, setNewFilename] = useState('');
   const [newFileType, setNewFileType] = useState<'ZIP' | 'SQL' | 'PDF' | 'TAR.GZ' | 'ENC'>('ZIP');
-  const [newFileSize, setNewFileSize] = useState('25.4 MB');
+  const [newFileSize, setNewFileSize] = useState('');
   const [newDescription, setNewDescription] = useState('');
 
   useEffect(() => {
+    let mounted = true;
     async function loadVault() {
+      setIsLoading(true);
       try {
-        const { data, error } = await supabase
+        const { data: { user } } = await supabase.auth.getUser();
+        const uid = clientId || user?.id || null;
+
+        let query = supabase
           .from('vault_files')
           .select('*')
           .order('created_at', { ascending: false });
 
-        if (!error && data && data.length > 0) {
+        if (!isAdmin) {
+          if (!uid) {
+            if (mounted) setFiles([]);
+            return;
+          }
+          query = query.eq('client_id', uid);
+        }
+
+        const { data, error } = await query;
+        if (mounted && !error && Array.isArray(data)) {
           const mapped: VaultFile[] = data.map((d: any) => ({
-            id: d.id,
+            id: String(d.id),
             client_id: d.client_id,
             filename: d.filename,
             file_type: d.file_type,
@@ -116,13 +84,20 @@ export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
             created_at: d.created_at,
           }));
           setFiles(mapped);
+        } else if (mounted) {
+          setFiles([]);
         }
       } catch {
-        // Local fallback
+        if (mounted) setFiles([]);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
     }
-    loadVault();
-  }, []);
+    void loadVault();
+    return () => {
+      mounted = false;
+    };
+  }, [isAdmin, clientId]);
 
   const handleCopyHash = (hash: string) => {
     navigator.clipboard.writeText(hash);
@@ -132,30 +107,24 @@ export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
   };
 
   const handleDecryptAndDownload = (file: VaultFile) => {
-    setDecryptingFileId(file.id);
-    setDecryptProgress(0);
+    if (!file.download_url || !/^https?:\/\//i.test(file.download_url)) {
+      if (showToast) {
+        showToast('Este registro aún no tiene un enlace de descarga activo asignado.');
+      }
+      return;
+    }
 
-    const interval = setInterval(() => {
-      setDecryptProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setDecryptingFileId(null);
-          if (showToast) {
-            showToast(`Archivo [${file.filename}] descifrado y entregado.`);
-          }
-          // Simulate browser download trigger
-          const element = document.createElement('a');
-          const fakeBlob = new Blob([`MRCA SOLUTIONS ENTERPRISE DELIVERABLE: ${file.filename}\nINTEGRITY SHA-256: ${file.sha256_hash}`], { type: 'text/plain' });
-          element.href = URL.createObjectURL(fakeBlob);
-          element.download = file.filename;
-          document.body.appendChild(element);
-          element.click();
-          document.body.removeChild(element);
-          return 100;
-        }
-        return prev + 25;
-      });
-    }, 200);
+    setDecryptingFileId(file.id);
+    setDecryptProgress(50);
+
+    setTimeout(() => {
+      setDecryptProgress(100);
+      setDecryptingFileId(null);
+      window.open(file.download_url, '_blank', 'noopener,noreferrer');
+      if (showToast) {
+        showToast(`Descarga segura iniciada para [${file.filename}].`);
+      }
+    }, 350);
   };
 
   const handleAdminAddFile = async (e: React.FormEvent) => {
@@ -282,6 +251,21 @@ export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
       </section>
 
       {/* Grid of Encrypted Files */}
+      {isLoading ? (
+        <div className="rounded-2xl bg-[#141A32]/80 border border-[#00E5FF]/20 p-10 text-center font-['JetBrains_Mono'] text-[12px] text-[#849396]">
+          Consultando entregables cifrados en Supabase...
+        </div>
+      ) : filteredFiles.length === 0 ? (
+        <div className="rounded-2xl bg-[#141A32]/80 border border-dashed border-[#00E5FF]/25 p-10 text-center flex flex-col items-center gap-2">
+          <Lock className="w-8 h-8 text-[#849396]" />
+          <span className="font-['Space_Grotesk'] text-[16px] font-bold text-[#DCE1FF]">
+            Sin registros aún
+          </span>
+          <p className="font-['Inter'] text-[12px] text-[#849396] max-w-md">
+            Los entregables cifrados asignados a tu cuenta aparecerán aquí automáticamente.
+          </p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredFiles.map((file) => {
           const isCurrentlyDecrypting = decryptingFileId === file.id;
@@ -388,6 +372,7 @@ export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
           );
         })}
       </div>
+      )}
 
       {/* Admin Deposit Modal */}
       {isUploadModalOpen && (

@@ -18,8 +18,8 @@ export interface LedgerEntry {
   amount: number;
   currency: string;
   service: string;
-  gateway: 'Stripe Escrow (Dual)' | 'SPEI Inmediato Banxico';
-  gatewayType: 'stripe' | 'spei';
+  gateway: 'SPEI Inmediato Banxico' | 'Transferencia SPEI (Nu México)' | string;
+  gatewayType: 'spei';
   hash: string;
   status: 'LEDGER OK' | 'PENDING' | 'DISPERSED';
   timestamp: string;

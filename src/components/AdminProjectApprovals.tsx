@@ -1,117 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ClientProjectProposal, ClientChatMessage } from '../types';
+import { supabase } from '../lib/supabase/client';
 
 interface AdminProjectApprovalsProps {
   onToast?: (msg: string) => void;
 }
 
-const INITIAL_PROPOSALS: ClientProjectProposal[] = [
-  {
-    id: 'PROP-9041',
-    companyName: 'Banco NeoPay LatAm',
-    representativeName: 'Ing. Rodrigo Salinas (VP Tech)',
-    email: 'rsalinas@neopay.lat',
-    category: 'databases',
-    projectTitle: 'Arquitectura PostgreSQL Sharding con RLS Multi-Inquilino',
-    description:
-      'Requerimos estructuración de base de datos bancaria para procesamiento de 15,000 tx/seg con aislamiento RLS estricto y cumplimiento regulatorio Banxico.',
-    budgetTier: '$250,000 - $400,000 MXN',
-    status: 'pending',
-    submittedAt: 'Hoy, 09:15 AM',
-    complianceAccepted: true,
-    messages: [
-      {
-        id: 'm1',
-        sender: 'client',
-        senderName: 'Ing. Rodrigo Salinas (VP Tech)',
-        text: 'Hola equipo MRCA Solutions. Nos urge iniciar el sprint de PostgreSQL RLS. ¿Podemos revisar el SLA de despliegue?',
-        timestamp: 'Hoy, 09:16 AM',
-        isEncrypted: true,
-        cipherHash: '0x9f41...2b8c',
-      },
-    ],
-  },
-  {
-    id: 'PROP-9042',
-    companyName: 'Aduana Express Cloud',
-    representativeName: 'Lic. Mariana Ortiz (Directora Ops)',
-    email: 'mortiz@aduanaexpress.mx',
-    category: 'custom_scripts',
-    projectTitle: 'Automatización de Manifiestos con Procesadores y Webhooks',
-    description:
-      'Buscamos scripts robustos en Python/Go para procesar pedimentos aduanales, validar firmas digitales SHA-256 y despachar a SAT.',
-    budgetTier: 'Adaptable a Presupuesto / Viabilidad',
-    status: 'accepted',
-    reviewedBy: 'Jefe (CISO)',
-    submittedAt: 'Ayer, 16:40 PM',
-    complianceAccepted: true,
-    messages: [
-      {
-        id: 'm2',
-        sender: 'client',
-        senderName: 'Lic. Mariana Ortiz',
-        text: 'Buenas tardes. Queremos coordinar la integración de los scripts con nuestro cluster actual.',
-        timestamp: 'Ayer, 16:45 PM',
-        isEncrypted: true,
-        cipherHash: '0x12d8...44f1',
-      },
-      {
-        id: 'm3',
-        sender: 'admin',
-        senderName: 'Socio (CTO)',
-        text: 'Proyecto aceptado, Lic. Mariana. Hemos asignado un entorno aislado en la nube para las pruebas de integración.',
-        timestamp: 'Ayer, 17:10 PM',
-        isEncrypted: true,
-        cipherHash: '0x7e29...a910',
-      },
-    ],
-  },
-  {
-    id: 'PROP-9043',
-    companyName: 'Salud Digital HIPAA Corp',
-    representativeName: 'Dr. Alejandro Méndez (CISO Médico)',
-    email: 'amendez@saluddigital.org',
-    category: 'security',
-    projectTitle: 'Auditoría Integral de Ciberseguridad y Blindaje en la Nube',
-    description:
-      'Auditoría ofensiva completa de expedientes clínicos electrónicos bajo estándar HIPAA y mitigación de fugas de memoria.',
-    budgetTier: '$350,000+ MXN',
-    status: 'pending',
-    submittedAt: 'Hoy, 11:05 AM',
-    complianceAccepted: true,
-    messages: [
-      {
-        id: 'm4',
-        sender: 'client',
-        senderName: 'Dr. Alejandro Méndez',
-        text: 'Deseamos iniciar el test de penetración antes de la auditoría de certificación.',
-        timestamp: 'Hoy, 11:10 AM',
-        isEncrypted: true,
-        cipherHash: '0x6a04...38c2',
-      },
-    ],
-  },
-  {
-    id: 'PROP-9044',
-    companyName: 'E-Commerce Retail MX',
-    representativeName: 'Sofía Valdés (Product Lead)',
-    email: 'svaldes@retailmex.com',
-    category: 'web_apps',
-    projectTitle: 'Plataforma Web Next.js 15 de Ultra-Baja Latencia',
-    description:
-      'Migración de e-commerce legacy a Next.js y Tailwind con pasarela escrow dual y CDN Cloudflare Enterprise.',
-    budgetTier: '$150,000 - $250,000 MXN',
-    status: 'paused',
-    reviewedBy: 'Socio (CTO)',
-    submittedAt: '3 Oct, 14:22 PM',
-    complianceAccepted: true,
-    messages: [],
-  },
-];
-
 export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ onToast }) => {
-  const [proposals, setProposals] = useState<ClientProjectProposal[]>(INITIAL_PROPOSALS);
-  const [selectedProposal, setSelectedProposal] = useState<ClientProjectProposal>(INITIAL_PROPOSALS[0]);
+  const [proposals, setProposals] = useState<ClientProjectProposal[]>([]);
+  const [selectedProposal, setSelectedProposal] = useState<ClientProjectProposal | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'accepted' | 'paused'>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -119,6 +17,60 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
   const [adminReplyText, setAdminReplyText] = useState('');
   const [adminSender, setAdminSender] = useState<'Jefe (CISO)' | 'Socio (CTO)'>('Jefe (CISO)');
   const [isSendingReply, setIsSendingReply] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadProposals() {
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('client_project_proposals')
+          .select('*')
+          .order('submitted_at', { ascending: false });
+
+        if (mounted && !error && Array.isArray(data)) {
+          const mapped: ClientProjectProposal[] = data.map((row: any) => ({
+            id: String(row.id),
+            companyName: row.company_name || 'Empresa Cliente',
+            representativeName: row.representative_name || 'Representante',
+            email: row.email || '',
+            category: (row.category || 'web_apps') as ClientProjectProposal['category'],
+            projectTitle: row.project_title || 'Propuesta B2B',
+            description: row.description || '',
+            budgetTier: row.budget_tier || 'Por definir',
+            status: (row.status === 'rejected' ? 'paused' : row.status || 'pending') as ClientProjectProposal['status'],
+            reviewedBy: row.reviewer_notes || undefined,
+            submittedAt: row.submitted_at
+              ? new Date(row.submitted_at).toLocaleString('es-MX', {
+                  day: '2-digit',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : '',
+            complianceAccepted: Boolean(row.compliance_accepted),
+            messages: [],
+          }));
+          setProposals(mapped);
+          setSelectedProposal(mapped[0] || null);
+        } else if (mounted) {
+          setProposals([]);
+          setSelectedProposal(null);
+        }
+      } catch {
+        if (mounted) {
+          setProposals([]);
+          setSelectedProposal(null);
+        }
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    }
+    void loadProposals();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const filteredProposals = proposals.filter((p) => {
     const matchesFilter = filterStatus === 'all' || p.status === filterStatus;
@@ -129,55 +81,67 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
     return matchesFilter && matchesSearch;
   });
 
-  const handleAcceptProject = (id: string) => {
+  const handleAcceptProject = async (id: string) => {
     setProposals((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            status: 'accepted',
-            reviewedBy: adminSender,
-          };
-        }
-        return item;
-      })
+      prev.map((item) =>
+        item.id === id ? { ...item, status: 'accepted', reviewedBy: adminSender } : item
+      )
     );
 
     setSelectedProposal((curr) =>
-      curr.id === id ? { ...curr, status: 'accepted', reviewedBy: adminSender } : curr
+      curr && curr.id === id ? { ...curr, status: 'accepted', reviewedBy: adminSender } : curr
     );
+
+    try {
+      await supabase
+        .from('client_project_proposals')
+        .update({
+          status: 'accepted',
+          reviewer_notes: adminSender,
+          reviewed_at: new Date().toISOString(),
+        })
+        .eq('id', id);
+    } catch {
+      // handled gracefully
+    }
 
     if (onToast) {
       onToast(`[PROYECTO ACEPTADO] "${id}" autorizado por ${adminSender}. Canal seguro desbloqueado.`);
     }
   };
 
-  const handlePauseProject = (id: string) => {
+  const handlePauseProject = async (id: string) => {
     setProposals((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            status: 'paused',
-            reviewedBy: adminSender,
-          };
-        }
-        return item;
-      })
+      prev.map((item) =>
+        item.id === id ? { ...item, status: 'paused', reviewedBy: adminSender } : item
+      )
     );
 
     setSelectedProposal((curr) =>
-      curr.id === id ? { ...curr, status: 'paused', reviewedBy: adminSender } : curr
+      curr && curr.id === id ? { ...curr, status: 'paused', reviewedBy: adminSender } : curr
     );
+
+    try {
+      await supabase
+        .from('client_project_proposals')
+        .update({
+          status: 'paused',
+          reviewer_notes: adminSender,
+          reviewed_at: new Date().toISOString(),
+        })
+        .eq('id', id);
+    } catch {
+      // handled gracefully
+    }
 
     if (onToast) {
       onToast(`[ESTADO ACTUALIZADO] Proyecto "${id}" pausado/archivado en revisión.`);
     }
   };
 
-  const handleSendAdminReply = (e: React.FormEvent) => {
+  const handleSendAdminReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!adminReplyText.trim()) return;
+    if (!selectedProposal || !adminReplyText.trim()) return;
 
     setIsSendingReply(true);
     const newMsg: ClientChatMessage = {
@@ -185,7 +149,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
       sender: 'admin',
       senderName: adminSender,
       text: adminReplyText.trim(),
-      timestamp: 'Hoy, ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: 'Hoy, ' + new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
       isEncrypted: true,
       cipherHash: '0x' + Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
     };
@@ -196,10 +160,25 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
       prev.map((p) => (p.id === selectedProposal.id ? { ...p, messages: updatedMessages } : p))
     );
 
-    setSelectedProposal((prev) => ({
-      ...prev,
-      messages: updatedMessages,
-    }));
+    setSelectedProposal((prev) => (prev ? { ...prev, messages: updatedMessages } : null));
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('secure_messages').insert({
+          sender_id: user.id,
+          proposal_id: selectedProposal.id,
+          encrypted_subject: `Respuesta sobre ${selectedProposal.projectTitle}`,
+          encrypted_payload: newMsg.text,
+          cipher_hash: newMsg.cipherHash,
+          category: 'normal',
+          client_company: selectedProposal.companyName,
+          read: false,
+        });
+      }
+    } catch {
+      // handled gracefully
+    }
 
     setAdminReplyText('');
     setIsSendingReply(false);
@@ -327,13 +306,22 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left Column: Proposals List */}
           <div className="lg:col-span-6 flex flex-col gap-2.5 max-h-[640px] overflow-y-auto pr-1">
-            {filteredProposals.length === 0 ? (
-              <div className="p-8 text-center text-[#849396] font-['JetBrains_Mono'] text-[12px] bg-[#060d24] rounded-2xl border border-dashed border-[#222941]">
-                No hay solicitudes en esta categoría.
+            {isLoading ? (
+              <div className="p-8 text-center text-[#849396] font-['JetBrains_Mono'] text-[12px] bg-[#060d24] rounded-2xl border border-[#222941]">
+                Consultando propuestas reales en Supabase...
+              </div>
+            ) : filteredProposals.length === 0 ? (
+              <div className="p-8 text-center text-[#849396] font-['JetBrains_Mono'] text-[12px] bg-[#060d24] rounded-2xl border border-dashed border-[#222941] flex flex-col items-center gap-1.5">
+                <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+                  Sin registros aún
+                </span>
+                <span>
+                  Los datos reales de propuestas y solicitudes B2B aparecerán aquí automáticamente.
+                </span>
               </div>
             ) : (
               filteredProposals.map((item) => {
-                const isSelected = selectedProposal.id === item.id;
+                const isSelected = selectedProposal?.id === item.id;
                 return (
                   <div
                     key={item.id}
@@ -388,6 +376,19 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
 
           {/* Right Column: Selected Proposal Detail & Action Buttons */}
           <div className="lg:col-span-6 rounded-2xl bg-[#060d24] border border-[#222941] p-5 flex flex-col justify-between gap-5">
+            {!selectedProposal ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-10 gap-2 text-[#849396]">
+                <span translate="no" className="notranslate material-symbols-outlined text-[36px] text-[#00e5ff]/50">
+                  inbox
+                </span>
+                <span className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
+                  Sin propuesta seleccionada
+                </span>
+                <p className="font-['Inter'] text-[12px] max-w-sm">
+                  Cuando los clientes envíen solicitudes de proyecto en Supabase, podrás revisarlas y aprobarlas desde este panel.
+                </p>
+              </div>
+            ) : (
             <div className="flex flex-col gap-4">
               <div className="flex items-start justify-between pb-3 border-b border-[#181e36]">
                 <div className="flex flex-col">
@@ -532,6 +533,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
                 )}
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

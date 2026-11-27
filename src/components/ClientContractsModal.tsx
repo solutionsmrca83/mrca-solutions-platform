@@ -23,10 +23,10 @@ export const ClientContractsModal: React.FC<ClientContractsModalProps> = ({
   onContractSigned,
   onUploadPhysicalContract,
   showToast,
-  clientCompany = 'FinTech Global B2B',
-  clientEmail = 'cliente@enterprise.corp',
-  clientName = 'Director Tecnológico Corporativo',
-  clientRfc = 'FTG200315KY1',
+  clientCompany = 'Cuenta Corporativa',
+  clientEmail = '',
+  clientName = 'Representante Legal',
+  clientRfc = '',
 }) => {
   if (!isOpen) return null;
 

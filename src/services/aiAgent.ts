@@ -70,7 +70,7 @@ export const queryNeuralNetwork = async (prompt: string): Promise<string> => {
   1. [VALIDADO] Integridad inmutable de compilación con firma digital (ECDSA P-384)
   2. [APLICADO] Credenciales inyectadas de forma segura desde Bóveda Cifrada
   3. [DESPLEGADO] Liberación progresiva controlada (10% -> 50% -> 100%) sin interrupción
-  4. [ENLACE] Conexión cifrada verificada con pasarelas SPEI y Stripe
+  4. [ENLACE] Conexión cifrada verificada con transferencias SPEI (Nu México / Banxico)
 • Estado: Despliegue completado con éxito en 1.84s (0 minutos de inactividad).`;
   }
 

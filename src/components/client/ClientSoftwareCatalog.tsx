@@ -15,8 +15,6 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase/client';
 import {
-  FALLBACK_SOFTWARE_CATALOG,
-  CATALOG_STORAGE_KEY,
   CATALOG_SYNC_EVENT,
   formatMxnCurrency,
 } from '../../lib/mrcaPricingFallback';
@@ -155,27 +153,6 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [downloadingManualId, setDownloadingManualId] = useState<string | null>(null);
 
-  const loadLocalActiveCatalog = (): SoftwareCatalogProduct[] => {
-    try {
-      const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
-      if (raw) {
-        const parsed: any[] = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed
-            .filter((p) => p.is_active)
-            .map((row) => ({
-              ...row,
-              zip_file_path: row.zip_file_path || row.zip_download_url || '',
-              manual_file_path: row.manual_file_path ?? row.manual_download_url ?? null,
-            }));
-        }
-      }
-    } catch {
-      // fallback
-    }
-    return FALLBACK_SOFTWARE_CATALOG.filter((p) => p.is_active);
-  };
-
   const fetchActiveProducts = useCallback(async () => {
     if (isStudentRole) return;
     setIsLoading(true);
@@ -186,7 +163,7 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         const normalized: SoftwareCatalogProduct[] = data.map((row: any) => ({
           id: String(row.id),
           title: row.title,
@@ -204,10 +181,10 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
         }));
         setProducts(normalized);
       } else {
-        setProducts(loadLocalActiveCatalog());
+        setProducts([]);
       }
     } catch {
-      setProducts(loadLocalActiveCatalog());
+      setProducts([]);
     } finally {
       setIsLoading(false);
     }

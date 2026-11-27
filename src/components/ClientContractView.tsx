@@ -70,37 +70,38 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
   contracts = [],
   onContractSigned,
   onUploadPhysicalContract,
-  clientCompany = 'FinTech Global B2B',
-  clientEmail = 'cliente@enterprise.corp',
-  clientName = 'Director Tecnológico Corporativo',
-  clientRfc = 'FTG200315KY1',
+  clientCompany = 'Cuenta Corporativa',
+  clientEmail = '',
+  clientName = 'Representante Legal',
+  clientRfc = '',
   showToast,
   onClose,
   isStandalone = false,
 }) => {
+  const hasRealContract = Boolean(contract || contracts.length > 0);
   // If multiple contracts are provided, allow selecting
   const [selectedContractId, setSelectedContractId] = useState<string>(
-    contract?.id || (contracts.length > 0 ? contracts[0].id : 'CTR-2026-904')
+    contract?.id || (contracts.length > 0 ? contracts[0].id : '')
   );
 
   const activeContract =
     contracts.find((c) => c.id === selectedContractId) ||
     contract || {
-      id: 'CTR-2026-904',
-      client_id: 'usr_client_demo',
+      id: '',
+      client_id: '',
       client_name: clientName,
       client_company: clientCompany,
       client_email: clientEmail,
-      title: 'Contrato Marco de Servicios de Ingeniería, Ciberseguridad & Acuerdo SLA',
+      title: 'Sin contrato emitido',
       content: '',
       status: 'pending_signature' as const,
       created_at: new Date().toISOString(),
-      advance_percentage: '40%',
-      total_cost: '$350,000 MXN',
+      advance_percentage: '25%',
+      total_cost: '$0 MXN',
       rfc: clientRfc,
-      uptime: '99.999%',
-      response_time: '1h',
-      services: ['cloud_arch', 'zero_trust', 'soc2_audit', 'webapp_dev'],
+      uptime: '99.9%',
+      response_time: '24h',
+      services: [],
     };
 
   // Local signature & upload state
@@ -338,6 +339,31 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
       }
     }, 800);
   };
+
+  if (!hasRealContract) {
+    return (
+      <div className="w-full rounded-3xl bg-[#091129]/95 border border-dashed border-cyan-500/30 p-10 text-center flex flex-col items-center justify-center gap-3 font-['Inter'] text-[#dce1ff]">
+        <div className="w-12 h-12 rounded-2xl bg-[#141a32] border border-cyan-500/40 flex items-center justify-center text-cyan-400">
+          <FileText className="w-6 h-6" />
+        </div>
+        <h3 className="font-['Space_Grotesk'] text-[18px] font-bold text-white">
+          Sin contratos asignados aún
+        </h3>
+        <p className="text-[13px] text-slate-400 max-w-md leading-relaxed">
+          Cuando MRCA Solutions emita un contrato de servicios o acuerdo de confidencialidad para tu cuenta, aparecerá aquí automáticamente listo para firma digital o carga en PDF.
+        </p>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-2 px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-['JetBrains_Mono'] text-[11px] font-bold uppercase"
+          >
+            Cerrar
+          </button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div

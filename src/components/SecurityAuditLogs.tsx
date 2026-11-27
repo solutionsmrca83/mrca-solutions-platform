@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'motion/react';
+import { supabase } from '../lib/supabase/client';
 import { 
   Shield, 
   ShieldAlert, 
@@ -32,102 +33,79 @@ export interface AuditLogEntry {
   signatureHash: string;
 }
 
-const MOCK_AUDIT_LOGS: AuditLogEntry[] = [
-  {
-    id: 'LOG-89421',
-    event: 'Inicio de Sesión Exitoso // MFA FIDO2',
-    eventType: 'auth_success',
-    ipAddress: '189.204.112.45',
-    ipLocation: 'CDMX, México (Alestra B2B)',
-    deviceBrowser: 'Chrome 131.0 // Enterprise',
-    os: 'macOS Sonoma 14.7',
-    timestamp: '2026-10-13 22:58:12 UTC',
-    riskScore: 'SAFE',
-    signatureHash: '0x8f2a...c914',
-  },
-  {
-    id: 'LOG-89420',
-    event: 'Descarga de Carga Útil Cifrada (Bóveda)',
-    eventType: 'vault_access',
-    ipAddress: '189.204.112.45',
-    ipLocation: 'CDMX, México (Alestra B2B)',
-    deviceBrowser: 'Chrome 131.0 // Enterprise',
-    os: 'macOS Sonoma 14.7',
-    timestamp: '2026-10-13 22:45:09 UTC',
-    riskScore: 'SAFE',
-    signatureHash: '0x3d7b...e490',
-  },
-  {
-    id: 'LOG-89419',
-    event: 'Rotación de API Key Maestra (HSM Nivel 4)',
-    eventType: 'token_rotation',
-    ipAddress: '200.68.139.12',
-    ipLocation: 'Guadalajara, JAL (Totalplay Corp)',
-    deviceBrowser: 'Firefox 132.0 ESR // Hardened',
-    os: 'Ubuntu 24.04 LTS',
-    timestamp: '2026-10-13 21:12:44 UTC',
-    riskScore: 'AUDITED',
-    signatureHash: '0x1c99...aa02',
-  },
-  {
-    id: 'LOG-89418',
-    event: 'Firma Digital de Contrato B2B (ECDSA)',
-    eventType: 'contract_sign',
-    ipAddress: '187.190.24.88',
-    ipLocation: 'Monterrey, N.L. (Telmex Enterprise)',
-    deviceBrowser: 'Safari 18.1 // TouchID Passkey',
-    os: 'macOS Sequoia 15.0',
-    timestamp: '2026-10-13 19:30:00 UTC',
-    riskScore: 'SAFE',
-    signatureHash: '0x44fa...7721',
-  },
-  {
-    id: 'LOG-89417',
-    event: 'Conexión Cifrada de Servicio Corporativo',
-    eventType: 'mtls_handshake',
-    ipAddress: '54.218.99.14',
-    ipLocation: 'AWS US-West (Oregon VPC Gateway)',
-    deviceBrowser: 'curl/8.9.1 // Golang Daemon',
-    os: 'Linux Alpine (Docker Container)',
-    timestamp: '2026-10-13 18:05:22 UTC',
-    riskScore: 'SAFE',
-    signatureHash: '0x00de...bb56',
-  },
-  {
-    id: 'LOG-89416',
-    event: 'Intento Bloqueado // IP No Autorizada',
-    eventType: 'blocked_attempt',
-    ipAddress: '91.240.118.82',
-    ipLocation: 'San Petersburgo, RU (VPN Externa)',
-    deviceBrowser: 'Python-requests/2.31',
-    os: 'Linux x86_64',
-    timestamp: '2026-10-13 16:40:11 UTC',
-    riskScore: 'BLOCKED',
-    signatureHash: '0xff41...0012',
-  },
-  {
-    id: 'LOG-89415',
-    event: 'Inicio de Sesión Exitoso // Token Sesión',
-    eventType: 'auth_success',
-    ipAddress: '189.204.112.45',
-    ipLocation: 'CDMX, México (Alestra B2B)',
-    deviceBrowser: 'Edge 130.0 // Windows Defender',
-    os: 'Windows 11 Pro Enterprise',
-    timestamp: '2026-10-13 14:15:02 UTC',
-    riskScore: 'SAFE',
-    signatureHash: '0x7e29...ff84',
-  },
-];
-
 export const SecurityAuditLogs: React.FC<{
   clientCompany?: string;
   showToast?: (msg: string) => void;
-}> = ({ clientCompany = 'FinTech Global B2B', showToast = () => {} }) => {
+}> = ({ clientCompany = 'Cuenta Corporativa', showToast = () => {} }) => {
+  const [logs, setLogs] = useState<AuditLogEntry[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const filteredLogs = MOCK_AUDIT_LOGS.filter((log) => {
+  const loadClientAuditLogs = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const email = user?.email?.trim().toLowerCase();
+      if (!email) {
+        setLogs([]);
+        return;
+      }
+      const { data, error } = await supabase
+        .from('system_audit_logs')
+        .select('*')
+        .ilike('actor', email)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (!error && Array.isArray(data)) {
+        const mapped: AuditLogEntry[] = data.map((row: any) => {
+          const ev = String(row.event_type || '').toLowerCase();
+          let eventType: AuditLogEntry['eventType'] = 'auth_success';
+          if (ev.includes('vault')) eventType = 'vault_access';
+          else if (ev.includes('key') || ev.includes('token')) eventType = 'token_rotation';
+          else if (ev.includes('contract')) eventType = 'contract_sign';
+          else if (ev.includes('block') || ev.includes('violation')) eventType = 'blocked_attempt';
+          else if (ev.includes('tls') || ev.includes('mtls')) eventType = 'mtls_handshake';
+
+          const riskScore: AuditLogEntry['riskScore'] =
+            row.severity === 'critical'
+              ? 'BLOCKED'
+              : row.severity === 'warning'
+              ? 'AUDITED'
+              : 'SAFE';
+
+          return {
+            id: String(row.id),
+            event: row.description || row.event_type || 'Evento de seguridad',
+            eventType,
+            ipAddress: row.ip_address || 'No registrada',
+            ipLocation: 'Registro Supabase',
+            deviceBrowser: row.actor || email,
+            os: 'Sesión Autenticada',
+            timestamp: row.created_at
+              ? new Date(row.created_at).toLocaleString('es-MX')
+              : '',
+            riskScore,
+            signatureHash: String(row.id).slice(0, 12),
+          };
+        });
+        setLogs(mapped);
+      } else {
+        setLogs([]);
+      }
+    } catch {
+      setLogs([]);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadClientAuditLogs();
+  }, [loadClientAuditLogs]);
+
+  const filteredLogs = logs.filter((log) => {
     const matchesSearch =
       log.event.toLowerCase().includes(searchTerm.toLowerCase()) ||
       log.ipAddress.includes(searchTerm) ||
@@ -139,12 +117,9 @@ export const SecurityAuditLogs: React.FC<{
     return matchesSearch && matchesFilter;
   });
 
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setIsRefreshing(false);
-      showToast('Registro de auditoría sincronizado con los nodos de seguridad.');
-    }, 700);
+  const handleRefresh = async () => {
+    await loadClientAuditLogs();
+    showToast('Registro de auditoría sincronizado con Supabase.');
   };
 
   const handleExport = () => {
@@ -222,7 +197,7 @@ export const SecurityAuditLogs: React.FC<{
             onChange={(e) => setFilterType(e.target.value)}
             className="w-full sm:w-auto bg-[#060d24] border border-[#222941] focus:border-[#00e5ff] rounded-2xl px-3 py-2.5 text-[12px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] cursor-pointer"
           >
-            <option value="all">Todos los Eventos (7)</option>
+            <option value="all">Todos los Eventos ({logs.length})</option>
             <option value="auth_success">Inicios de Sesión</option>
             <option value="vault_access">Descargas de Bóveda</option>
             <option value="token_rotation">Rotación de Claves</option>
@@ -242,15 +217,22 @@ export const SecurityAuditLogs: React.FC<{
                 <th className="py-3.5 px-4 sm:px-6">Evento de Seguridad</th>
                 <th className="py-3.5 px-4">Dirección IP & Origen</th>
                 <th className="py-3.5 px-4">Dispositivo / Navegador</th>
-                <th className="py-3.5 px-4">Fecha y Hora (UTC)</th>
+                <th className="py-3.5 px-4">Fecha y Hora</th>
                 <th className="py-3.5 px-4 sm:px-6 text-right">Firma SHA-256</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#181e36] font-['Inter'] text-[12px]">
               {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-[#849396] font-['JetBrains_Mono']">
-                    No se encontraron registros que coincidan con la búsqueda.
+                  <td colSpan={5} className="py-12 text-center text-[#849396] font-['Inter']">
+                    <div className="flex flex-col items-center gap-1.5">
+                      <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+                        Sin registros aún
+                      </span>
+                      <span className="text-[12px]">
+                        Los eventos reales de seguridad de tu cuenta aparecerán aquí automáticamente.
+                      </span>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -343,9 +325,9 @@ export const SecurityAuditLogs: React.FC<{
         <div className="p-4 bg-[#060d24] border-t border-[#222941] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-['JetBrains_Mono'] text-[#849396]">
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse" />
-            Integridad de Bitácora: Cifrado HMAC-SHA256 y Resguardo Inmutable WORM
+            Integridad de Bitácora: Registro Inmutable en Supabase
           </span>
-          <span>Mostrando {filteredLogs.length} de {MOCK_AUDIT_LOGS.length} eventos registrados</span>
+          <span>Mostrando {filteredLogs.length} de {logs.length} eventos registrados</span>
         </div>
       </div>
     </div>

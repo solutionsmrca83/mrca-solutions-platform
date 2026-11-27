@@ -27,81 +27,11 @@ interface AdminBudgetNegotiationsProps {
   showToast?: (msg: string) => void;
 }
 
-const INITIAL_NEGOTIATIONS: BudgetNegotiation[] = [
-  {
-    id: 'NEG-2026-041',
-    client_type: 'student',
-    client_name: 'Carlos Eduardo Reyes',
-    client_company_or_school: 'Facultad de Ingeniería UNAM',
-    client_email: 'creyes@comunidad.unam.mx',
-    client_phone: '+52 55 4912 3019',
-    service_title: 'Nivel 2: Sistema Integrado Modular',
-    service_category: 'academy',
-    original_price: 4200,
-    proposed_budget: 2500,
-    approved_price: null,
-    status: 'pending',
-    message:
-      'Hola arquitectos, soy estudiante de último semestre. Me redujeron la beca institucional y mi fondo máximo es de $2,500 MXN. ¿Podemos modularizar la entrega omitiendo la simulación en Meet?',
-    admin_scope_adjustment: '',
-    checkout_link: null,
-    created_at: new Date(Date.now() - 3600000 * 3).toISOString(),
-  },
-  {
-    id: 'NEG-2026-038',
-    client_type: 'enterprise',
-    client_name: 'Lic. Roberto Valenzuela (COO)',
-    client_company_or_school: 'Logística Transfronteriza Del Norte S.A.',
-    client_email: 'rvalenzuela@transnorte.com.mx',
-    client_phone: '+52 81 8390 1200',
-    service_title: 'Fase 03: Infraestructura Cloud Cifrada y Bóveda Segura',
-    service_category: 'b2b',
-    original_price: 185000,
-    proposed_budget: 145000,
-    approved_price: 145000,
-    status: 'approved',
-    message:
-      'Nuestro límite trimestral de CAPEX TI para este entregable es de $145,000 MXN netos. Solicitamos diferir el soporte de monitoreo Prometheus a la fase posterior.',
-    admin_scope_adjustment:
-      'Alcance adaptado: Se implementa arquitectura central mTLS y HSM. El módulo complementario de Prometheus se despliega en Q1 2027.',
-    admin_notes: 'Aprobado por Jefe (CISO) tras revisión de márgenes.',
-    checkout_link:
-      'https://enclave.mrcasolutions.com/checkout/spei?negotiation_id=NEG-2026-038&token=mrca_sec_89fa12',
-    created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
-  },
-  {
-    id: 'NEG-2026-042',
-    client_type: 'student',
-    client_name: 'Mariana Tapia G.',
-    client_company_or_school: 'Instituto Politécnico Nacional (UPIITA)',
-    client_email: 'mtapia@alumno.ipn.mx',
-    client_phone: '+52 55 3190 8821',
-    service_title: 'Topología de Redes OSPF & pfSense',
-    service_category: 'academy',
-    original_price: 2800,
-    proposed_budget: 1800,
-    approved_price: null,
-    status: 'pending',
-    message:
-      'Tengo examen práctico en 4 días y hacemos equipo entre dos alumnos. Nuestro presupuesto conjunto alcanza $1,800 MXN. Requerimos el archivo .pkt con la segmentación VLAN.',
-    admin_scope_adjustment: '',
-    checkout_link: null,
-    created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
-  },
-];
-
 export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = ({
   showToast,
 }) => {
-  const [negotiations, setNegotiations] = useState<BudgetNegotiation[]>(() => {
-    try {
-      const saved = localStorage.getItem('mrca_budget_negotiations');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return INITIAL_NEGOTIATIONS;
-  });
+  const [negotiations, setNegotiations] = useState<BudgetNegotiation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [filterType, setFilterType] = useState<
     'all' | 'pending' | 'student' | 'enterprise' | 'approved'
@@ -113,17 +43,19 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
   const [isProcessingId, setIsProcessingId] = useState<string | null>(null);
 
   useEffect(() => {
-    // 1. Fetch from Supabase
+    let mounted = true;
+
     async function fetchNegotiations() {
+      setIsLoading(true);
       try {
         const { data, error } = await supabase
           .from('budget_negotiations')
           .select('*')
           .order('created_at', { ascending: false });
 
-        if (data && data.length > 0 && !error) {
+        if (mounted && !error && Array.isArray(data)) {
           const mapped: BudgetNegotiation[] = data.map((d: any) => ({
-            id: d.id,
+            id: String(d.id),
             client_type: d.client_type,
             client_name: d.client_name,
             client_company_or_school: d.client_company_or_school,
@@ -131,8 +63,8 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
             client_phone: d.client_phone || undefined,
             service_title: d.service_title,
             service_category: d.service_category,
-            original_price: Number(d.original_price),
-            proposed_budget: Number(d.proposed_budget),
+            original_price: Number(d.original_price || 0),
+            proposed_budget: Number(d.proposed_budget || 0),
             approved_price: d.approved_price ? Number(d.approved_price) : null,
             status: d.status,
             message: d.message,
@@ -142,27 +74,27 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
             created_at: d.created_at,
           }));
           setNegotiations(mapped);
-          localStorage.setItem('mrca_budget_negotiations', JSON.stringify(mapped));
+        } else if (mounted) {
+          setNegotiations([]);
         }
       } catch {
-        // use local
+        if (mounted) setNegotiations([]);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
     }
 
-    fetchNegotiations();
+    void fetchNegotiations();
 
-    // 2. Listen for custom event when client creates a negotiation
-    const handleNewNegotiation = (e: any) => {
-      try {
-        const saved = localStorage.getItem('mrca_budget_negotiations');
-        if (saved) setNegotiations(JSON.parse(saved));
-      } catch {
-        // quota
-      }
+    const handleNewNegotiation = () => {
+      void fetchNegotiations();
     };
 
     window.addEventListener('mrca_negotiation_created', handleNewNegotiation);
-    return () => window.removeEventListener('mrca_negotiation_created', handleNewNegotiation);
+    return () => {
+      mounted = false;
+      window.removeEventListener('mrca_negotiation_created', handleNewNegotiation);
+    };
   }, []);
 
   const handleCopyLink = (link: string, id: string) => {
@@ -351,7 +283,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
               {approvedCount}
             </span>
             <span className="font-['JetBrains_Mono'] text-[10px] text-[#00FF66]">
-              Enlaces de pago activos vía SPEI/Stripe
+              Enlaces de pago activos vía SPEI (Nu México)
             </span>
           </div>
 
@@ -408,11 +340,18 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
 
       {/* Negotiations Cards List */}
       <div className="flex flex-col gap-4">
-        {filtered.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl bg-[#080f24] border border-[#1b2b52] flex flex-col items-center justify-center gap-3">
+        {isLoading ? (
+          <div className="p-12 text-center rounded-3xl bg-[#080f24] border border-[#1b2b52] font-['JetBrains_Mono'] text-[12px] text-[#849396]">
+            Consultando negociaciones reales en Supabase...
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="p-12 text-center rounded-3xl bg-[#080f24] border border-dashed border-[#1b2b52] flex flex-col items-center justify-center gap-3">
             <SlidersHorizontal className="w-10 h-10 text-[#849396]" />
-            <p className="font-['Space_Grotesk'] text-[16px] text-[#dce1ff]">
-              No hay solicitudes de presupuesto que coincidan con el filtro.
+            <p className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
+              Sin registros aún
+            </p>
+            <p className="font-['Inter'] text-[12px] text-[#849396]">
+              Los datos reales de negociaciones y contraofertas aparecerán aquí automáticamente.
             </p>
           </div>
         ) : (
@@ -420,9 +359,10 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
             const isPending = neg.status === 'pending';
             const isApproved = neg.status === 'approved';
             const isRejected = neg.status === 'rejected';
-            const deltaPercent = Math.round(
-              ((neg.original_price - neg.proposed_budget) / neg.original_price) * 100
-            );
+            const deltaPercent =
+              neg.original_price > 0
+                ? Math.round(((neg.original_price - neg.proposed_budget) / neg.original_price) * 100)
+                : 0;
 
             const currentDraftScope =
               scopeDrafts[neg.id] !== undefined

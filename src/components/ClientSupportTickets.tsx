@@ -23,51 +23,13 @@ interface ClientSupportTicketsProps {
   showToast?: (msg: string) => void;
 }
 
-const DEFAULT_CLIENT_TICKETS: SupportTicket[] = [
-  {
-    id: 'TCK-2026-102',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    subject: 'Solicitud de Hardening adicional en endpoint de Webhooks Banxico',
-    description:
-      'Deseamos validar la firma HMAC-SHA256 en las notificaciones entrantes de SPEI para evitar ataques de repetición.',
-    priority: 'medium',
-    status: 'in_progress',
-    admin_reply:
-      'Recibido por Jefe (CISO). Estamos preparando el filtro de validación de nonces en el proxy eBPF. Tiempo estimado de entrega: 4 horas.',
-    created_at: 'Hoy, 09:30 AM',
-  },
-  {
-    id: 'TCK-2026-098',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    subject: 'Rotación preventiva de certificados mTLS de producción',
-    description:
-      'Requerimos renovar el par de llaves asimétricas del cluster de pruebas antes del paso a producción.',
-    priority: 'low',
-    status: 'resolved',
-    admin_reply:
-      'Certificados renovados satisfactoriamente con algoritmo ECDSA P-384. Las credenciales fueron despachadas a su canal seguro.',
-    created_at: '09 Oct 2026',
-  },
-];
-
 export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
-  clientCompany = 'FinTech Global B2B',
-  clientEmail = 'cliente@enterprise.corp',
+  clientCompany = 'Cuenta Corporativa',
+  clientEmail = '',
   showToast,
 }) => {
-  const [tickets, setTickets] = useState<SupportTicket[]>(() => {
-    try {
-      const saved = localStorage.getItem('mrca_support_tickets');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return DEFAULT_CLIENT_TICKETS;
-  });
+  const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [subject, setSubject] = useState('');
   const [description, setDescription] = useState('');
@@ -77,18 +39,88 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    // Sync with storage events from Admin replies
-    const handleSync = () => {
+    let mounted = true;
+    async function loadMyTickets() {
+      setIsLoading(true);
       try {
-        const saved = localStorage.getItem('mrca_support_tickets');
-        if (saved) setTickets(JSON.parse(saved));
+        const { data: { user } } = await supabase.auth.getUser();
+        const email = (clientEmail || user?.email || '').trim().toLowerCase();
+        if (!user && !email) {
+          if (mounted) setTickets([]);
+          return;
+        }
+        let query = supabase
+          .from('support_tickets')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (user && email) {
+          query = query.or(`user_id.eq.${user.id},client_id.eq.${user.id},client_email.ilike.${email}`);
+        } else if (user) {
+          query = query.or(`user_id.eq.${user.id},client_id.eq.${user.id}`);
+        } else {
+          query = query.ilike('client_email', email);
+        }
+
+        const { data, error } = await query;
+        if (mounted && !error && Array.isArray(data)) {
+          const mapped: SupportTicket[] = data.map((row: any) => {
+            const rawPrio = String(row.priority || 'medium').toLowerCase();
+            const normPrio: TicketPriority =
+              rawPrio === 'critical' || rawPrio === 'crítica' || rawPrio === 'critica' || rawPrio === 'alta'
+                ? 'critical'
+                : rawPrio === 'low' || rawPrio === 'baja'
+                ? 'low'
+                : 'medium';
+            const rawStatus = String(row.status || 'open').toLowerCase();
+            const normStatus: TicketStatus =
+              rawStatus === 'resolved' || rawStatus === 'resuelto por bot'
+                ? 'resolved'
+                : rawStatus === 'in_progress' || rawStatus === 'escalado a humano'
+                ? 'in_progress'
+                : 'open';
+            return {
+              id: String(row.id),
+              client_id: String(row.client_id || row.user_id || user?.id || ''),
+              client_company: row.client_company || clientCompany,
+              client_email: row.client_email || email,
+              subject: row.subject || 'Solicitud de soporte',
+              description: row.description || '',
+              priority: normPrio,
+              status: normStatus,
+              admin_reply: row.admin_reply || row.bot_resolution || undefined,
+              created_at: row.created_at
+                ? new Date(row.created_at).toLocaleString('es-MX', {
+                    day: '2-digit',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })
+                : '',
+            };
+          });
+          setTickets(mapped);
+        } else if (mounted) {
+          setTickets([]);
+        }
       } catch {
-        // quota
+        if (mounted) setTickets([]);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
+    }
+
+    void loadMyTickets();
+
+    const handleSync = () => {
+      void loadMyTickets();
     };
     window.addEventListener('mrca_ticket_updated', handleSync);
-    return () => window.removeEventListener('mrca_ticket_updated', handleSync);
-  }, []);
+    return () => {
+      mounted = false;
+      window.removeEventListener('mrca_ticket_updated', handleSync);
+    };
+  }, [clientCompany, clientEmail]);
 
   // Handle critical priority selection with urgent red pulse
   const handleSelectPriority = (newPriority: TicketPriority) => {
@@ -114,52 +146,55 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
     }
 
     setIsSubmitting(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    const effectiveEmail = clientEmail || user?.email || '';
     const generatedId = `TCK-${Date.now().toString().slice(-6)}`;
+
+    let persistedId = generatedId;
+    try {
+      const { data: inserted } = await supabase
+        .from('support_tickets')
+        .insert({
+          user_id: user?.id || null,
+          client_email: effectiveEmail,
+          category: 'Soporte VIP Portal',
+          subject: subject.trim(),
+          description: description.trim(),
+          priority: priority === 'critical' ? 'Crítica' : priority === 'low' ? 'Baja' : 'Media',
+          status: 'Abierto',
+        })
+        .select('id')
+        .maybeSingle();
+
+      if (inserted?.id) {
+        persistedId = String(inserted.id);
+      }
+    } catch {
+      // handled gracefully
+    }
+
     const newTicket: SupportTicket = {
-      id: generatedId,
-      client_id: 'usr_client_demo',
+      id: persistedId,
+      client_id: user?.id || '',
       client_company: clientCompany,
-      client_email: clientEmail,
+      client_email: effectiveEmail,
       subject: subject.trim(),
       description: description.trim(),
       priority,
       status: 'open',
-      created_at: 'Ahora mismo',
+      created_at: new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
     };
 
-    // Save in Supabase
-    try {
-      await supabase.from('support_tickets').insert({
-        id: generatedId,
-        client_id: '00000000-0000-0000-0000-000000000000',
-        subject: newTicket.subject,
-        description: newTicket.description,
-        priority: newTicket.priority,
-        status: 'open',
-        created_at: new Date().toISOString(),
-      });
-    } catch {
-      // local fallback
-    }
+    setTickets((prev) => [newTicket, ...prev]);
+    window.dispatchEvent(new CustomEvent('mrca_ticket_updated'));
 
-    const updated = [newTicket, ...tickets];
-    setTickets(updated);
-    try {
-      localStorage.setItem('mrca_support_tickets', JSON.stringify(updated));
-      window.dispatchEvent(new CustomEvent('mrca_ticket_updated'));
-    } catch {
-      // quota
+    setIsSubmitting(false);
+    setSubject('');
+    setDescription('');
+    setPriority('medium');
+    if (showToast) {
+      showToast(`Ticket registrado correctamente y asignado al equipo de soporte.`);
     }
-
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubject('');
-      setDescription('');
-      setPriority('medium');
-      if (showToast) {
-        showToast(`Ticket ${generatedId} generado. Asignado a los Arquitectos (Jefe & Socio).`);
-      }
-    }, 600);
   };
 
   const filteredTickets = tickets.filter(
@@ -393,6 +428,22 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
         </div>
 
         <div className="flex flex-col gap-3.5">
+          {isLoading && (
+            <div className="p-8 text-center rounded-2xl bg-[#070f24] border border-[#1a2850] font-['JetBrains_Mono'] text-[12px] text-[#849396]">
+              Consultando tus tickets de soporte en Supabase...
+            </div>
+          )}
+          {!isLoading && filteredTickets.length === 0 && (
+            <div className="p-10 text-center rounded-2xl bg-[#070f24] border border-dashed border-[#1a2850] flex flex-col items-center gap-1.5">
+              <LifeBuoy className="w-8 h-8 text-[#849396]/70" />
+              <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+                Sin tickets registrados aún
+              </span>
+              <p className="font-['Inter'] text-[12px] text-[#849396]">
+                Cuando abras una solicitud de soporte técnico, podrás seguir su avance aquí en tiempo real.
+              </p>
+            </div>
+          )}
           {filteredTickets.map((t) => {
             const isResolved = t.status === 'resolved';
             const isInProgress = t.status === 'in_progress';

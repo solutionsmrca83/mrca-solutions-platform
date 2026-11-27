@@ -91,57 +91,6 @@ export const AVAILABLE_SERVICES: ServiceOption[] = [
   },
 ];
 
-const PRESET_CLIENTS = [
-  {
-    companyName: 'Banco NeoPay LatAm S.A. de C.V.',
-    representativeName: 'Ing. Rodrigo Salinas Valenzuela',
-    email: 'rsalinas@neopay.lat',
-    rfc: 'BNP180412XYZ',
-    totalCost: '$350,000 MXN',
-    paymentTerms: '50% Anticipo, 50% Contra Entrega y UAT',
-    advancePercentage: '40%',
-    uptime: '99.999%',
-    responseTime: '1h',
-    services: ['cloud_arch', 'zero_trust', 'soc2_audit'],
-  },
-  {
-    companyName: 'Aduana Express Cloud S.A.P.I. de C.V.',
-    representativeName: 'Lic. Mariana Ortiz Estrada',
-    email: 'mortiz@aduanaexpress.mx',
-    rfc: 'AEC210815AB2',
-    totalCost: '$180,000 MXN',
-    paymentTerms: '50% Anticipo, 50% Contra Entrega y UAT',
-    advancePercentage: '25%',
-    uptime: '99.9%',
-    responseTime: '1h',
-    services: ['zero_trust', 'webapp_dev'],
-  },
-  {
-    companyName: 'Salud Digital HIPAA Corp S.A. de C.V.',
-    representativeName: 'Dr. Alejandro Méndez Arismendi',
-    email: 'amendez@saluddigital.org',
-    rfc: 'SDH191103K77',
-    totalCost: '$420,000 MXN',
-    paymentTerms: '30% Anticipo, 40% Hito Alpha, 30% Despliegue',
-    advancePercentage: '40%',
-    uptime: '99.999%',
-    responseTime: '1h',
-    services: ['cloud_arch', 'zero_trust', 'soc2_audit', 'webapp_dev'],
-  },
-  {
-    companyName: 'E-Commerce Retail MX S.A. de C.V.',
-    representativeName: 'Lic. Sofía Valdés Noriega',
-    email: 'svaldes@retailmex.com',
-    rfc: 'ERM200508J91',
-    totalCost: '$260,000 MXN',
-    paymentTerms: '50% Anticipo, 50% Contra Entrega y UAT',
-    advancePercentage: '25%',
-    uptime: '99.9%',
-    responseTime: '24h',
-    services: ['webapp_dev', 'cloud_arch'],
-  },
-];
-
 // STRICT FINANCIAL CLAUSES & CLABE CONFIGURATION (NU MÉXICO)
 export const NU_MEXICO_CLABE = '638180010197163103';
 export const NU_MEXICO_INSTITUTION = 'Nu México';
@@ -183,34 +132,27 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
   // Active top-level subtab: 'generator' | 'negotiations' | 'history'
   const [activeTab, setActiveTab] = useState<'generator' | 'negotiations' | 'history'>(initialMode);
 
-  // Form states: Client Details
-  const [companyName, setCompanyName] = useState<string>('Banco NeoPay LatAm S.A. de C.V.');
-  const [representativeName, setRepresentativeName] = useState<string>('Ing. Rodrigo Salinas Valenzuela');
-  const [email, setEmail] = useState<string>('rsalinas@neopay.lat');
-  const [rfc, setRfc] = useState<string>('BNP180412XYZ');
+  // Form states: Client Details (starts clean for production)
+  const [companyName, setCompanyName] = useState<string>('');
+  const [representativeName, setRepresentativeName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [rfc, setRfc] = useState<string>('');
 
   // Project Specs (Multi-select)
-  const [selectedServices, setSelectedServices] = useState<string[]>([
-    'cloud_arch',
-    'zero_trust',
-    'soc2_audit',
-    'webapp_dev',
-  ]);
-  const [customScopeNotes, setCustomScopeNotes] = useState<string>(
-    'Despliegue perimetral con soporte para auditoría bancaria Banxico, esquemas PostgreSQL con RLS multitenant y cifrado de repositorios con llaves HSM YubiKey Nivel 4.'
-  );
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [customScopeNotes, setCustomScopeNotes] = useState<string>('');
 
   // Financials
-  const [totalCost, setTotalCost] = useState<string>('$350,000 MXN');
+  const [totalCost, setTotalCost] = useState<string>('');
   const [paymentTerms, setPaymentTerms] = useState<string>('50% Anticipo, 50% Entrega');
   const [advancePercentage, setAdvancePercentage] = useState<'25%' | '40%'>('25%');
 
   // SLA Guarantees
-  const [uptime, setUptime] = useState<'99.9%' | '99.999%'>('99.999%');
+  const [uptime, setUptime] = useState<'99.9%' | '99.999%'>('99.9%');
   const [responseTime, setResponseTime] = useState<'1h' | '24h'>('1h');
 
   // Generation & Action Bar states
-  const [contractFolio, setContractFolio] = useState<string>(() => `CTR-2026-MX-${Math.floor(100000 + Math.random() * 900000)}`);
+  const [contractFolio, setContractFolio] = useState<string>(() => `CTR-${new Date().getFullYear()}-MX-${Math.floor(100000 + Math.random() * 900000)}`);
   const [isExportingPdf, setIsExportingPdf] = useState<boolean>(false);
   const [cryptoLinkModal, setCryptoLinkModal] = useState<{
     isOpen: boolean;
@@ -226,59 +168,50 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
     hash: '',
   });
 
-  // Drafts & dispatched contracts storage
+  // Drafts & dispatched contracts storage (live Supabase)
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
-  const [sentContracts, setSentContracts] = useState<ClientContract[]>(() => {
-    try {
-      const saved = localStorage.getItem('mrca_client_contracts');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return [
-      {
-        id: 'CTR-2026-MX-841920',
-        client_id: 'usr_client_aduana_02',
-        client_name: 'Lic. Mariana Ortiz Estrada',
-        client_company: 'Aduana Express Cloud S.A.P.I. de C.V.',
-        client_email: 'mortiz@aduanaexpress.mx',
-        title: 'Contrato Marco de Servicios de Ciberseguridad & SLA 99.9%',
-        content: 'Acuerdo de Servicios de Ciberseguridad B2B sellado con materialidad SAT CFDI 4.0.',
-        status: 'signed',
-        signature_hash: '0x7a81be492a01948bd01948c02cba39d1049281bf',
-        signed_at: 'Ayer, 17:30 PM',
-        created_at: new Date(Date.now() - 86400000).toISOString(),
-      },
-    ];
-  });
+  const [sentContracts, setSentContracts] = useState<ClientContract[]>([]);
 
   // Budget negotiations list (for Tab 2)
-  const [negotiations, setNegotiations] = useState<BudgetNegotiation[]>(() => {
-    try {
-      const saved = localStorage.getItem('mrca_budget_negotiations');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return [];
-  });
+  const [negotiations, setNegotiations] = useState<BudgetNegotiation[]>([]);
 
-  // Load negotiations from Supabase or localStorage
+  // Load real contracts & negotiations from Supabase
   useEffect(() => {
-    async function loadNegotiations() {
+    let mounted = true;
+    async function loadLiveContractData() {
       try {
-        const { data, error } = await supabase
-          .from('budget_negotiations')
-          .select('*')
-          .order('created_at', { ascending: false });
-        if (data && data.length > 0 && !error) {
-          setNegotiations(data as any);
+        const [negRes, contractsRes] = await Promise.all([
+          supabase.from('budget_negotiations').select('*').order('created_at', { ascending: false }),
+          supabase.from('client_contracts').select('*').order('created_at', { ascending: false }),
+        ]);
+        if (mounted && !negRes.error && Array.isArray(negRes.data)) {
+          setNegotiations(negRes.data as any);
+        }
+        if (mounted && !contractsRes.error && Array.isArray(contractsRes.data)) {
+          const mapped: ClientContract[] = contractsRes.data.map((row: any) => ({
+            id: String(row.id),
+            client_id: row.client_id || '',
+            client_name: row.client_name || '',
+            client_company: row.client_company || '',
+            client_email: row.signer_email || row.client_email || '',
+            title: row.title || 'Contrato de Servicios B2B',
+            content: row.content || '',
+            status: row.status || 'pending_signature',
+            signature_data: row.signature_data || undefined,
+            signature_hash: row.signature_hash || undefined,
+            signed_at: row.signed_at || undefined,
+            created_at: row.created_at || new Date().toISOString(),
+          }));
+          setSentContracts(mapped);
         }
       } catch {
-        // fallback
+        // leave empty cleanly
       }
     }
-    loadNegotiations();
+    void loadLiveContractData();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Update initialMode if prop changes
@@ -315,27 +248,6 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
     );
     onPrefillConsumed?.();
   }, [prefillLead, onPrefillConsumed, showToast]);
-
-  // Handle Preset Client Auto-fill (Superadmin Only)
-  const handleSelectPreset = (preset: (typeof PRESET_CLIENTS)[0]) => {
-    if (!isSuper) {
-      showToast('Acceso restringido: Solo Superadmin puede modificar o cargar datos de clientes.');
-      return;
-    }
-    setCompanyName(preset.companyName);
-    setRepresentativeName(preset.representativeName);
-    setEmail(preset.email);
-    setRfc(preset.rfc);
-    setTotalCost(preset.totalCost);
-    setPaymentTerms(preset.paymentTerms);
-    if ((preset as any).advancePercentage) {
-      setAdvancePercentage((preset as any).advancePercentage);
-    }
-    setUptime(preset.uptime as any);
-    setResponseTime(preset.responseTime as any);
-    setSelectedServices(preset.services);
-    showToast(`Plantilla cargada para ${preset.companyName}`);
-  };
 
   // Toggle Services in multi-select (Superadmin Only)
   const handleToggleService = (serviceId: string) => {
@@ -422,24 +334,23 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
 
   // ACTION 2: Generar Enlace Criptográfico del Contrato
   const handleGenerateCryptoLink = () => {
-    const rawEntropy = `${contractFolio}-${email}-${rfc}-${Date.now()}`;
-    const mockHash =
+    const contractHash =
       '0x' +
       Array.from({ length: 40 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
-    const mockToken = `sec_ecdsa_${Array.from({ length: 24 }, () =>
+    const accessToken = `sec_ecdsa_${Array.from({ length: 24 }, () =>
       'abcdef0123456789'.charAt(Math.floor(Math.random() * 16))
     ).join('')}`;
 
     const link = `https://enclave.mrcasolutions.com/contratos/firmar?folio=${encodeURIComponent(
       contractFolio
-    )}&token=${mockToken}&sig=${mockHash.slice(0, 16)}`;
+    )}&token=${accessToken}&sig=${contractHash.slice(0, 16)}`;
 
     setCryptoLinkModal({
       isOpen: true,
       url: link,
-      token: mockToken,
+      token: accessToken,
       expiresIn: '72 Horas (Vence: T+3 días bancarios)',
-      hash: mockHash,
+      hash: contractHash,
     });
 
     // Copy immediately to clipboard
@@ -717,42 +628,6 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
           {/* LEFT COLUMN: INPUT FORM (lg:col-span-6 xl:col-span-5)            */}
           {/* ================================================================= */}
           <div className="lg:col-span-6 xl:col-span-5 flex flex-col gap-5">
-            {/* Quick Preset Selector */}
-            <div className="bg-[#0A1128]/90 border border-cyan-500/25 rounded-2xl p-4 backdrop-blur-xl shadow-lg flex flex-col gap-2.5">
-              <div className="flex items-center justify-between">
-                <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  Cargar Perfil de Cliente Corporativo
-                </span>
-                <span className="text-[10px] text-slate-400 font-['JetBrains_Mono']">
-                  {isSuper ? 'Pre-configurado' : 'Modo Lectura (Solo Superadmin)'}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {PRESET_CLIENTS.map((preset) => (
-                  <button
-                    key={preset.companyName}
-                    disabled={!isSuper}
-                    onClick={() => handleSelectPreset(preset)}
-                    className={`p-2.5 rounded-xl border text-left transition-all flex flex-col gap-1 ${
-                      !isSuper
-                        ? 'opacity-60 bg-[#0c132c]/50 border-slate-800 text-slate-400 cursor-not-allowed'
-                        : companyName === preset.companyName
-                        ? 'bg-cyan-950/60 border-cyan-400 text-white shadow-[0_0_12px_rgba(0,229,255,0.2)] cursor-pointer'
-                        : 'bg-[#141a32]/60 border-slate-800 text-slate-300 hover:border-cyan-500/40 hover:text-white cursor-pointer'
-                    }`}
-                  >
-                    <span className="font-['Space_Grotesk'] text-[12px] font-bold truncate leading-tight">
-                      {preset.companyName.split(' ')[0]} {preset.companyName.split(' ')[1]}
-                    </span>
-                    <span className="font-['JetBrains_Mono'] text-[9px] text-cyan-400">
-                      RFC: {preset.rfc}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* SECTION A: CLIENT DETAILS */}
             <div className="bg-[#0A1128]/90 border border-cyan-500/30 rounded-2xl p-5 sm:p-6 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col gap-4">
               <div className="flex items-center justify-between pb-3 border-b border-cyan-900/40">
@@ -791,7 +666,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                       type="text"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
-                      placeholder="Ej. Banco NeoPay LatAm S.A. de C.V."
+                      placeholder="Razón Social de la empresa cliente"
                       className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-['Inter'] transition-all"
                     />
                   ) : (
@@ -818,7 +693,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                       type="text"
                       value={representativeName}
                       onChange={(e) => setRepresentativeName(e.target.value)}
-                      placeholder="Ej. Ing. Rodrigo Salinas Valenzuela"
+                      placeholder="Nombre completo del representante legal"
                       className="w-full bg-[#060D24] border border-cyan-500/30 rounded-xl px-3.5 py-2.5 text-[13px] text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-['Inter'] transition-all"
                     />
                   ) : (
@@ -1574,15 +1449,12 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
             {negotiations.length === 0 ? (
               <div className="text-center py-12 flex flex-col items-center gap-3 text-slate-400 font-['JetBrains_Mono'] text-[12px]">
                 <Cpu className="w-10 h-10 text-cyan-400 opacity-60" />
-                <span>No hay negociaciones pendientes en este momento.</span>
+                <span>Sin registros aún. Las solicitudes de negociación reales aparecerán aquí automáticamente.</span>
                 <button
-                  onClick={() => {
-                    handleSelectPreset(PRESET_CLIENTS[0]);
-                    setActiveTab('generator');
-                  }}
+                  onClick={() => setActiveTab('generator')}
                   className="text-cyan-400 hover:underline text-[11px]"
                 >
-                  Cargar cliente corporativo de ejemplo &rarr;
+                  Ir al Generador Manual &rarr;
                 </button>
               </div>
             ) : (

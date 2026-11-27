@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { supabase } from '../lib/supabase/client';
 import { 
   FileText, 
   Download, 
@@ -29,69 +30,78 @@ export interface InvoiceItem {
   trackingKey: string;
 }
 
-const MOCK_INVOICES: InvoiceItem[] = [
-  {
-    id: 'INV-001',
-    folio: 'F-2026-081',
-    uuidSat: '4FA892C1-3B12-4D90-8812-7F0129B81920',
-    concept: 'Implementación de Infraestructura y Nube (Cloud) de Alta Disponibilidad',
-    amountMxn: 159482.76,
-    vatMxn: 25517.24,
-    totalMxn: 185000.00,
-    date: '12 de Octubre, 2026',
-    status: 'PAGADA',
-    gateway: 'SPEI Inmediato Banxico',
-    trackingKey: 'SPEI20261012894129',
-  },
-  {
-    id: 'INV-002',
-    folio: 'F-2026-074',
-    uuidSat: '9A7712E0-112B-4A12-9014-6F29108BA121',
-    concept: 'Auditoría de Ciberseguridad y Aislamiento de Datos Corporativos',
-    amountMxn: 81896.55,
-    vatMxn: 13103.45,
-    totalMxn: 95000.00,
-    date: '28 de Septiembre, 2026',
-    status: 'PAGADA',
-    gateway: 'SPEI Inmediato Banxico',
-    trackingKey: 'SPEI20260928741022',
-  },
-  {
-    id: 'INV-003',
-    folio: 'F-2026-059',
-    uuidSat: '2C9901F4-44A1-4E89-B012-110298B74109',
-    concept: 'Despliegue de Clúster PostgreSQL Supabase Enterprise & Enclaves mTLS',
-    amountMxn: 120689.65,
-    vatMxn: 19310.35,
-    totalMxn: 140000.00,
-    date: '15 de Septiembre, 2026',
-    status: 'PAGADA',
-    gateway: 'Transferencia Nu México B2B',
-    trackingKey: 'NU20260915994101',
-  },
-  {
-    id: 'INV-004',
-    folio: 'F-2026-042',
-    uuidSat: '1E8044B2-99F1-4412-8810-5E01928B3301',
-    concept: 'Licenciamiento B2B & Mantenimiento Proactivo con Garantía SLA 99.9%',
-    amountMxn: 38793.10,
-    vatMxn: 6206.90,
-    totalMxn: 45000.00,
-    date: '01 de Septiembre, 2026',
-    status: 'PAGADA',
-    gateway: 'SPEI Inmediato Banxico',
-    trackingKey: 'SPEI20260901420199',
-  },
-];
-
 export const InvoiceVault: React.FC<{
   clientCompany?: string;
   showToast?: (msg: string) => void;
-}> = ({ clientCompany = 'FinTech Global B2B', showToast = () => {} }) => {
+}> = ({ clientCompany = 'Cuenta Corporativa', showToast = () => {} }) => {
+  const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
-  const filteredInvoices = MOCK_INVOICES.filter(
+  useEffect(() => {
+    let mounted = true;
+    async function loadBilledInvoices() {
+      setIsLoading(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          if (mounted) setInvoices([]);
+          return;
+        }
+        const { data, error } = await supabase
+          .from('invoices')
+          .select('*')
+          .eq('client_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (mounted && !error && Array.isArray(data)) {
+          const mapped: InvoiceItem[] = data.map((row: any) => {
+            const totalMxn = Number(row.amount || 0);
+            const amountMxn = Number((totalMxn / 1.16).toFixed(2));
+            const vatMxn = Number((totalMxn - amountMxn).toFixed(2));
+            return {
+              id: String(row.id),
+              folio: `F-${String(row.id).slice(0, 8).toUpperCase()}`,
+              uuidSat: row.spei_tracking_key || 'PENDIENTE-TIMBRADO',
+              concept: row.description || 'Servicios Profesionales B2B',
+              amountMxn,
+              vatMxn,
+              totalMxn,
+              date: row.created_at
+                ? new Date(row.created_at).toLocaleDateString('es-MX', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                  })
+                : '',
+              status:
+                row.status === 'paid'
+                  ? 'PAGADA'
+                  : row.status === 'verification_in_progress'
+                  ? 'PROCESADA'
+                  : 'TIMBRADA',
+              gateway: 'Transferencia Nu México B2B',
+              trackingKey: row.spei_tracking_key || 'PENDIENTE',
+            };
+          });
+          setInvoices(mapped);
+        } else if (mounted) {
+          setInvoices([]);
+        }
+      } catch {
+        if (mounted) setInvoices([]);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    }
+    void loadBilledInvoices();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const filteredInvoices = invoices.filter(
     (inv) =>
       inv.concept.toLowerCase().includes(searchTerm.toLowerCase()) ||
       inv.folio.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -100,7 +110,7 @@ export const InvoiceVault: React.FC<{
 
   // Manual-only click handler: fires only when called as an explicit arrow callback
   const downloadFile = (invoiceId: string) => {
-    const invoice = MOCK_INVOICES.find((i) => i.id === invoiceId);
+    const invoice = invoices.find((i) => i.id === invoiceId);
     if (!invoice) return;
 
     setDownloadingId(invoice.id);
@@ -109,19 +119,16 @@ export const InvoiceVault: React.FC<{
     setTimeout(() => {
       setDownloadingId(null);
 
-      // Create a mock downloadable PDF blob with .pdf extension
-      const mockPdfContent = `%PDF-1.4\n%MRCA SOLUTIONS B2B INVOICE\n` +
+      const pdfContent = `%PDF-1.4\n%MRCA SOLUTIONS B2B INVOICE\n` +
         `Folio: ${invoice.folio}\nUUID SAT: ${invoice.uuidSat}\nCliente: ${clientCompany}\n` +
         `Concepto: ${invoice.concept}\nSubtotal: $${invoice.amountMxn.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN\n` +
         `IVA (16%): $${invoice.vatMxn.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN\nTotal: $${invoice.totalMxn.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN\n` +
-        `Fecha de Timbrado: ${invoice.date}\nMétodo: ${invoice.gateway}\nClave de Rastreo: ${invoice.trackingKey}\n` +
-        `Sello Digital SAT: SHA256-ECDSA-VERIFIED\n%%EOF`;
+        `Fecha de Emisión: ${invoice.date}\nMétodo: ${invoice.gateway}\nClave de Rastreo: ${invoice.trackingKey}\n%%EOF`;
 
-      const blob = new Blob([mockPdfContent], { type: 'application/pdf' });
+      const blob = new Blob([pdfContent], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      // Fixed file extension: strictly factura-MRCA-${invoice.id}.pdf
       link.download = `factura-MRCA-${invoice.id}.pdf`;
       document.body.appendChild(link);
       link.click();
@@ -133,11 +140,11 @@ export const InvoiceVault: React.FC<{
   };
 
   const downloadXML = (invoiceId: string) => {
-    const invoice = MOCK_INVOICES.find((i) => i.id === invoiceId);
+    const invoice = invoices.find((i) => i.id === invoiceId);
     if (!invoice) return;
 
-    if (showToast) showToast(`Descargando XML timbrado SAT para ${invoice.folio}...`);
-    const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" Version="4.0" Folio="${invoice.folio}" Total="${invoice.totalMxn}">\n  <cfdi:Emisor Rfc="MCR260101XYZ" Nombre="MRCA SOLUTIONS S.A.P.I. DE C.V."/>\n  <cfdi:Receptor Nombre="${clientCompany}"/>\n  <cfdi:Conceptos>\n    <cfdi:Concepto Descripcion="${invoice.concept}" Importe="${invoice.amountMxn}"/>\n  </cfdi:Conceptos>\n</cfdi:Comprobante>`;
+    if (showToast) showToast(`Descargando XML CFDI 4.0 para ${invoice.folio}...`);
+    const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" Version="4.0" Folio="${invoice.folio}" Total="${invoice.totalMxn}">\n  <cfdi:Emisor Nombre="MRCA SOLUTIONS"/>\n  <cfdi:Receptor Nombre="${clientCompany}"/>\n  <cfdi:Conceptos>\n    <cfdi:Concepto Descripcion="${invoice.concept}" Importe="${invoice.amountMxn}"/>\n  </cfdi:Conceptos>\n</cfdi:Comprobante>`;
     const blob = new Blob([xmlContent], { type: 'application/xml' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -149,7 +156,7 @@ export const InvoiceVault: React.FC<{
     URL.revokeObjectURL(url);
   };
 
-  const totalBilled = MOCK_INVOICES.reduce((acc, curr) => acc + curr.totalMxn, 0);
+  const totalBilled = invoices.reduce((acc, curr) => acc + curr.totalMxn, 0);
 
   return (
     <div className="w-full flex flex-col gap-5">
@@ -167,7 +174,7 @@ export const InvoiceVault: React.FC<{
               </span>
             </div>
             <h2 className="font-['Space_Grotesk'] text-[22px] font-bold text-[#dce1ff]">
-              Bóveda de Facturas & Comprobantes
+              Bóveda de Facturas &amp; Comprobantes
             </h2>
             <p className="font-['Inter'] text-[12px] text-[#bac9cc]">
               Descarga expedita de facturas electrónicas timbradas ante el SAT y comprobantes de dispersión SPEI para <strong className="text-[#00e5ff]">{clientCompany}</strong>.
@@ -181,7 +188,9 @@ export const InvoiceVault: React.FC<{
           <span className="text-[18px] font-bold text-[#00FF66]">
             ${totalBilled.toLocaleString('es-MX', { minimumFractionDigits: 2 })} MXN
           </span>
-          <span className="text-[10px] text-[#00daf3]">4 Facturas Timbradas</span>
+          <span className="text-[10px] text-[#00daf3]">
+            {invoices.length} {invoices.length === 1 ? 'Factura Registrada' : 'Facturas Registradas'}
+          </span>
         </div>
       </div>
 
@@ -190,7 +199,7 @@ export const InvoiceVault: React.FC<{
         <Search className="absolute left-3.5 top-3 w-4 h-4 text-[#849396]" />
         <input
           type="text"
-          placeholder="Buscar factura por concepto, folio (F-2026-...) o UUID fiscal..."
+          placeholder="Buscar factura por concepto, folio o clave de rastreo..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full bg-[#060d24] border border-[#222941] focus:border-[#00e5ff] rounded-2xl pl-10 pr-4 py-2.5 text-[12px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono'] transition-colors"
@@ -199,9 +208,19 @@ export const InvoiceVault: React.FC<{
 
       {/* Invoices List */}
       <div className="flex flex-col gap-3">
-        {filteredInvoices.length === 0 ? (
+        {isLoading ? (
           <div className="rounded-2xl bg-[#0a1128] border border-[#222941] p-12 text-center text-[#849396] font-['JetBrains_Mono'] text-[13px]">
-            No se encontraron facturas con el criterio de búsqueda especificado.
+            Consultando facturas fiscales en Supabase...
+          </div>
+        ) : filteredInvoices.length === 0 ? (
+          <div className="rounded-2xl bg-[#0a1128] border border-dashed border-[#222941] p-12 text-center flex flex-col items-center gap-2">
+            <Receipt className="w-8 h-8 text-[#849396]/70" />
+            <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+              Sin facturas registradas aún
+            </span>
+            <span className="text-[#849396] font-['Inter'] text-[12px]">
+              Tus comprobantes fiscales CFDI 4.0 y recibos SPEI aparecerán aquí automáticamente al emitirse.
+            </span>
           </div>
         ) : (
           filteredInvoices.map((invoice) => (

@@ -393,8 +393,14 @@ export default function App() {
     }
     return (
       <ClientPortalView
-        clientEmail={sessionUser?.email || 'cliente@enterprise.corp'}
-        clientCompany="FinTech Global B2B"
+        clientId={sessionUser?.id}
+        clientEmail={sessionUser?.email || ''}
+        clientCompany={
+          sessionUser?.company_name ||
+          sessionUser?.user_metadata?.company_name ||
+          sessionUser?.full_name ||
+          'Cuenta Corporativa'
+        }
         userRole={detectedRole}
         onSignOut={handleSignOut}
         showToast={showToast}

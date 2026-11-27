@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ShieldCheck, Server, Activity, ChevronDown } from 'lucide-react';
+import { supabase } from '../lib/supabase/client';
 
 interface SystemStatusBadgeProps {
   className?: string;
@@ -12,6 +13,32 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
   showDetailsOnHover = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState<boolean | null>(null);
+  const [latencyMs, setLatencyMs] = useState<number | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    async function probeSupabase() {
+      const start = performance.now();
+      try {
+        const { error } = await supabase
+          .from('service_pricing')
+          .select('id', { count: 'exact', head: true });
+        if (!mounted) return;
+        const elapsed = Math.max(1, Math.round(performance.now() - start));
+        setIsOnline(!error);
+        setLatencyMs(!error ? elapsed : null);
+      } catch {
+        if (!mounted) return;
+        setIsOnline(false);
+        setLatencyMs(null);
+      }
+    }
+    void probeSupabase();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <div 
@@ -26,17 +53,39 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
         className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#141a32]/80 hover:bg-[#181e36] border border-[#00fe66]/30 hover:border-[#00fe66]/60 backdrop-blur-md shadow-[0_0_15px_rgba(0,254,102,0.15)] transition-all cursor-pointer font-['JetBrains_Mono'] text-[11px]"
         aria-label="Estado operativo de la plataforma"
       >
-        {/* Animated Double Pulse Dot */}
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00fe66] opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00fe66] shadow-[0_0_8px_#00fe66]"></span>
+          <span
+            className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+              isOnline === false ? 'bg-red-400' : 'bg-[#00fe66]'
+            }`}
+          ></span>
+          <span
+            className={`relative inline-flex rounded-full h-2 w-2 ${
+              isOnline === false
+                ? 'bg-red-400'
+                : 'bg-[#00fe66] shadow-[0_0_8px_#00fe66]'
+            }`}
+          ></span>
         </span>
 
-        {/* Status Text */}
-        <span className="text-[#00fe66] font-semibold tracking-wide flex items-center gap-1.5">
-          <span>Sistemas Operativos en Línea</span>
-          <span className="text-[#849396] font-normal">//</span>
-          <span className="text-cyan-300">99.9% Disponibilidad</span>
+        <span
+          className={`font-semibold tracking-wide flex items-center gap-1.5 ${
+            isOnline === false ? 'text-red-400' : 'text-[#00fe66]'
+          }`}
+        >
+          <span>
+            {isOnline === null
+              ? 'Verificando sistema...'
+              : isOnline
+              ? 'Sistemas en Línea'
+              : 'Conexión Interrumpida'}
+          </span>
+          {latencyMs !== null && (
+            <>
+              <span className="text-[#849396] font-normal">//</span>
+              <span className="text-cyan-300">{latencyMs} ms</span>
+            </>
+          )}
         </span>
 
         {showDetailsOnHover && (
@@ -58,7 +107,7 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
               <div className="flex items-center gap-2">
                 <Activity className="w-4 h-4 text-[#00fe66]" />
                 <span className="font-['Space_Grotesk'] text-[13px] font-bold text-[#dce1ff]">
-                  Telemetría de Nodos B2B
+                  Estado de Conexión Real
                 </span>
               </div>
               <span className="text-[10px] font-['JetBrains_Mono'] px-2 py-0.5 rounded bg-[#00fe66]/10 text-[#00fe66] border border-[#00fe66]/30 font-bold">
@@ -69,40 +118,28 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
             <div className="flex flex-col gap-2 font-['JetBrains_Mono'] text-[11px]">
               <div className="flex items-center justify-between">
                 <span className="text-[#bac9cc] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
-                  Pasarela de Servicios y Cifrado
+                  <span className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-[#00fe66]' : 'bg-red-400'}`}></span>
+                  Base de Datos Supabase
                 </span>
-                <span className="text-[#00fe66] font-bold">100.0%</span>
+                <span className={isOnline ? 'text-[#00fe66] font-bold' : 'text-red-400 font-bold'}>
+                  {isOnline ? 'En línea' : 'Desconectado'}
+                </span>
               </div>
 
               <div className="flex items-center justify-between">
                 <span className="text-[#bac9cc] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
-                  Control de Acceso Corporativo
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                  Latencia Medida
                 </span>
-                <span className="text-[#00fe66] font-bold">99.99%</span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-[#bac9cc] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
-                  Base de Datos Redundante
+                <span className="text-cyan-300 font-bold">
+                  {latencyMs !== null ? `${latencyMs} ms` : 'N/D'}
                 </span>
-                <span className="text-[#00fe66] font-bold">100.0%</span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-[#bac9cc] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
-                  Red Global de Entrega (CDN)
-                </span>
-                <span className="text-[#00fe66] font-bold">14ms latencia</span>
               </div>
             </div>
 
             <div className="pt-2 border-t border-[#181e36] text-[10px] font-['JetBrains_Mono'] text-[#849396] flex items-center justify-between">
-              <span>SLA CONTRACTUAL: 99.9% DISPONIBILIDAD</span>
-              <span className="text-[#00daf3]">REDUNDANCIA MX Y NUBE</span>
+              <span>TRANSPORTE CIFRADO TLS 1.3</span>
+              <span className="text-[#00daf3]">MRCA B2B</span>
             </div>
           </motion.div>
         )}

@@ -86,7 +86,7 @@ const ACADEMY_TEMPLATES: AcademyTemplate[] = [
     techStack: ['PostgreSQL', 'MySQL', 'DBeaver', 'Diagrama Crow Foot'],
     tags: ['Entrega Inmediata', 'Código Comentado', '3FN Estricta', 'Diagrama E-R HD'],
     description:
-      'Modelo relacional empresarial estructurado en Tercera Forma Normal (3FN). Incluye DDL con constraints de integridad referencial, triggers de auditoría y datos semilla dummy.',
+      'Modelo relacional empresarial estructurado en Tercera Forma Normal (3FN). Incluye DDL con constraints de integridad referencial, triggers de auditoría y datos semilla estructurados.',
     deliverables: [
       'Script .sql relacional limpio y validado sin errores de sintaxis',
       'Diagrama Entidad-Relación (DER) en PDF con notación Crow Foot',
@@ -399,7 +399,7 @@ export const AcademyTemplatesCatalog: React.FC<AcademyTemplatesCatalogProps> = (
       </div>
 
       {/* ==================================================================== */}
-      {/* BUY MODAL: SPEI / STRIPE WITH PROMO CODE SUPPORT                     */}
+      {/* BUY MODAL: SPEI NU MÉXICO WITH PROMO CODE SUPPORT                    */}
       {/* ==================================================================== */}
       <AnimatePresence>
         {activeTemplateForBuy && (

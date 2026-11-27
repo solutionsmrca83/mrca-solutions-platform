@@ -171,17 +171,11 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
   };
 
 
-  const handleCheckoutStripe = () => {
+  const handleReserveSpei = () => {
     setIsReserving(true);
     if (showToast) {
-      showToast('Generando enlace seguro de Stripe Escrow...');
+      showToast('Preparando resumen de reserva con pago SPEI (Nu México)...');
     }
-
-    // Pre-built Stripe Payment Link or dynamic fallback
-    const stripePaymentUrl =
-      'https://buy.stripe.com/test_mrca_academy_deposit?client_reference_id=' +
-      Date.now() +
-      '&prefilled_email=estudiante@ingenieria.edu';
 
     setTimeout(() => {
       setIsReserving(false);
@@ -189,7 +183,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
       if (onReserve) {
         onReserve(currentQuote);
       }
-    }, 900);
+    }, 500);
   };
 
   const dbToggleId = useId();
@@ -219,7 +213,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
               </span>
             </div>
             <p className="font-['Inter'] text-[12px] sm:text-[13px] text-[#bac9cc]">
-              Selecciona los módulos de tu proyecto. El precio es transparente y el anticipo se congela vía Stripe.
+              Selecciona los módulos de tu proyecto. El precio es transparente y el anticipo se formaliza vía SPEI (Nu México).
             </p>
           </div>
         </div>
@@ -442,7 +436,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
         </div>
 
         {/* ==================================================================== */}
-        {/* RIGHT COLUMN: Real-Time Dynamic Summary & Stripe Action (5 cols)     */}
+        {/* RIGHT COLUMN: Real-Time Dynamic Summary & SPEI Action (5 cols)       */}
         {/* ==================================================================== */}
         <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl bg-gradient-to-b from-[#101b3d] to-[#0a1128] border-2 border-[#00e5ff]/50 p-6 shadow-2xl relative animate-border-pulse">
           <div className="flex flex-col gap-4">
@@ -625,15 +619,15 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
           <div className="flex flex-col gap-3 pt-5">
             <button
               type="button"
-              id="btn-reserve-stripe-academy"
-              onClick={handleCheckoutStripe}
+              id="btn-reserve-spei-academy"
+              onClick={handleReserveSpei}
               disabled={isReserving}
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:from-[#5affff] hover:to-[#5aff96] text-[#00363d] font-['Space_Grotesk'] text-[15px] font-extrabold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] flex items-center justify-center gap-2.5 hover:scale-105 active:scale-[0.98] cursor-pointer"
             >
               <ExternalLink className="w-5 h-5 text-[#00363d]" />
               <span>
                 {isReserving
-                  ? 'Conectando con Stripe Escrow...'
+                  ? 'Preparando resumen SPEI...'
                   : `Reservar Proyecto con Anticipo ($${depositPrice.toLocaleString()} MXN)`}
               </span>
             </button>
@@ -651,7 +645,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
 
             <div className="flex items-center justify-center gap-2 text-[10px] font-['JetBrains_Mono'] text-[#849396]">
               <span translate="no" className="notranslate material-symbols-outlined text-[13px] text-[#00fe66]">lock</span>
-              <span>Pago cifrado protegido por Stripe Payment Links • Sin cobros ocultos</span>
+              <span>Transferencia directa SPEI (Nu México) • 0% comisiones bancarias</span>
             </div>
           </div>
         </div>
@@ -694,7 +688,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
                   ¡Cotización Generada con Éxito!
                 </h4>
                 <p className="font-['Inter'] text-[12px] text-[#bac9cc] mt-1 leading-relaxed">
-                  Tu proyecto ha sido pre-registrado. Puedes formalizar el anticipo del 50% (${depositPrice.toLocaleString()} MXN) mediante Stripe o coordinar detalles directos con un arquitecto.
+                  Tu proyecto ha sido pre-registrado. Puedes formalizar el anticipo (${depositPrice.toLocaleString()} MXN) vía transferencia SPEI (Nu México) al coordinar detalles directos con un arquitecto.
                 </p>
               </div>
 
@@ -720,14 +714,14 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
               <div className="w-full flex flex-col gap-2 pt-1">
                 <a
                   href={`https://wa.me/525500000000?text=${encodeURIComponent(
-                    `Hola MRCA Academy, coticé un proyecto de ingeniería nivel ${complexity.toUpperCase()} por $${totalPrice} MXN (Anticipo: $${depositPrice} MXN). Me gustaría afinar detalles y coordinar el pago.`
+                    `Hola MRCA Academy, coticé un proyecto de ingeniería nivel ${complexity.toUpperCase()} por $${totalPrice} MXN (Anticipo: $${depositPrice} MXN). Me gustaría afinar detalles y coordinar el pago vía SPEI.`
                   )}`}
                   target="_blank"
                   rel="noreferrer"
                   className="w-full py-3 rounded-xl bg-[#00fe66] hover:bg-[#5aff96] text-[#00363d] font-['Space_Grotesk'] text-[13px] font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,254,102,0.4)]"
                 >
                   <ExternalLink className="w-4 h-4" />
-                  <span>Confirmar Vía WhatsApp / Stripe</span>
+                  <span>Confirmar Vía WhatsApp / SPEI</span>
                 </a>
 
                 <button

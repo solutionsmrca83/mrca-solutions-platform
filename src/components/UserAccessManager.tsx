@@ -642,7 +642,7 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-3">Finanzas y Dispersión SPEI / Stripe</td>
+                    <td className="py-2 pr-3">Finanzas y Dispersión SPEI (Nu México)</td>
                     <td className="py-2 px-2 text-center text-emerald-400">HABILITADO</td>
                     <td className="py-2 px-2 text-center text-emerald-400">HABILITADO</td>
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>

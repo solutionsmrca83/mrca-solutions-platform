@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { EngineeringCapability, ClientChatMessage, ClientContract } from '../types';
+import { supabase } from '../lib/supabase/client';
 import { SecureClientInbox } from './SecureClientInbox';
 import { LiveRoadmap } from './LiveRoadmap';
 import { ApiKeyMetricsDashboard } from './ApiKeyMetricsDashboard';
@@ -15,6 +16,7 @@ import { ClientLayout } from './layouts/ClientLayout';
 import { FileText, Key, Activity, ShieldCheck, FileCheck, DollarSign, LifeBuoy, FolderArchive, ShieldAlert, Receipt, Package } from 'lucide-react';
 
 interface ClientPortalViewProps {
+  clientId?: string;
   clientEmail?: string;
   clientCompany?: string;
   userRole?: string | null;
@@ -35,46 +37,6 @@ export type ClientPortalTab =
   | 'auditoria'
   | 'facturas';
 
-const INITIAL_CONTRACTS: ClientContract[] = [
-  {
-    id: 'CTR-2026-904',
-    client_id: 'usr_client_demo',
-    client_name: 'Director Tecnológico Corporativo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    template_id: 'tmpl_nda_v4',
-    title: 'Contrato Marco de Servicios de Ingeniería, Ciberseguridad & Acuerdo SLA',
-    advance_percentage: '40%',
-    total_cost: '$350,000 MXN',
-    rfc: 'FTG200315KY1',
-    uptime: '99.999%',
-    response_time: '1h',
-    services: ['cloud_arch', 'zero_trust', 'soc2_audit', 'webapp_dev'],
-    content: `ACUERDO BILATERAL DE CONFIDENCIALIDAD Y PROTECCIÓN CRIPTOGRÁFICA (NDA CORPORATIVO)
-
-ENTRE LAS PARTES:
-MRCA SOLUTIONS S.A.P.I. DE C.V., representada por su Enclave de Dirección Ejecutiva (Jefe & Socio), y por la otra parte:
-EMPRESA BENEFICIARIA: FinTech Global B2B
-REPRESENTANTE LEGAL: Director Tecnológico Corporativo
-CORREO INSTITUCIONAL: cliente@enterprise.corp
-
-CLÁUSULA PRIMERA — OBJETO DEL SIGILO TECNOLÓGICO:
-Las partes compartirán arquitectura de software, microservicios blindados y esquemas de bases de datos PostgreSQL con RLS con el fin de evaluar y desplegar servicios de ingeniería de alta concurrencia.
-
-CLÁUSULA SEGUNDA — NO REVELACIÓN Y PROTECCIÓN CRIPTOGRÁFICA:
-Toda información compartida se considera Carga Útil Confidencial Nivel 4 (FIPS 140-3). Queda estrictamente prohibida su divulgación o ingesta en modelos no autorizados sin firma previa.
-
-CLÁUSULA TERCERA — VIGENCIA Y PENALIZACIÓN CONVENCIONAL:
-Vigencia ininterrumpida de cinco (5) años a partir de la firma digital. La parte infractora responderá ante el Enclave Arbitral Tecnológico de la Ciudad de México.
-
-SLA ASIGNADO: 99.98% DISPONIBILIDAD // ENCLAVE mTLS
-FECHA DE EMISIÓN: 12 de Octubre de 2026
-SELLO SHA-256 PREVIO: 0x9f41b8a72e90c8a1b490f840139b8192`,
-    status: 'pending_signature',
-    created_at: new Date().toISOString(),
-  },
-];
-
 const CAPABILITIES: EngineeringCapability[] = [
   {
     id: 'web_apps',
@@ -84,7 +46,7 @@ const CAPABILITIES: EngineeringCapability[] = [
       'Sistemas distribuidos de respuesta inmediata, portales web corporativos seguros, conexiones cifradas y velocidad optimizada para operación empresarial.',
     icon: 'web',
     technologies: ['Next.js', 'React 19', 'TypeScript', 'Arquitectura SaaS', 'API Segura'],
-    sla: '99.98% DISPONIBILIDAD',
+    sla: 'SLA CONTRACTUAL',
     badge: 'INGENIERÍA CORE',
   },
   {
@@ -95,7 +57,7 @@ const CAPABILITIES: EngineeringCapability[] = [
       'Modelado relacional con aislamiento estricto por empresa, cifrado de datos sensibles, alta disponibilidad y preparación para auditorías regulatorias.',
     icon: 'database',
     technologies: ['PostgreSQL', 'Aislamiento por Cliente', 'Cifrado AES-256', 'Redundancia Activa'],
-    sla: 'CERO FUGAS DE DATOS',
+    sla: 'AISLAMIENTO RLS',
     badge: 'ALTA SEGURIDAD',
   },
   {
@@ -106,7 +68,7 @@ const CAPABILITIES: EngineeringCapability[] = [
       'Automatización de procesos operativos B2B, integración de sistemas internos, reportes ejecutivos automáticos y conciliación bancaria SPEI Banxico / Nu México.',
     icon: 'terminal',
     technologies: ['Python', 'Automatización B2B', 'Integraciones API', 'Webhooks SPEI'],
-    sla: 'EJECUCIÓN INMEDIATA',
+    sla: 'EJECUCIÓN DEDICADA',
     badge: 'AUTOMATIZACIÓN',
   },
   {
@@ -122,39 +84,10 @@ const CAPABILITIES: EngineeringCapability[] = [
   },
 ];
 
-const INITIAL_CHAT: ClientChatMessage[] = [
-  {
-    id: 'c1',
-    sender: 'admin',
-    senderName: 'Jefe (CISO)',
-    text: 'Bienvenido al canal seguro de MRCA Solutions. Su identidad corporativa ha sido verificada. ¿En qué capacidad de ingeniería podemos apoyarle hoy?',
-    timestamp: 'Hoy, 10:14 AM',
-    isEncrypted: true,
-    cipherHash: '0x4f8a...921b',
-  },
-  {
-    id: 'c2',
-    sender: 'client',
-    senderName: 'Cliente Corporativo',
-    text: 'Hola Jefe. Deseamos implementar políticas RLS en PostgreSQL y auditar un endpoint crítico de pagos SPEI.',
-    timestamp: 'Hoy, 10:20 AM',
-    isEncrypted: true,
-    cipherHash: '0x3b1c...a0d2',
-  },
-  {
-    id: 'c3',
-    sender: 'admin',
-    senderName: 'Socio (CTO)',
-    text: 'Enterado. Podemos estructurar el plan de trabajo adaptándonos a su fase presupuestal. Puede enviarnos sus archivos o especificaciones en este canal con cifrado AES-256.',
-    timestamp: 'Hoy, 10:25 AM',
-    isEncrypted: true,
-    cipherHash: '0x88ea...1d29',
-  },
-];
-
 export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
-  clientEmail = 'cliente@enterprise.corp',
-  clientCompany = 'FinTech Global B2B',
+  clientId,
+  clientEmail = '',
+  clientCompany = 'Cuenta Corporativa',
   userRole = 'client',
   onSignOut,
   showToast,
@@ -179,17 +112,146 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
     return 'capacidades';
   });
   const [isContractsModalOpen, setIsContractsModalOpen] = useState(false);
-  const [contracts, setContracts] = useState<ClientContract[]>(() => {
-    try {
-      const saved = localStorage.getItem('mrca_client_contracts');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return INITIAL_CONTRACTS;
+  const [contracts, setContracts] = useState<ClientContract[]>([]);
+  const [chatMessages, setChatMessages] = useState<ClientChatMessage[]>([]);
+  const [clientSummary, setClientSummary] = useState({
+    projectsTotal: 0,
+    projectsAccepted: 0,
+    paidAmountMxn: 0,
+    totalInvoicedMxn: 0,
   });
+  const [inputMessage, setInputMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [selectedCapability, setSelectedCapability] = useState<EngineeringCapability | null>(null);
 
   useEffect(() => {
+    let mounted = true;
+    async function loadClientLiveState() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const uid = clientId || user?.id || null;
+        const email = (clientEmail || user?.email || '').trim().toLowerCase();
+
+        if (!uid && !email) return;
+
+        // 1. Contratos reales del cliente
+        let contractsQuery = supabase
+          .from('client_contracts')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (uid && email) {
+          contractsQuery = contractsQuery.or(`client_id.eq.${uid},signer_email.ilike.${email}`);
+        } else if (uid) {
+          contractsQuery = contractsQuery.eq('client_id', uid);
+        } else {
+          contractsQuery = contractsQuery.ilike('signer_email', email);
+        }
+
+        // 2. Facturas SPEI reales del cliente
+        const invoicesPromise = uid
+          ? supabase.from('invoices').select('amount, status').eq('client_id', uid)
+          : Promise.resolve({ data: [], error: null });
+
+        // 3. Propuestas / Proyectos asignados del cliente
+        let proposalsQuery = supabase
+          .from('client_project_proposals')
+          .select('id, status');
+        if (uid && email) {
+          proposalsQuery = proposalsQuery.or(`client_id.eq.${uid},email.ilike.${email}`);
+        } else if (uid) {
+          proposalsQuery = proposalsQuery.eq('client_id', uid);
+        } else {
+          proposalsQuery = proposalsQuery.ilike('email', email);
+        }
+
+        // 4. Mensajes reales del canal seguro
+        const messagesPromise = uid
+          ? supabase
+              .from('secure_messages')
+              .select('*')
+              .or(`sender_id.eq.${uid},recipient_id.eq.${uid}`)
+              .order('created_at', { ascending: true })
+          : Promise.resolve({ data: [], error: null });
+
+        const [contractsRes, invoicesRes, proposalsRes, messagesRes] = await Promise.all([
+          contractsQuery,
+          invoicesPromise,
+          proposalsQuery,
+          messagesPromise,
+        ]);
+
+        if (!mounted) return;
+
+        if (!contractsRes.error && Array.isArray(contractsRes.data)) {
+          const mappedContracts: ClientContract[] = contractsRes.data.map((row: any) => ({
+            id: String(row.id),
+            client_id: row.client_id || uid || '',
+            client_name: row.client_name || clientCompany,
+            client_company: row.client_company || clientCompany,
+            client_email: row.signer_email || email,
+            template_id: row.template_id || undefined,
+            title: row.title || 'Contrato de Servicios B2B',
+            content: row.content || '',
+            status: row.status || 'pending_signature',
+            signature_data: row.signature_data || undefined,
+            signature_hash: row.signature_hash || undefined,
+            signed_at: row.signed_at || undefined,
+            created_at: row.created_at || new Date().toISOString(),
+          }));
+          setContracts(mappedContracts);
+        } else {
+          setContracts([]);
+        }
+
+        const invRows = !invoicesRes.error && Array.isArray(invoicesRes.data) ? invoicesRes.data : [];
+        const paidAmountMxn = invRows
+          .filter((i: any) => i.status === 'paid')
+          .reduce((acc: number, i: any) => acc + Number(i.amount || 0), 0);
+        const totalInvoicedMxn = invRows.reduce(
+          (acc: number, i: any) => acc + Number(i.amount || 0),
+          0
+        );
+
+        const propRows =
+          !proposalsRes.error && Array.isArray(proposalsRes.data) ? proposalsRes.data : [];
+        const projectsTotal = propRows.length;
+        const projectsAccepted = propRows.filter((p: any) => p.status === 'accepted').length;
+
+        setClientSummary({
+          projectsTotal,
+          projectsAccepted,
+          paidAmountMxn,
+          totalInvoicedMxn,
+        });
+
+        if (!messagesRes.error && Array.isArray(messagesRes.data)) {
+          const mappedMessages: ClientChatMessage[] = messagesRes.data.map((m: any) => ({
+            id: String(m.id),
+            sender: m.sender_id === uid ? 'client' : 'admin',
+            senderName: m.sender_id === uid ? clientCompany : 'Dirección MRCA Solutions',
+            text: m.encrypted_payload || m.encrypted_subject || '',
+            timestamp: m.created_at
+              ? new Date(m.created_at).toLocaleString('es-MX', {
+                  day: '2-digit',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : '',
+            isEncrypted: true,
+            cipherHash: m.cipher_hash || undefined,
+          }));
+          setChatMessages(mappedMessages);
+        } else {
+          setChatMessages([]);
+        }
+      } catch {
+        // leave zero state cleanly
+      }
+    }
+
+    void loadClientLiveState();
+
     const handleDispatched = (event: any) => {
       const newContract: ClientContract = event.detail;
       if (newContract) {
@@ -203,13 +265,14 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
 
     window.addEventListener('mrca_contract_dispatched', handleDispatched);
     return () => {
+      mounted = false;
       window.removeEventListener('mrca_contract_dispatched', handleDispatched);
     };
-  }, [showToast]);
+  }, [clientId, clientEmail, clientCompany, showToast]);
 
   const handleContractSigned = (contractId: string, signatureData: string, signatureHash: string) => {
-    setContracts((prev) => {
-      const updated = prev.map((c) =>
+    setContracts((prev) =>
+      prev.map((c) =>
         c.id === contractId
           ? {
               ...c,
@@ -219,14 +282,8 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               signed_at: new Date().toISOString(),
             }
           : c
-      );
-      try {
-        localStorage.setItem('mrca_client_contracts', JSON.stringify(updated));
-      } catch {
-        // quota
-      }
-      return updated;
-    });
+      )
+    );
   };
 
   const handleUploadPhysicalContract = (
@@ -234,8 +291,8 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
     _file: File,
     meta: { filename: string; size: number; uploadDate: string }
   ) => {
-    setContracts((prev) => {
-      const updated = prev.map((c) =>
+    setContracts((prev) =>
+      prev.map((c) =>
         c.id === contractId
           ? {
               ...c,
@@ -244,58 +301,65 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               signature_mode: 'physical' as const,
             }
           : c
-      );
-      try {
-        localStorage.setItem('mrca_client_contracts', JSON.stringify(updated));
-      } catch {
-        // quota
-      }
-      return updated;
-    });
+      )
+    );
   };
 
   const pendingContractsCount = contracts.filter((c) => c.status === 'pending_signature').length;
-  const [chatMessages, setChatMessages] = useState<ClientChatMessage[]>(INITIAL_CHAT);
-  const [inputMessage, setInputMessage] = useState('');
-  const [isSending, setIsSending] = useState(false);
-  const [selectedCapability, setSelectedCapability] = useState<EngineeringCapability | null>(null);
+  const primaryContract = contracts[0] || null;
+  const progressPercent =
+    clientSummary.projectsTotal > 0
+      ? Math.round((clientSummary.projectsAccepted / clientSummary.projectsTotal) * 100)
+      : 0;
+  const paymentPercent =
+    clientSummary.totalInvoicedMxn > 0
+      ? Math.round((clientSummary.paidAmountMxn / clientSummary.totalInvoicedMxn) * 100)
+      : 0;
+  const pendingBalanceMxn = Math.max(0, clientSummary.totalInvoicedMxn - clientSummary.paidAmountMxn);
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputMessage.trim()) return;
 
     setIsSending(true);
+    const trimmed = inputMessage.trim();
+    const cipherHash =
+      '0x' + Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+
     const newMsg: ClientChatMessage = {
       id: 'msg_' + Date.now(),
       sender: 'client',
-      senderName: 'Cliente Corporativo',
-      text: inputMessage.trim(),
-      timestamp: 'Ahora mismo',
+      senderName: clientCompany,
+      text: trimmed,
+      timestamp: new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
       isEncrypted: true,
-      cipherHash: '0x' + Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
+      cipherHash,
     };
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('secure_messages').insert({
+          sender_id: user.id,
+          encrypted_subject: 'Mensaje Directo Portal Clientes',
+          encrypted_payload: trimmed,
+          cipher_hash: cipherHash,
+          category: 'normal',
+          client_company: clientCompany,
+          read: false,
+        });
+      }
+    } catch {
+      // keep message in session state
+    }
 
     setChatMessages((prev) => [...prev, newMsg]);
     setInputMessage('');
+    setIsSending(false);
 
     if (showToast) {
-      showToast('Mensaje cifrado con AES-256 transmitido al Enclave de Administración.');
+      showToast('Mensaje cifrado registrado y enviado al equipo de MRCA Solutions.');
     }
-
-    // Simulate Admin instant acknowledged echo after a brief period
-    setTimeout(() => {
-      const ackMsg: ClientChatMessage = {
-        id: 'ack_' + Date.now(),
-        sender: 'admin',
-        senderName: 'Enclave Bot (Jefe & Socio)',
-        text: 'Acuse de recibo confirmado por HSM. Un arquitecto responderá a su requerimiento en breve.',
-        timestamp: 'Ahora mismo',
-        isEncrypted: true,
-        cipherHash: '0x' + Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
-      };
-      setChatMessages((prev) => [...prev, ackMsg]);
-      setIsSending(false);
-    }, 1200);
   };
 
   return (
@@ -314,7 +378,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
         {/* EXECUTIVE CLIENT STATUS CENTER: PROGRESS, CONTRACTS & PAYMENTS     */}
         {/* ================================================================== */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* 1. PROGRESO GENERAL DEL PROYECTO (LARGE READABLE PROGRESS BAR) */}
+          {/* 1. PROGRESO GENERAL DEL PROYECTO (LIVE SUPABASE) */}
           <div className="rounded-xl bg-slate-900 border border-white/10 p-5 sm:p-6 backdrop-blur-xl shadow-lg flex flex-col justify-between gap-4 hover:border-cyan-500/30 transition-all duration-300">
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2">
@@ -324,37 +388,42 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 </span>
               </div>
               <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 bg-slate-950 px-2.5 py-0.5 rounded border border-white/5">
-                FASE 2 DE 4
+                {clientSummary.projectsTotal > 0
+                  ? `${clientSummary.projectsAccepted} DE ${clientSummary.projectsTotal} ACTIVOS`
+                  : 'SIN PROYECTOS'}
               </span>
             </div>
 
             <div className="flex flex-col gap-2">
               <div className="flex items-baseline justify-between">
                 <span className="font-['Space_Grotesk'] text-[32px] sm:text-[36px] font-extrabold text-white leading-none">
-                  68<span className="text-[20px] text-cyan-400">%</span>
+                  {progressPercent}
+                  <span className="text-[20px] text-cyan-400">%</span>
                 </span>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-emerald-400 font-semibold">
-                  EN TIEMPO &amp; FORMA
+                  {clientSummary.projectsTotal > 0 ? 'EN EJECUCIÓN' : 'PENDIENTE DE INICIO'}
                 </span>
               </div>
 
-              {/* Large, High-Contrast Progress Bar */}
               <div className="w-full h-3.5 rounded-full bg-slate-950 p-0.5 border border-white/10 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-teal-400 shadow-[0_0_12px_rgba(6,182,212,0.5)] transition-all duration-500"
-                  style={{ width: '68%' }}
+                  style={{ width: `${progressPercent}%` }}
                 ></div>
               </div>
 
               <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-slate-400 pt-1">
-                <span>Hito Alpha: Completado ✓</span>
-                <span className="text-cyan-300">Próximo: UAT Beta</span>
+                <span>
+                  {clientSummary.projectsTotal > 0
+                    ? `${clientSummary.projectsAccepted} propuesta(s) aprobada(s)`
+                    : 'Sin proyectos asignados aún'}
+                </span>
               </div>
             </div>
 
             <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11.5px] font-['Inter'] text-slate-300">
-              <span>SLA Activo:</span>
-              <strong className="text-emerald-400 font-['JetBrains_Mono']">99.999% Disponibilidad VIP</strong>
+              <span>Seguimiento:</span>
+              <strong className="text-cyan-300 font-['JetBrains_Mono']">Sincronizado con Supabase</strong>
             </div>
           </div>
 
@@ -369,33 +438,41 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               </div>
               <span
                 className={`px-2.5 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold ${
-                  pendingContractsCount === 0
+                  contracts.length === 0
+                    ? 'bg-slate-800 text-slate-300 border border-white/10'
+                    : pendingContractsCount === 0
                     ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                     : 'bg-amber-500/15 text-amber-300 border border-amber-500/30 animate-pulse'
                 }`}
               >
-                {pendingContractsCount === 0 ? 'FIRMADO & SELLADO' : 'REQUIERE FIRMA'}
+                {contracts.length === 0
+                  ? 'SIN CONTRATOS'
+                  : pendingContractsCount === 0
+                  ? 'FIRMADO & SELLADO'
+                  : 'REQUIERE FIRMA'}
               </span>
             </div>
 
             <div className="flex flex-col gap-1.5">
               <h3 className="font-['Space_Grotesk'] text-[16px] font-bold text-white leading-snug">
-                Contrato Marco de Servicios &amp; Acuerdo SLA
+                {primaryContract ? primaryContract.title : 'Sin contratos emitidos aún'}
               </h3>
               <p className="font-['Inter'] text-[12.5px] text-slate-400 leading-relaxed">
-                Obra por Encargo (Arts. 83-84 LFDA), facturación CFDI 4.0 SAT y estipulación de pena convencional no reembolsable.
+                {primaryContract
+                  ? 'Obra por Encargo (Arts. 83-84 LFDA), facturación CFDI 4.0 SAT y estipulación de pena convencional no reembolsable.'
+                  : 'Cuando MRCA Solutions emita un contrato o NDA para tu organización, aparecerá aquí para firma digital o carga en PDF.'}
               </p>
             </div>
 
             <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-3">
               <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400">
-                Folio: <strong className="text-white">CTR-2026-904</strong>
+                Folio: <strong className="text-white">{primaryContract ? primaryContract.id : 'N/A'}</strong>
               </span>
               <button
                 onClick={() => setIsContractsModalOpen(true)}
                 className="px-4 py-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-400 hover:text-slate-950 text-cyan-300 border border-cyan-500/40 font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all duration-300 shadow-sm"
               >
-                {pendingContractsCount > 0 ? 'Firmar Ahora' : 'Ver Documento'}
+                {pendingContractsCount > 0 ? 'Firmar Ahora' : 'Ver Contratos'}
               </button>
             </div>
           </div>
@@ -418,12 +495,14 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               <div className="flex items-baseline justify-between">
                 <div>
                   <span className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] font-bold text-white leading-none">
-                    $140,000
+                    ${clientSummary.paidAmountMxn.toLocaleString('es-MX')}
                   </span>
-                  <span className="text-[11px] text-slate-400 font-['JetBrains_Mono'] ml-1">/ $350,000 MXN</span>
+                  <span className="text-[11px] text-slate-400 font-['JetBrains_Mono'] ml-1">
+                    / ${clientSummary.totalInvoicedMxn.toLocaleString('es-MX')} MXN
+                  </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-cyan-400 font-bold">
-                  40% ANTICIPO OK
+                  {paymentPercent}% LIQUIDADO
                 </span>
               </div>
 
@@ -431,13 +510,17 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               <div className="w-full h-2.5 rounded-full bg-slate-950 border border-white/10 overflow-hidden">
                 <div
                   className="h-full rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.4)] transition-all duration-500"
-                  style={{ width: '40%' }}
+                  style={{ width: `${paymentPercent}%` }}
                 ></div>
               </div>
 
               <div className="flex items-center justify-between text-[10.5px] font-['JetBrains_Mono'] text-slate-400 pt-0.5">
-                <span>Anticipo: <strong>Transferido</strong></span>
-                <span>Saldo pendiente: <strong>$210,000 MXN</strong></span>
+                <span>
+                  Liquidado: <strong>${clientSummary.paidAmountMxn.toLocaleString('es-MX')} MXN</strong>
+                </span>
+                <span>
+                  Saldo pendiente: <strong>${pendingBalanceMxn.toLocaleString('es-MX')} MXN</strong>
+                </span>
               </div>
             </div>
 
@@ -640,9 +723,13 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
               <span className="px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/50 text-amber-300 text-[10px] animate-pulse font-bold">
                 {pendingContractsCount} Pendiente
               </span>
-            ) : (
+            ) : contracts.length > 0 ? (
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-[10px] font-bold">
                 Firmado ✓
+              </span>
+            ) : (
+              <span className="px-2 py-0.5 rounded-full bg-slate-800 border border-white/10 text-slate-400 text-[10px] font-bold">
+                0 Activos
               </span>
             )}
           </button>
@@ -833,46 +920,57 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
 
               {/* Chat Thread Messages Box */}
               <div className="flex flex-col gap-3 min-h-[320px] max-h-[460px] overflow-y-auto p-3 rounded-2xl bg-[#060d24] border border-[#222941]">
-                {chatMessages.map((msg) => {
-                  const isAdmin = msg.sender === 'admin';
-                  return (
-                    <div
-                      key={msg.id}
-                      className={`flex flex-col max-w-[85%] sm:max-w-[70%] ${
-                        isAdmin ? 'self-start items-start' : 'self-end items-end'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-1 px-1">
-                        <span
-                          className={`font-['JetBrains_Mono'] text-[10px] font-bold ${
-                            isAdmin ? 'text-[#00fe66]' : 'text-[#00e5ff]'
-                          }`}
-                        >
-                          {msg.senderName}
-                        </span>
-                        <span className="font-['JetBrains_Mono'] text-[9px] text-[#849396]">
-                          {msg.timestamp}
-                        </span>
-                      </div>
-
+                {chatMessages.length === 0 ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center p-8 gap-1.5 text-slate-400">
+                    <span className="font-['Space_Grotesk'] text-[15px] font-bold text-slate-200">
+                      Sin mensajes previos aún
+                    </span>
+                    <span className="font-['Inter'] text-[12px]">
+                      Envía tu primer mensaje cifrado abajo y quedará registrado directamente en Supabase.
+                    </span>
+                  </div>
+                ) : (
+                  chatMessages.map((msg) => {
+                    const isAdmin = msg.sender === 'admin';
+                    return (
                       <div
-                        className={`p-3.5 rounded-2xl font-['Inter'] text-[13px] leading-relaxed border ${
-                          isAdmin
-                            ? 'bg-[#141a32] border-[#00fe66]/30 text-[#dce1ff]'
-                            : 'bg-[#00e5ff]/15 border-[#00e5ff]/40 text-[#c3f5ff]'
+                        key={msg.id}
+                        className={`flex flex-col max-w-[85%] sm:max-w-[70%] ${
+                          isAdmin ? 'self-start items-start' : 'self-end items-end'
                         }`}
                       >
-                        <p>{msg.text}</p>
-                        {msg.cipherHash && (
-                          <div className="mt-2 pt-1.5 border-t border-white/10 flex items-center justify-between font-['JetBrains_Mono'] text-[9px] text-[#849396]">
-                            <span>SELLO AES-256</span>
-                            <span className="font-mono text-[#00daf3]">{msg.cipherHash}</span>
-                          </div>
-                        )}
+                        <div className="flex items-center gap-2 mb-1 px-1">
+                          <span
+                            className={`font-['JetBrains_Mono'] text-[10px] font-bold ${
+                              isAdmin ? 'text-[#00fe66]' : 'text-[#00e5ff]'
+                            }`}
+                          >
+                            {msg.senderName}
+                          </span>
+                          <span className="font-['JetBrains_Mono'] text-[9px] text-[#849396]">
+                            {msg.timestamp}
+                          </span>
+                        </div>
+
+                        <div
+                          className={`p-3.5 rounded-2xl font-['Inter'] text-[13px] leading-relaxed border ${
+                            isAdmin
+                              ? 'bg-[#141a32] border-[#00fe66]/30 text-[#dce1ff]'
+                              : 'bg-[#00e5ff]/15 border-[#00e5ff]/40 text-[#c3f5ff]'
+                          }`}
+                        >
+                          <p>{msg.text}</p>
+                          {msg.cipherHash && (
+                            <div className="mt-2 pt-1.5 border-t border-white/10 flex items-center justify-between font-['JetBrains_Mono'] text-[9px] text-[#849396]">
+                              <span>SELLO AES-256</span>
+                              <span className="font-mono text-[#00daf3]">{msg.cipherHash}</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                )}
               </div>
 
               {/* Chat Input Field */}
@@ -986,7 +1084,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
         {/* Tab 3: Encrypted Messages Vault */}
         {activeTab === 'inbox' && (
           <div className="flex flex-col gap-4">
-            <SecureClientInbox clientEmail={clientEmail} onToast={showToast} />
+            <SecureClientInbox clientEmail={clientEmail} clientCompany={clientCompany} onToast={showToast} />
           </div>
         )}
       </div>

@@ -125,23 +125,6 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
       });
 
       if (error) {
-        // Local sandbox fallback for testing
-        if (
-          (loginEmail.includes('socio') ||
-            loginEmail.includes('jefe') ||
-            loginEmail.includes('cliente')) &&
-          loginPassword.length >= 6
-        ) {
-          const mockUser = {
-            id: 'usr_' + Math.random().toString(36).substring(2, 9),
-            email: loginEmail,
-            role: loginEmail.includes('cliente') ? 'client' : 'owner',
-          };
-          setFailedAttempts(0);
-          if (showToast) showToast(`[SESIÓN ACTIVA] Bienvenido ${loginEmail}`);
-          if (onLoginSuccess) onLoginSuccess(mockUser);
-          return;
-        }
         throw error;
       }
 
@@ -576,7 +559,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="Ej. FinTech NeoPay S.A. de C.V."
+                  placeholder="Razón Social de tu empresa"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-white focus:outline-none font-['Inter'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"
@@ -594,7 +577,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                 <input
                   type="email"
                   required
-                  placeholder="carlos@neopay.com"
+                  placeholder="contacto@tuempresa.com"
                   value={regEmail}
                   onChange={(e) => setRegEmail(e.target.value)}
                   className="w-full bg-slate-950/80 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-10 pr-3 py-2.5 text-[13px] text-white focus:outline-none font-['JetBrains_Mono'] focus:ring-1 focus:ring-cyan-400 transition-all duration-300"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import {
   Network,
@@ -18,9 +18,11 @@ import {
   Layers,
   ChevronDown,
 } from 'lucide-react';
+import { supabase } from '../lib/supabase/client';
 import { PricingCalculator, QuoteSummary } from './PricingCalculator';
 import { AcademyTemplatesCatalog } from './AcademyTemplatesCatalog';
 import { StudentLayout } from './layouts/StudentLayout';
+import type { BudgetNegotiation } from '../types';
 
 
 interface ModularService {
@@ -142,13 +144,58 @@ const FAQS = [
   },
   {
     q: '¿Cómo funciona el pago del anticipo?',
-    a: 'Para comenzar los trabajos se requiere un 50% de anticipo formalizado vía Stripe Payment Links (con tarjeta de débito, crédito o transferencia). El 50% restante se liquida una vez que te demostramos el funcionamiento completo del proyecto en video o llamada.',
+    a: 'Para comenzar los trabajos se requiere un anticipo formalizado mediante transferencia electrónica SPEI a nuestra cuenta empresarial en Nu México (0% comisiones bancarias). El saldo restante se liquida una vez que te demostramos el funcionamiento completo del proyecto en video o llamada.',
   },
 ];
 
 export const MrcaAcademy: React.FC = () => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [studentEmail, setStudentEmail] = useState<string | null>(null);
+  const [studentRequests, setStudentRequests] = useState<BudgetNegotiation[]>([]);
+  const [loadingRequests, setLoadingRequests] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadStudentRecords() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        const email = user?.email?.trim().toLowerCase() || null;
+        if (!mounted) return;
+        setStudentEmail(email);
+        if (!email) {
+          setStudentRequests([]);
+          return;
+        }
+        setLoadingRequests(true);
+        const { data, error } = await supabase
+          .from('budget_negotiations')
+          .select('*')
+          .eq('client_type', 'student')
+          .ilike('client_email', email)
+          .order('created_at', { ascending: false });
+
+        if (mounted && !error && Array.isArray(data)) {
+          setStudentRequests(data as BudgetNegotiation[]);
+        } else if (mounted) {
+          setStudentRequests([]);
+        }
+      } catch {
+        if (mounted) setStudentRequests([]);
+      } finally {
+        if (mounted) setLoadingRequests(false);
+      }
+    }
+    void loadStudentRecords();
+    const handleRefresh = () => {
+      void loadStudentRecords();
+    };
+    window.addEventListener('mrca_negotiation_created', handleRefresh);
+    return () => {
+      mounted = false;
+      window.removeEventListener('mrca_negotiation_created', handleRefresh);
+    };
+  }, []);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -220,18 +267,18 @@ export const MrcaAcademy: React.FC = () => {
             </a>
           </div>
 
-          {/* Social Proof Quick Stats */}
+          {/* Service Guarantees Strip (Truthful, zero inflated counts) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 pt-6 w-full max-w-3xl">
             <div className="p-3.5 rounded-2xl bg-[#0c1533]/80 border border-[#1c274a] flex flex-col items-center">
-              <span className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] font-bold text-[#00e5ff]">
-                +140
+              <span className="font-['Space_Grotesk'] text-[22px] sm:text-[24px] font-bold text-[#00e5ff]">
+                SPEI 0%
               </span>
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc] uppercase mt-0.5">
-                Proyectos Aprobados
+                Transferencia Nu México
               </span>
             </div>
             <div className="p-3.5 rounded-2xl bg-[#0c1533]/80 border border-[#1c274a] flex flex-col items-center">
-              <span className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] font-bold text-[#00fe66]">
+              <span className="font-['Space_Grotesk'] text-[22px] sm:text-[24px] font-bold text-[#00fe66]">
                 100%
               </span>
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc] uppercase mt-0.5">
@@ -239,19 +286,19 @@ export const MrcaAcademy: React.FC = () => {
               </span>
             </div>
             <div className="p-3.5 rounded-2xl bg-[#0c1533]/80 border border-[#1c274a] flex flex-col items-center">
-              <span className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] font-bold text-[#00daf3]">
+              <span className="font-['Space_Grotesk'] text-[22px] sm:text-[24px] font-bold text-[#00daf3]">
                 48h - 5d
               </span>
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc] uppercase mt-0.5">
-                Tiempo de Entrega
+                Entrega Estimada
               </span>
             </div>
             <div className="p-3.5 rounded-2xl bg-[#0c1533]/80 border border-[#1c274a] flex flex-col items-center">
-              <span className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] font-bold text-[#c084fc]">
-                9.8 / 10
+              <span className="font-['Space_Grotesk'] text-[22px] sm:text-[24px] font-bold text-[#c084fc]">
+                Guía Oral
               </span>
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc] uppercase mt-0.5">
-                Calificación Promedio
+                Defensa de Proyecto
               </span>
             </div>
           </div>
@@ -430,6 +477,68 @@ export const MrcaAcademy: React.FC = () => {
         <AcademyTemplatesCatalog showToast={showToast} />
 
         {/* ==================================================================== */}
+        {/* 4.5 MIS SOLICITUDES ACADÉMICAS (LIVE SUPABASE — ZERO MOCKS)          */}
+        {/* ==================================================================== */}
+        <section className="rounded-3xl bg-[#0c1533]/85 border border-[#1c274a] p-6 sm:p-7 flex flex-col gap-4 shadow-xl">
+          <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#1c274a]">
+            <div>
+              <span className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] uppercase tracking-wider font-bold">
+                SEGUIMIENTO EN VIVO // SUPABASE
+              </span>
+              <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-white">
+                Mis Proyectos y Solicitudes Académicas
+              </h3>
+            </div>
+            <span className="font-['JetBrains_Mono'] text-[11px] text-[#00daf3] px-3 py-1 rounded-xl bg-[#060c20] border border-[#1c274a]">
+              {studentEmail ? `${studentRequests.length} registro(s)` : 'Sesión de visitante'}
+            </span>
+          </div>
+
+          {loadingRequests ? (
+            <div className="p-6 text-center font-['JetBrains_Mono'] text-[12px] text-[#849396]">
+              Consultando tus solicitudes en Supabase...
+            </div>
+          ) : studentRequests.length === 0 ? (
+            <div className="p-8 text-center rounded-2xl bg-[#060c20] border border-dashed border-[#23315a] flex flex-col items-center gap-1.5">
+              <GraduationCap className="w-8 h-8 text-[#00e5ff]/60" />
+              <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+                Sin proyectos ni solicitudes registradas aún
+              </span>
+              <p className="font-['Inter'] text-[12px] text-[#849396] max-w-md">
+                {studentEmail
+                  ? 'Cuando envíes una cotización o propuesta de ajuste académico con tu cuenta, su estatus aparecerá aquí automáticamente.'
+                  : 'Usa el cotizador en vivo o solicita un ajuste presupuestal para iniciar tu proyecto académico.'}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {studentRequests.map((req) => (
+                <div
+                  key={req.id}
+                  className="p-4 rounded-2xl bg-[#060c20] border border-[#23315a] flex flex-col gap-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-['Space_Grotesk'] text-[14px] font-bold text-white">
+                      {req.service_title}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-['JetBrains_Mono'] font-bold uppercase bg-[#00e5ff]/15 text-[#00e5ff] border border-[#00e5ff]/30">
+                      {req.status === 'approved'
+                        ? 'Aprobado'
+                        : req.status === 'rejected'
+                        ? 'Rechazado'
+                        : 'En Revisión'}
+                    </span>
+                  </div>
+                  <div className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66]">
+                    Presupuesto propuesto: ${Number(req.proposed_budget || 0).toLocaleString('es-MX')} MXN
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* ==================================================================== */}
         {/* 5. AUTOMATED STUDENT QUOTER (Interactive Component)                   */}
         {/* ==================================================================== */}
         <section id="seccion-cotizador" className="flex flex-col gap-4">
@@ -492,7 +601,7 @@ export const MrcaAcademy: React.FC = () => {
             <span>• Prototipado & Arquitectura para Estudiantes de Ingeniería</span>
           </div>
           <div>
-            Pagos protegidos vía Stripe Escrow • Soporte en español para México y LATAM
+            Pagos directos vía SPEI (Nu México) • Soporte en español para México y LATAM
           </div>
           <div>
             © 2025-2026 MRCA Solutions Inc. Todos los derechos reservados.

@@ -21,105 +21,78 @@ interface AdminSupportTicketsProps {
   showToast?: (msg: string) => void;
 }
 
-const DEFAULT_GLOBAL_TICKETS: SupportTicket[] = [
-  {
-    id: 'TCK-2026-102',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    subject: 'Solicitud de Hardening adicional en endpoint de Webhooks Banxico',
-    description:
-      'Deseamos validar la firma HMAC-SHA256 en las notificaciones entrantes de SPEI para evitar ataques de repetición.',
-    priority: 'medium',
-    status: 'in_progress',
-    admin_reply:
-      'Recibido por Jefe (CISO). Estamos preparando el filtro de validación de nonces en el proxy eBPF. Tiempo estimado de entrega: 4 horas.',
-    created_at: 'Hoy, 09:30 AM',
-  },
-  {
-    id: 'TCK-2026-105',
-    client_id: 'usr_client_aduana_02',
-    client_company: 'Aduana Express Cloud',
-    client_email: 'mortiz@aduanaexpress.mx',
-    subject: 'Picos de latencia inusuales en base de datos sharded de aduanas',
-    description:
-      'Se registraron tiempos de respuesta > 250ms en la consulta de pedimentos durante el cambio de turno.',
-    priority: 'critical',
-    status: 'open',
-    created_at: 'Hoy, 11:15 AM',
-  },
-  {
-    id: 'TCK-2026-098',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    subject: 'Rotación preventiva de certificados mTLS de producción',
-    description:
-      'Requerimos renovar el par de llaves asimétricas del cluster de pruebas antes del paso a producción.',
-    priority: 'low',
-    status: 'resolved',
-    admin_reply:
-      'Certificados renovados satisfactoriamente con algoritmo ECDSA P-384. Las credenciales fueron despachadas a su canal seguro.',
-    created_at: '09 Oct 2026',
-  },
-  {
-    id: 'TCK-2026-092',
-    client_id: 'usr_client_neo',
-    client_company: 'NeoLogistics LatAm',
-    client_email: 'cto@neologistics.io',
-    subject: 'Auditoría de políticas RLS para nuevo microservicio de tracking',
-    description:
-      'Requerimos revisión formal de las cláusulas USING / WITH CHECK para el rol de operador logístico.',
-    priority: 'medium',
-    status: 'resolved',
-    admin_reply:
-      'Políticas auditadas y selladas con cero fugas de datos bajo estándar SOC-2.',
-    created_at: '04 Oct 2026',
-  },
-];
+function normalizeSupportStatus(raw?: string | null): TicketStatus {
+  const s = String(raw || '').toLowerCase();
+  if (s === 'resolved' || s === 'resuelto por bot') return 'resolved';
+  if (s === 'in_progress' || s === 'escalado a humano') return 'in_progress';
+  return 'open';
+}
+
+function normalizeSupportPriority(raw?: string | null): TicketPriority {
+  const p = String(raw || '').toLowerCase();
+  if (p === 'critical' || p === 'crítica' || p === 'critica' || p === 'alta' || p === 'high') return 'critical';
+  if (p === 'low' || p === 'baja') return 'low';
+  return 'medium';
+}
 
 export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showToast }) => {
-  const [tickets, setTickets] = useState<SupportTicket[]>(() => {
-    try {
-      const saved = localStorage.getItem('mrca_support_tickets');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return DEFAULT_GLOBAL_TICKETS;
-  });
-
+  const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [replyingTicket, setReplyingTicket] = useState<SupportTicket | null>(null);
   const [replyText, setReplyText] = useState('');
   const [searchFilter, setSearchFilter] = useState('');
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
     async function fetchTickets() {
+      setIsLoading(true);
       try {
         const { data, error } = await supabase
           .from('support_tickets')
           .select('*')
           .order('created_at', { ascending: false });
-        if (data && data.length > 0 && !error) {
-          setTickets(data as SupportTicket[]);
+        if (mounted && !error && Array.isArray(data)) {
+          const normalized: SupportTicket[] = data.map((row: any) => ({
+            id: String(row.id),
+            client_id: String(row.client_id || row.user_id || ''),
+            client_company: row.client_company || row.category || 'Cliente B2B',
+            client_email: row.client_email || '',
+            subject: row.subject || 'Solicitud de soporte',
+            description: row.description || '',
+            priority: normalizeSupportPriority(row.priority),
+            status: normalizeSupportStatus(row.status),
+            admin_reply: row.admin_reply || row.bot_resolution || undefined,
+            created_at: row.created_at
+              ? new Date(row.created_at).toLocaleString('es-MX', {
+                  day: '2-digit',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : '',
+            updated_at: row.updated_at || undefined,
+          }));
+          setTickets(normalized);
+        } else if (mounted) {
+          setTickets([]);
         }
       } catch {
-        // fallback
+        if (mounted) setTickets([]);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
     }
-    fetchTickets();
+    void fetchTickets();
 
     const handleSync = () => {
-      try {
-        const saved = localStorage.getItem('mrca_support_tickets');
-        if (saved) setTickets(JSON.parse(saved));
-      } catch {
-        // quota
-      }
+      void fetchTickets();
     };
     window.addEventListener('mrca_ticket_updated', handleSync);
-    return () => window.removeEventListener('mrca_ticket_updated', handleSync);
+    return () => {
+      mounted = false;
+      window.removeEventListener('mrca_ticket_updated', handleSync);
+    };
   }, []);
 
   const handleUpdateStatus = async (ticketId: string, newStatus: TicketStatus) => {
@@ -282,7 +255,16 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
           </div>
 
           <div className="flex flex-col gap-3">
-            {openTickets.map((t) => (
+            {isLoading ? (
+              <div className="p-6 text-center rounded-xl bg-[#050b1c] border border-[#1a2850] font-['JetBrains_Mono'] text-[11px] text-[#849396]">
+                Cargando tickets...
+              </div>
+            ) : openTickets.length === 0 ? (
+              <div className="p-6 text-center rounded-xl bg-[#050b1c] border border-dashed border-[#1a2850] font-['Inter'] text-[12px] text-[#849396]">
+                Sin tickets abiertos aún.
+              </div>
+            ) : (
+              openTickets.map((t) => (
               <div
                 key={t.id}
                 className={`rounded-2xl p-4 border transition-all flex flex-col gap-2.5 shadow-md ${
@@ -327,7 +309,8 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
                   </button>
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
         </div>
 
@@ -346,7 +329,12 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
           </div>
 
           <div className="flex flex-col gap-3">
-            {inProgressTickets.map((t) => (
+            {inProgressTickets.length === 0 ? (
+              <div className="p-6 text-center rounded-xl bg-[#050b1c] border border-dashed border-[#1a2850] font-['Inter'] text-[12px] text-[#849396]">
+                Sin tickets en diagnóstico aún.
+              </div>
+            ) : (
+              inProgressTickets.map((t) => (
               <div
                 key={t.id}
                 className="rounded-2xl bg-[#0d1633] border border-[#00E5FF]/40 p-4 flex flex-col gap-2.5 shadow-md hover:border-[#00E5FF] transition-all"
@@ -401,7 +389,8 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
                   </div>
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
         </div>
 
@@ -420,7 +409,12 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
           </div>
 
           <div className="flex flex-col gap-3">
-            {resolvedTickets.map((t) => (
+            {resolvedTickets.length === 0 ? (
+              <div className="p-6 text-center rounded-xl bg-[#050b1c] border border-dashed border-[#1a2850] font-['Inter'] text-[12px] text-[#849396]">
+                Sin tickets resueltos aún.
+              </div>
+            ) : (
+              resolvedTickets.map((t) => (
               <div
                 key={t.id}
                 className="rounded-2xl bg-[#060d20] border border-[#152345] p-4 flex flex-col gap-2 shadow-sm"
@@ -449,7 +443,8 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
                   <span>{t.created_at}</span>
                 </div>
               </div>
-            ))}
+            ))
+            )}
           </div>
         </div>
       </div>

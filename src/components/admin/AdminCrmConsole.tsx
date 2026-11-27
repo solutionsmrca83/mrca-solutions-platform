@@ -43,145 +43,6 @@ interface AdminCrmConsoleProps {
   onSendToContractGenerator?: (lead: ContractPrefillLead) => void;
 }
 
-const DEMO_CRM_LEADS: CrmLeadRecord[] = [
-  {
-    id: 'LEAD-904101',
-    client_name: 'Ing. Rodrigo Salinas Valenzuela',
-    company_name: 'Banco NeoPay LatAm S.A. de C.V.',
-    email: 'rsalinas@neopay.lat',
-    service_type: 'Infraestructura y Nube',
-    project_scope: 'Alto Alcance / A la Medida',
-    estimated_budget: '$150,000 - $320,000 MXN',
-    advance_percentage: 40,
-    status: 'Aceptado Automáticamente',
-    bot_notes:
-      'Cliente aceptó estimado referencial ($150,000 - $320,000 MXN, anticipo 40%, entrega 6 a 12 semanas) y fue aceptado automáticamente en CRM.',
-    auto_accepted: true,
-    session_id: 'demo_sess_neopay',
-    created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-  },
-  {
-    id: 'LEAD-904102',
-    client_name: 'Lic. Mariana Ortiz Estrada',
-    company_name: 'Aduana Express Cloud S.A.P.I. de C.V.',
-    email: 'mortiz@aduanaexpress.mx',
-    service_type: 'Desarrollo Web & SaaS',
-    project_scope: 'Profesional / Empresarial',
-    estimated_budget: '$65,000 - $145,000 MXN',
-    advance_percentage: 25,
-    status: 'En Contrato',
-    bot_notes:
-      'Cotización estimada aceptada vía chat. Datos enviados al Generador de Contratos con esquema de 25% de anticipo SPEI.',
-    auto_accepted: true,
-    session_id: 'demo_sess_aduana',
-    created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
-  },
-  {
-    id: 'LEAD-904103',
-    client_name: 'Dr. Alejandro Méndez Arismendi',
-    company_name: 'Salud Digital Corporativa',
-    email: 'amendez@saluddigital.org',
-    service_type: 'Auditoría de Ciberseguridad',
-    project_scope: 'Profesional / Empresarial',
-    estimated_budget: '$55,000 - $120,000 MXN',
-    advance_percentage: 25,
-    status: 'Aceptado Automáticamente',
-    bot_notes:
-      'Estimado de auditoría aceptado y dado de alta de forma automática por el Asistente MRCA.',
-    auto_accepted: true,
-    session_id: 'demo_sess_salud',
-    created_at: new Date(Date.now() - 1000 * 60 * 420).toISOString(),
-  },
-];
-
-const DEMO_SUPPORT_TICKETS: BotSupportTicketRecord[] = [
-  {
-    id: 'TKT-882101',
-    client_email: 'finanzas@retailmex.com',
-    category: 'Pagos y Facturación',
-    subject: 'Consulta sobre CFDI 4.0, Obra por Encargo y reglas de anticipo SPEI',
-    description:
-      'Consulta atendida en autoservicio Nivel 1 (Pagos y Facturación). El cliente confirmó solución inmediata.',
-    priority: 'Baja',
-    status: 'Resuelto por Bot',
-    bot_resolution:
-      'Se detallaron CFDI 4.0 SAT, Obra por Encargo LFDA y reglas de anticipo SPEI 25%/40% protegiendo confidencialidad bancaria.',
-    session_id: 'demo_sess_retail',
-    created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-  },
-  {
-    id: 'TKT-882102',
-    client_email: 'operaciones@aduanaexpress.mx',
-    category: 'Firmas de Contratos',
-    subject: 'Guía de firma digital y carga de contrato PDF firmado',
-    description:
-      'El cliente consultó cómo cargar su contrato firmado autógrafamente en formato PDF desde el portal.',
-    priority: 'Baja',
-    status: 'Resuelto por Bot',
-    bot_resolution:
-      'Se explicó el flujo de Firma Digital en lienzo interactivo y la modalidad alternativa de Descargar/Subir PDF firmado.',
-    session_id: 'demo_sess_aduana',
-    created_at: new Date(Date.now() - 1000 * 60 * 110).toISOString(),
-  },
-  {
-    id: 'TKT-882103',
-    client_email: 'ti@neopay.lat',
-    category: 'Acceso y Cookies',
-    subject: 'Acceso y Cookies — Atención Especializada',
-    description:
-      'Nuestro firewall corporativo bloquea la actualización de sesión en una oficina remota; requerimos validación directa del especialista.',
-    priority: 'Alta',
-    status: 'Escalado a Humano',
-    bot_resolution:
-      'Escalado a especialista humano con alerta enviada a solutionsmrca83@gmail.com.',
-    session_id: 'demo_sess_neopay',
-    created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
-  },
-];
-
-const DEMO_CHAT_LOGS: Record<string, BotChatLogRecord[]> = {
-  demo_sess_neopay: [
-    {
-      id: 'dlog_1',
-      session_id: 'demo_sess_neopay',
-      user_email: 'rsalinas@neopay.lat',
-      sender: 'user',
-      message: '💰 Cotizar Proyecto (Estimado)',
-      action_triggered: 'start_quote_flow',
-      created_at: new Date(Date.now() - 1000 * 60 * 48).toISOString(),
-    },
-    {
-      id: 'dlog_2',
-      session_id: 'demo_sess_neopay',
-      user_email: 'rsalinas@neopay.lat',
-      sender: 'bot',
-      message:
-        'Aquí tienes tu cotización estimada transparente para Infraestructura y Nube (Alto Alcance / A la Medida): $150,000 - $320,000 MXN • Entrega 6 a 12 semanas • 40% anticipo SPEI.',
-      action_triggered: 'quote_generated',
-      created_at: new Date(Date.now() - 1000 * 60 * 47).toISOString(),
-    },
-    {
-      id: 'dlog_3',
-      session_id: 'demo_sess_neopay',
-      user_email: 'rsalinas@neopay.lat',
-      sender: 'user',
-      message: '✅ Aceptar Estimado y Registrar mi Proyecto',
-      action_triggered: 'quote_accepted_start_onboarding',
-      created_at: new Date(Date.now() - 1000 * 60 * 46).toISOString(),
-    },
-    {
-      id: 'dlog_4',
-      session_id: 'demo_sess_neopay',
-      user_email: 'rsalinas@neopay.lat',
-      sender: 'bot',
-      message:
-        '¡Listo! Tu proyecto para Banco NeoPay LatAm S.A. de C.V. ha sido aceptado automáticamente en nuestro CRM con tu estimado referencial guardado.',
-      action_triggered: 'crm_lead_auto_accepted',
-      created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-    },
-  ],
-};
-
 function formatDateTime(iso: string): string {
   try {
     return new Date(iso).toLocaleString('es-MX', {
@@ -220,7 +81,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
   const [activeSection, setActiveSection] = useState<'leads' | 'tickets'>(defaultSection);
   const [leads, setLeads] = useState<CrmLeadRecord[]>([]);
   const [tickets, setTickets] = useState<BotSupportTicketRecord[]>([]);
-  const [quotesGeneratedCount, setQuotesGeneratedCount] = useState<number>(DEMO_CRM_LEADS.length);
+  const [quotesGeneratedCount, setQuotesGeneratedCount] = useState<number>(0);
   const [autoAcceptEnabled, setAutoAcceptEnabled] = useState<boolean>(() => getAutoAcceptSettingSync());
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTogglingAutoAccept, setIsTogglingAutoAccept] = useState<boolean>(false);
@@ -314,8 +175,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       [...remoteLeads, ...localLeads].forEach((item) => {
         if (!mergedLeadsMap.has(item.id)) mergedLeadsMap.set(item.id, item);
       });
-      const finalLeads =
-        mergedLeadsMap.size > 0 ? Array.from(mergedLeadsMap.values()) : DEMO_CRM_LEADS;
+      const finalLeads = Array.from(mergedLeadsMap.values());
       finalLeads.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       setLeads(finalLeads);
 
@@ -332,7 +192,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
           ? (ticketsRes.data as any[]).map((row) => ({
               id: String(row.id),
               user_id: row.user_id || row.client_id || null,
-              client_email: row.client_email || 'cliente@empresa.corp',
+              client_email: row.client_email || '',
               category: row.category || 'Soporte General',
               subject: row.subject || 'Consulta de Soporte',
               description: row.description || '',
@@ -348,17 +208,15 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       [...remoteTickets, ...localTickets].forEach((item) => {
         if (!mergedTicketsMap.has(item.id)) mergedTicketsMap.set(item.id, item);
       });
-      const finalTickets =
-        mergedTicketsMap.size > 0 ? Array.from(mergedTicketsMap.values()) : DEMO_SUPPORT_TICKETS;
+      const finalTickets = Array.from(mergedTicketsMap.values());
       finalTickets.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       setTickets(finalTickets);
     } catch {
       const localLeads = loadLocalLeads();
       const localTickets = loadLocalTickets();
-      const fallbackLeads = localLeads.length > 0 ? localLeads : DEMO_CRM_LEADS;
-      setLeads(fallbackLeads);
-      setTickets(localTickets.length > 0 ? localTickets : DEMO_SUPPORT_TICKETS);
-      setQuotesGeneratedCount(Math.max(loadLocalQuoteLogsCount(), fallbackLeads.length));
+      setLeads(localLeads);
+      setTickets(localTickets);
+      setQuotesGeneratedCount(Math.max(loadLocalQuoteLogsCount(), localLeads.length));
     } finally {
       setIsLoading(false);
     }
@@ -650,10 +508,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       localLogs = [];
     }
 
-    const demoLogs =
-      params.sessionId && DEMO_CHAT_LOGS[params.sessionId] ? DEMO_CHAT_LOGS[params.sessionId] : [];
-    const combined =
-      remoteLogs.length > 0 ? remoteLogs : localLogs.length > 0 ? localLogs : demoLogs;
+    const combined = remoteLogs.length > 0 ? remoteLogs : localLogs;
 
     setConversationModal((prev) => ({
       ...prev,

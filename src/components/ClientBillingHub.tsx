@@ -35,60 +35,13 @@ interface ClientBillingHubProps {
   showToast?: (msg: string) => void;
 }
 
-const INITIAL_INVOICES: Invoice[] = [
-  {
-    id: 'INV-2026-081',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    amount: 185000,
-    status: 'pending',
-    description: 'Fase 03: Infraestructura Cloud Cifrada y Bóveda de Seguridad',
-    due_date: '24 Oct 2026',
-    created_at: '12 Oct 2026',
-  },
-  {
-    id: 'INV-2026-074',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    amount: 120000,
-    status: 'verification_in_progress',
-    description: 'Anticipo de Auditoría Integral de Ciberseguridad y Blindaje',
-    due_date: '18 Oct 2026',
-    spei_tracking_key: '2026101240014BND00008891230194',
-    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv074.pdf',
-    created_at: '10 Oct 2026',
-  },
-  {
-    id: 'INV-2026-062',
-    client_id: 'usr_client_demo',
-    client_company: 'FinTech Global B2B',
-    client_email: 'cliente@enterprise.corp',
-    amount: 350000,
-    status: 'paid',
-    description: 'Fases 01 y 02: Arquitectura de Seguridad y Base de Datos Aislada',
-    due_date: '05 Oct 2026',
-    spei_tracking_key: '2026100540014BND00007712490182',
-    payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv062.pdf',
-    created_at: '28 Sep 2026',
-  },
-];
-
 export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
-  clientCompany = 'FinTech Global B2B',
-  clientEmail = 'cliente@enterprise.corp',
+  clientCompany = 'Cuenta Corporativa',
+  clientEmail = '',
   showToast,
 }) => {
-  const [invoices, setInvoices] = useState<Invoice[]>(() => {
-    try {
-      const saved = localStorage.getItem('mrca_client_invoices');
-      if (saved) return JSON.parse(saved);
-    } catch {
-      // fallback
-    }
-    return INITIAL_INVOICES;
-  });
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [selectedInvoiceForPayment, setSelectedInvoiceForPayment] = useState<Invoice | null>(null);
@@ -103,10 +56,10 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
   const [couponErrors, setCouponErrors] = useState<Record<string, string>>({});
   const [negotiationModalInvoice, setNegotiationModalInvoice] = useState<Invoice | null>(null);
 
-  // Transfer Constants (Strictly Nu México - Zero Stripe/Credit Cards)
+  // Transfer Constants (100% Nu México SPEI)
   const BANK_DETAILS = {
     institution: 'Nu México',
-    clabe: '638180000123456789',
+    clabe: '638180010197163103',
     beneficiary: 'MRCA Solutions S.A.P.I. de C.V.',
     accountType: 'Cuenta Concentradora B2B / SPEI 24/7',
   };
@@ -137,19 +90,59 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
   };
 
   useEffect(() => {
-    // Sync with global storage events (e.g. when Admin validates a payment)
-    const handleInvoiceSync = () => {
+    let mounted = true;
+    async function loadClientInvoices() {
+      setIsLoading(true);
       try {
-        const saved = localStorage.getItem('mrca_client_invoices');
-        if (saved) setInvoices(JSON.parse(saved));
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          if (mounted) setInvoices([]);
+          return;
+        }
+        const { data, error } = await supabase
+          .from('invoices')
+          .select('*')
+          .eq('client_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (mounted && !error && Array.isArray(data)) {
+          const mapped: Invoice[] = data.map((row: any) => ({
+            id: String(row.id),
+            client_id: String(row.client_id || user.id),
+            client_company: row.client_company || clientCompany,
+            client_email: row.client_email || clientEmail || user.email || '',
+            amount: Number(row.amount || 0),
+            status: (row.status || 'pending') as InvoiceStatus,
+            description: row.description || 'Factura de Servicios B2B',
+            due_date: row.due_date ? new Date(row.due_date).toLocaleDateString('es-MX') : 'Por definir',
+            spei_tracking_key: row.spei_tracking_key || undefined,
+            payment_proof_url: row.payment_proof_url || undefined,
+            created_at: row.created_at ? new Date(row.created_at).toLocaleDateString('es-MX') : '',
+            updated_at: row.updated_at || undefined,
+          }));
+          setInvoices(mapped);
+        } else if (mounted) {
+          setInvoices([]);
+        }
       } catch {
-        // quota
+        if (mounted) setInvoices([]);
+      } finally {
+        if (mounted) setIsLoading(false);
       }
+    }
+
+    void loadClientInvoices();
+
+    const handleInvoiceSync = () => {
+      void loadClientInvoices();
     };
 
     window.addEventListener('mrca_invoice_updated', handleInvoiceSync);
-    return () => window.removeEventListener('mrca_invoice_updated', handleInvoiceSync);
-  }, []);
+    return () => {
+      mounted = false;
+      window.removeEventListener('mrca_invoice_updated', handleInvoiceSync);
+    };
+  }, [clientCompany, clientEmail]);
 
   const handleCopy = (text: string, fieldName: string) => {
     navigator.clipboard.writeText(text);
@@ -527,6 +520,22 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
 
         {/* Invoices List */}
         <div className="flex flex-col gap-4">
+          {isLoading && (
+            <div className="p-8 text-center rounded-2xl bg-[#050b1c] border border-[#1a2850] font-['JetBrains_Mono'] text-[12px] text-[#849396]">
+              Consultando tu facturación SPEI en Supabase...
+            </div>
+          )}
+          {!isLoading && filteredInvoices.length === 0 && (
+            <div className="p-10 text-center rounded-2xl bg-[#050b1c] border border-dashed border-[#1a2850] flex flex-col items-center gap-1.5">
+              <FileText className="w-8 h-8 text-[#849396]/70" />
+              <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+                Sin facturas pendientes ni registradas aún
+              </span>
+              <p className="font-['Inter'] text-[12px] text-[#849396]">
+                Tus cobros, anticipos y comprobantes SPEI aparecerán aquí automáticamente al emitirse.
+              </p>
+            </div>
+          )}
           {filteredInvoices.map((inv) => {
             const isPending = inv.status === 'pending';
             const isVerification = inv.status === 'verification_in_progress';

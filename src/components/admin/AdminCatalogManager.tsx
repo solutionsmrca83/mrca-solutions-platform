@@ -20,7 +20,6 @@ import {
 import { supabase } from '../../lib/supabase/client';
 import { isSuperAdmin } from '../../lib/auth';
 import {
-  FALLBACK_SOFTWARE_CATALOG,
   CATALOG_STORAGE_KEY,
   CATALOG_SYNC_EVENT,
   formatMxnCurrency,
@@ -91,7 +90,7 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
       const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           return parsed.map((row: any) => ({
             ...row,
             zip_file_path: row.zip_file_path || row.zip_download_url || '',
@@ -100,9 +99,9 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
         }
       }
     } catch {
-      // fallback
+      // ignore storage errors
     }
-    return FALLBACK_SOFTWARE_CATALOG;
+    return [];
   };
 
   const persistLocalCatalog = (nextList: SoftwareCatalogProduct[]) => {
@@ -122,7 +121,7 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (!error && Array.isArray(data) && data.length > 0) {
+      if (!error && Array.isArray(data)) {
         const normalized: SoftwareCatalogProduct[] = data.map((row: any) => ({
           id: String(row.id),
           title: row.title,
@@ -141,10 +140,10 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
         setProducts(normalized);
         persistLocalCatalog(normalized);
       } else {
-        setProducts(loadLocalCatalog());
+        setProducts([]);
       }
     } catch {
-      setProducts(loadLocalCatalog());
+      setProducts([]);
     } finally {
       setIsLoading(false);
     }

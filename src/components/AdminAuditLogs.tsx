@@ -28,135 +28,98 @@ interface AdminAuditLogsProps {
   showToast?: (msg: string) => void;
 }
 
-const INITIAL_LOGS: SystemAuditLog[] = [
-  {
-    id: 'LOG-9921',
-    timestamp: new Date(Date.now() - 1000 * 45).toLocaleTimeString(),
-    event_type: 'HSM_ROOT_BOOT',
-    severity: 'success',
-    actor: 'jefe@mrcasolutions.com',
-    ip_address: '10.0.4.1 (CDMX Enclave)',
-    description: 'Módulo de seguridad de hardware sincronizado con certificado TLS 1.3 ECDSA P-384.',
-    metadata: { hsm_id: 'YUBI-MX-01', status: 'LOCKED' },
-  },
-  {
-    id: 'LOG-9920',
-    timestamp: new Date(Date.now() - 1000 * 120).toLocaleTimeString(),
-    event_type: 'CONTRACT_SIGNED',
-    severity: 'success',
-    actor: 'cliente@enterprise.corp',
-    ip_address: '187.190.22.41 (Monterrey, MX)',
-    description: 'Cliente completó firma criptográfica digital para Contrato Maestro NDA.',
-    metadata: { contract_id: 'CTR-B2B-902', signature_method: 'ECDSA Canvas Pad' },
-  },
-  {
-    id: 'LOG-9919',
-    timestamp: new Date(Date.now() - 1000 * 240).toLocaleTimeString(),
-    event_type: 'SPEI_VERIFICATION',
-    severity: 'info',
-    actor: 'Banxico STP Concentradora',
-    ip_address: '10.0.12.8 (Nu Mexico Gateway)',
-    description: 'Aviso CEP Banxico recibido para factura INV-8921 ($350,000 MXN) en cuenta concentradora.',
-    metadata: { clabe: '638180000123456789', status: 'VERIFIED' },
-  },
-  {
-    id: 'LOG-9918',
-    timestamp: new Date(Date.now() - 1000 * 380).toLocaleTimeString(),
-    event_type: 'LOGIN_ATTEMPT',
-    severity: 'warning',
-    actor: 'probe_recon_daemon',
-    ip_address: '45.134.140.12 (Extranjero)',
-    description: 'Intento de acceso en puerto administrativo bloqueado automáticamente por la protección perimetral.',
-    metadata: { port: 22, policy: 'BLOQUEO_AUTOMATICO' },
-  },
-  {
-    id: 'LOG-9917',
-    timestamp: new Date(Date.now() - 1000 * 500).toLocaleTimeString(),
-    event_type: 'VAULT_DECRYPT',
-    severity: 'success',
-    actor: 'cliente@enterprise.corp',
-    ip_address: '187.190.22.41 (Monterrey, MX)',
-    description: 'Desbloqueo de clave AES-256 para entregable esquema_postgresql_aislamiento_empresarial.sql.',
-    metadata: { file_id: 'VF-02', sha256_match: true },
-  },
-  {
-    id: 'LOG-9916',
-    timestamp: new Date(Date.now() - 1000 * 680).toLocaleTimeString(),
-    event_type: 'POLICY_VIOLATION',
-    severity: 'critical',
-    actor: 'unauthorized_subdomain_req',
-    ip_address: '194.26.29.112 (Tor Exit Node)',
-    description: 'Solicitud con token manipulado bloqueada en el Reverse Proxy Envoy. IP colocada en cuarentena.',
-    metadata: { http_status: 403, action: 'GLOBAL_REVOKE_TRIGGER' },
-  },
-];
-
 export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => {
-  const [logs, setLogs] = useState<SystemAuditLog[]>(INITIAL_LOGS);
+  const [logs, setLogs] = useState<SystemAuditLog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [filterSeverity, setFilterSeverity] = useState<'all' | 'success' | 'info' | 'warning' | 'critical'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLiveStream, setIsLiveStream] = useState(true);
 
-  // Simulated continuous live event stream
+  const loadAuditLogs = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('system_audit_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100);
+
+      if (!error && Array.isArray(data)) {
+        const mapped: SystemAuditLog[] = data.map((row: any) => ({
+          id: String(row.id),
+          timestamp: row.created_at
+            ? new Date(row.created_at).toLocaleString('es-MX', {
+                day: '2-digit',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+              })
+            : '',
+          event_type: row.event_type || 'SYSTEM_EVENT',
+          severity: (['success', 'info', 'warning', 'critical'].includes(row.severity)
+            ? row.severity
+            : 'info') as SystemAuditLog['severity'],
+          actor: row.actor || 'sistema',
+          ip_address: row.ip_address || 'No registrada',
+          description: row.description || '',
+          metadata: row.metadata || {},
+        }));
+        setLogs(mapped);
+      } else {
+        setLogs([]);
+      }
+    } catch {
+      setLogs([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadAuditLogs();
+  }, []);
+
+  // Suscripción real a Supabase Realtime (cero eventos simulados)
   useEffect(() => {
     if (!isLiveStream) return;
 
-    const streamEvents: Array<{
-      event_type: string;
-      severity: 'success' | 'info' | 'warning' | 'critical';
-      actor: string;
-      ip_address: string;
-      description: string;
-    }> = [
-      {
-        event_type: 'FIDO2_TOKEN_VALIDATED',
-        severity: 'success',
-        actor: 'socio@mrcasolutions.com',
-        ip_address: '10.0.4.2 (Nodo Alfa)',
-        description: 'Autenticación biométrica WebAuthn FIDO2 validada para sesión de superadministrador.',
-      },
-      {
-        event_type: 'API_KEY_ROTATED',
-        severity: 'info',
-        actor: 'cliente@enterprise.corp',
-        ip_address: '187.190.22.41',
-        description: 'Rotación de secreto mrca_live_**** ejecutada con periodo de gracia de 24h.',
-      },
-      {
-        event_type: 'RATE_LIMIT_HIT',
-        severity: 'warning',
-        actor: 'bot_crawler_unverified',
-        ip_address: '89.248.165.71',
-        description: 'Excedido límite de peticiones por minuto en /api/v1/healthcheck. Throttling aplicado.',
-      },
-      {
-        event_type: 'BACKUP_SNAPSHOT_SEALED',
-        severity: 'success',
-        actor: 'Automated PostgreSQL Cron',
-        ip_address: '10.0.2.14',
-        description: 'Snapshot inmutable de base de datos cifrado con clave PGP y enviado a cold storage.',
-      },
-    ];
+    const channel = supabase
+      .channel('mrca-system-audit-logs-live')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'system_audit_logs' },
+        (payload: any) => {
+          const row = payload?.new;
+          if (!row) return;
+          const incoming: SystemAuditLog = {
+            id: String(row.id),
+            timestamp: row.created_at
+              ? new Date(row.created_at).toLocaleString('es-MX', {
+                  day: '2-digit',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                })
+              : new Date().toLocaleTimeString('es-MX'),
+            event_type: row.event_type || 'SYSTEM_EVENT',
+            severity: (['success', 'info', 'warning', 'critical'].includes(row.severity)
+              ? row.severity
+              : 'info') as SystemAuditLog['severity'],
+            actor: row.actor || 'sistema',
+            ip_address: row.ip_address || 'No registrada',
+            description: row.description || '',
+            metadata: row.metadata || {},
+          };
+          setLogs((prev) => [incoming, ...prev.slice(0, 99)]);
+        }
+      )
+      .subscribe();
 
-    let counter = 0;
-    const interval = setInterval(() => {
-      const template = streamEvents[counter % streamEvents.length];
-      const newLog: SystemAuditLog = {
-        id: `LOG-${Math.floor(Math.random() * 8000 + 2000)}`,
-        timestamp: new Date().toLocaleTimeString(),
-        event_type: template.event_type,
-        severity: template.severity,
-        actor: template.actor,
-        ip_address: template.ip_address,
-        description: template.description,
-        metadata: { live_stream: true },
-      };
-
-      setLogs((prev) => [newLog, ...prev.slice(0, 49)]); // Keep latest 50
-      counter++;
-    }, 7000);
-
-    return () => clearInterval(interval);
+    return () => {
+      void supabase.removeChannel(channel);
+    };
   }, [isLiveStream]);
 
   const handleExportLogs = () => {
@@ -351,11 +314,21 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
           </table>
         </div>
 
-        {filteredLogs.length === 0 && (
+        {isLoading ? (
           <div className="p-8 text-center text-[#849396] font-['JetBrains_Mono'] text-[12px]">
-            No se encontraron eventos coincidentes con los criterios de búsqueda.
+            Consultando registros de auditoría en Supabase...
           </div>
-        )}
+        ) : filteredLogs.length === 0 ? (
+          <div className="p-10 text-center text-[#849396] font-['JetBrains_Mono'] text-[12px] flex flex-col items-center gap-2">
+            <Shield className="w-8 h-8 text-[#849396]/70" />
+            <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+              Sin registros aún
+            </span>
+            <span>
+              Los eventos reales de seguridad y auditoría aparecerán aquí automáticamente.
+            </span>
+          </div>
+        ) : null}
       </section>
     </div>
   );

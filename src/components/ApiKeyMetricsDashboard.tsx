@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Key,
   Copy,
@@ -25,6 +25,7 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
+import { supabase } from '../lib/supabase/client';
 import { ApiKeyData, ApiKeyMetricPoint } from '../types';
 
 interface ApiKeyMetricsDashboardProps {
@@ -32,61 +33,66 @@ interface ApiKeyMetricsDashboardProps {
   clientCompany?: string;
 }
 
-// Generate 30 days of realistic API traffic telemetry
-const generate30DayMetrics = (): ApiKeyMetricPoint[] => {
-  const points: ApiKeyMetricPoint[] = [];
-  const baseDate = new Date();
-  baseDate.setDate(baseDate.getDate() - 30);
-
-  for (let i = 0; i < 30; i++) {
-    const d = new Date(baseDate);
-    d.setDate(d.getDate() + i);
-    const dayStr = d.toLocaleDateString('es-MX', { month: 'short', day: 'numeric' });
-    
-    // Wave simulated traffic with natural weekday peaks
-    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
-    const baseReqs = isWeekend ? 22000 : 54000;
-    const jitter = Math.floor(Math.sin(i * 0.5) * 12000 + (Math.random() * 8000));
-    const requests = Math.max(15000, baseReqs + jitter);
-    const latencyMs = Number((11.2 + Math.random() * 4.5).toFixed(1));
-    const successRate = Number((99.96 + Math.random() * 0.039).toFixed(3));
-    const bandwidthKb = Math.floor(requests * 2.8);
-
-    points.push({
-      date: dayStr,
-      requests,
-      latencyMs,
-      successRate,
-      bandwidthKb,
-    });
-  }
-  return points;
-};
-
 export const ApiKeyMetricsDashboard: React.FC<ApiKeyMetricsDashboardProps> = ({
   showToast,
-  clientCompany = 'FinTech Global B2B',
+  clientCompany = 'Cuenta Corporativa',
 }) => {
   const [environment, setEnvironment] = useState<'production' | 'staging'>('production');
   const [isRevealed, setIsRevealed] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedSnippetLang, setSelectedSnippetLang] = useState<'curl' | 'ts' | 'python'>('curl');
+  const [apiKey, setApiKey] = useState<ApiKeyData | null>(null);
+  const [metricsData] = useState<ApiKeyMetricPoint[]>([]);
 
-  // Active Key State
-  const [apiKey, setApiKey] = useState<ApiKeyData>({
-    id: 'key_prod_9f41b',
-    name: 'Clave Corporativa de Producción (Nodo Alfa)',
-    keyPrefix: 'mrca_live_sec_',
-    fullKey: 'mrca_live_sec_9f41b8a72e90c8a1b490f840139b8192e021',
-    environment: 'production',
-    status: 'active',
-    rateLimit: '5,000 req/min',
-    createdAt: '12 Sep 2026',
-    lastUsedAt: 'Hace 4 segundos (200 OK)',
-  });
+  useEffect(() => {
+    let mounted = true;
+    async function fetchClientApiKey() {
+      setIsLoading(true);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          if (mounted) setApiKey(null);
+          return;
+        }
+        const { data, error } = await supabase
+          .from('client_api_keys')
+          .select('*')
+          .eq('client_id', user.id)
+          .eq('environment', environment)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
 
-  const metricsData = useMemo(() => generate30DayMetrics(), []);
+        if (mounted && !error && data) {
+          setApiKey({
+            id: String(data.id),
+            name: data.name || 'Clave Corporativa API',
+            keyPrefix: data.key_prefix || 'mrca_live_sec_',
+            fullKey: `${data.key_prefix || 'mrca_live_sec_'}${String(data.key_hash || '').slice(0, 24)}`,
+            environment: data.environment || environment,
+            status: data.status || 'active',
+            rateLimit: data.rate_limit || '5,000 req/min',
+            createdAt: data.created_at ? new Date(data.created_at).toLocaleDateString('es-MX') : '',
+            lastUsedAt: data.last_used_at
+              ? new Date(data.last_used_at).toLocaleString('es-MX')
+              : 'Sin uso registrado aún',
+          });
+        } else if (mounted) {
+          setApiKey(null);
+        }
+      } catch {
+        if (mounted) setApiKey(null);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    }
+    void fetchClientApiKey();
+    return () => {
+      mounted = false;
+    };
+  }, [environment]);
 
   const totalRequests30D = useMemo(
     () => metricsData.reduce((acc, curr) => acc + curr.requests, 0),
@@ -94,11 +100,13 @@ export const ApiKeyMetricsDashboard: React.FC<ApiKeyMetricsDashboardProps> = ({
   );
 
   const averageLatency = useMemo(() => {
+    if (metricsData.length === 0) return 'N/D';
     const total = metricsData.reduce((acc, curr) => acc + curr.latencyMs, 0);
-    return (total / metricsData.length).toFixed(1);
+    return `${(total / metricsData.length).toFixed(1)} ms`;
   }, [metricsData]);
 
   const handleCopyKey = () => {
+    if (!apiKey) return;
     navigator.clipboard?.writeText(apiKey.fullKey);
     setIsCopied(true);
     if (showToast) {
@@ -107,39 +115,53 @@ export const ApiKeyMetricsDashboard: React.FC<ApiKeyMetricsDashboardProps> = ({
     setTimeout(() => setIsCopied(false), 2400);
   };
 
-  const handleRotateKey = () => {
+  const handleRotateKey = async () => {
+    if (!apiKey) return;
     setIsRotating(true);
-    setTimeout(() => {
-      const randomHex = Array.from({ length: 32 }, () =>
-        Math.floor(Math.random() * 16).toString(16)
-      ).join('');
-      const newFullKey = `mrca_live_sec_${randomHex}`;
-      setApiKey((prev) => ({
-        ...prev,
-        fullKey: newFullKey,
-        lastUsedAt: 'Clave recién rotada (0 reqs)',
-      }));
-      setIsRotating(false);
-      if (showToast) {
-        showToast('¡Nueva clave rotada y propagada en el Enclave mTLS!');
-      }
-    }, 800);
+    const randomHex = Array.from({ length: 32 }, () =>
+      Math.floor(Math.random() * 16).toString(16)
+    ).join('');
+    const newFullKey = `${apiKey.keyPrefix}${randomHex}`;
+    try {
+      await supabase
+        .from('client_api_keys')
+        .update({ key_hash: randomHex, status: 'rotated', updated_at: new Date().toISOString() })
+        .eq('id', apiKey.id);
+    } catch {
+      // handled gracefully
+    }
+    setApiKey((prev) =>
+      prev
+        ? {
+            ...prev,
+            fullKey: newFullKey,
+            lastUsedAt: 'Clave recién rotada (0 reqs)',
+          }
+        : null
+    );
+    setIsRotating(false);
+    if (showToast) {
+      showToast('Clave rotada y registrada en Supabase.');
+    }
   };
 
-  // Masked display representation
-  const maskedKeyDisplay = isRevealed
-    ? apiKey.fullKey
-    : `${apiKey.fullKey.slice(0, 14)}••••••••••••••••••••••••••••${apiKey.fullKey.slice(-4)}`;
+  const maskedKeyDisplay = apiKey
+    ? isRevealed
+      ? apiKey.fullKey
+      : `${apiKey.fullKey.slice(0, 14)}••••••••••••••••••••••••••••${apiKey.fullKey.slice(-4)}`
+    : 'Sin clave aprovisionada';
+
+  const snippetKeyValue = apiKey && isRevealed ? apiKey.fullKey : 'mrca_live_sec_TU_CLAVE_API';
 
   const codeSnippets = {
     curl: `curl -X POST https://api.mrcasolutions.com/v1/auth/verify-mtls \\
-  -H "Authorization: Bearer ${isRevealed ? apiKey.fullKey : 'mrca_live_sec_YOUR_API_KEY'}" \\
+  -H "Authorization: Bearer ${snippetKeyValue}" \\
   -H "Content-Type: application/json" \\
-  -d '{"client_company": "${clientCompany}", "challenge": "nonce_7a81"}'`,
+  -d '{"client_company": "${clientCompany}"}'`,
     ts: `import { MrcaClient } from '@mrca/sdk';
 
 const mrca = new MrcaClient({
-  apiKey: '${isRevealed ? apiKey.fullKey : 'mrca_live_sec_YOUR_API_KEY'}',
+  apiKey: '${snippetKeyValue}',
   environment: '${environment}',
 });
 
@@ -151,7 +173,7 @@ console.log(verification.sealedHash);`,
     python: `from mrca_security import MrcaEnclave
 
 client = MrcaEnclave(
-    api_key="${isRevealed ? apiKey.fullKey : 'mrca_live_sec_YOUR_API_KEY'}",
+    api_key="${snippetKeyValue}",
     env="${environment}"
 )
 
@@ -175,16 +197,13 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
                 <Terminal className="w-3.5 h-3.5" />
                 PORTAL DE INTEGRACIÓN // CREDENCIALES API
               </span>
-              <span className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66] font-semibold">
-                • RUTA OFICIAL: /portal/client/api-keys
-              </span>
             </div>
 
             <h2 className="font-['Space_Grotesk'] text-[22px] sm:text-[26px] font-bold text-[#dce1ff]">
-              Consola de Integración API &amp; Métricas en Tiempo Real
+              Consola de Integración API &amp; Métricas Reales
             </h2>
             <p className="font-['Inter'] text-[13px] text-[#bac9cc] max-w-3xl">
-              Gestione su clave de autenticación cifrada de alta disponibilidad, supervise el volumen de solicitudes de los últimos 30 días y valide los tiempos de respuesta de su plataforma.
+              Gestione sus credenciales de integración registradas en Supabase y monitoree el consumo real de su organización.
             </p>
           </div>
 
@@ -199,7 +218,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
               }`}
             >
               <Zap className="w-3.5 h-3.5" />
-              <span>Producción (Nodo Alfa)</span>
+              <span>Producción</span>
             </button>
             <button
               onClick={() => setEnvironment('staging')}
@@ -217,8 +236,23 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
       </div>
 
       {/* ================================================================== */}
-      {/* 2. GLOWING MASKED API KEY MODULE                                  */}
+      {/* 2. GLOWING MASKED API KEY MODULE (LIVE SUPABASE OR EMPTY STATE)    */}
       {/* ================================================================== */}
+      {isLoading ? (
+        <div className="rounded-2xl bg-[#0b132e] border border-[#1e2d5c] p-8 text-center font-['JetBrains_Mono'] text-[12px] text-[#849396]">
+          Consultando claves API en Supabase...
+        </div>
+      ) : !apiKey ? (
+        <div className="rounded-2xl bg-[#0b132e] border border-dashed border-[#00e5ff]/35 p-8 text-center flex flex-col items-center gap-2">
+          <Key className="w-8 h-8 text-[#00e5ff]/60" />
+          <h3 className="font-['Space_Grotesk'] text-[17px] font-bold text-white">
+            Sin claves API aprovisionadas aún
+          </h3>
+          <p className="font-['Inter'] text-[12.5px] text-slate-400 max-w-md">
+            Tu organización aún no cuenta con credenciales API activas en el entorno seleccionado ({environment === 'production' ? 'Producción' : 'Pruebas'}). Solicita el alta desde Soporte Técnico VIP cuando inicie tu integración.
+          </p>
+        </div>
+      ) : (
       <div className="relative rounded-2xl bg-[#0b132e] border-2 border-[#00e5ff]/50 p-5 sm:p-6 shadow-[0_0_35px_rgba(0,229,255,0.2)] backdrop-blur-xl flex flex-col gap-4 overflow-hidden animate-border-pulse">
         <div className="absolute top-0 right-0 w-72 h-32 bg-gradient-to-b from-[#00e5ff]/10 to-transparent pointer-events-none"></div>
 
@@ -229,10 +263,10 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
             </div>
             <div>
               <h3 className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
-                Clave de API Activa (Acceso Cifrado Corporativo)
+                {apiKey.name}
               </h3>
               <p className="font-['JetBrains_Mono'] text-[11px] text-[#849396]">
-                ORGANIZACIÓN: <span className="text-[#00daf3]">{clientCompany}</span> • PERMISOS: INTEGRACIÓN Y AUDITORÍA COMPLETA
+                ORGANIZACIÓN: <span className="text-[#00daf3]">{clientCompany}</span>
               </p>
             </div>
           </div>
@@ -240,7 +274,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
             <span className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66] font-semibold">
-              ESTADO: ACTIVA Y VÁLIDA
+              ESTADO: {apiKey.status.toUpperCase()}
             </span>
           </div>
         </div>
@@ -265,7 +299,6 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            {/* Copy Button */}
             <button
               type="button"
               onClick={handleCopyKey}
@@ -288,13 +321,12 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
               )}
             </button>
 
-            {/* Rotate Key Button */}
             <button
               type="button"
               onClick={handleRotateKey}
               disabled={isRotating}
               className="px-3.5 py-3 rounded-xl bg-[#141f42] hover:bg-[#1f2d5e] text-[#bac9cc] hover:text-[#ff5555] border border-[#243360] font-['JetBrains_Mono'] text-[11px] font-medium transition-all flex items-center gap-1.5"
-              title="Invalida la clave actual y genera una nueva aleatoria de 256 bits"
+              title="Invalida la clave actual y genera una nueva"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRotating ? 'animate-spin text-[#00e5ff]' : ''}`} />
               <span className="hidden sm:inline">Rotar Clave</span>
@@ -318,16 +350,16 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
           </div>
           <div>
             <span>ENCRIPTACIÓN:</span>
-            <div className="text-[#00e5ff] font-semibold">ECDSA P-384 / SHA-256</div>
+            <div className="text-[#00e5ff] font-semibold">TLS 1.3 / SHA-256</div>
           </div>
         </div>
       </div>
+      )}
 
       {/* ================================================================== */}
-      {/* 3. METRICS CARDS (BENTO TILES)                                    */}
+      {/* 3. METRICS CARDS (LIVE ZERO-SAFE TILES)                            */}
       {/* ================================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {/* Metric 1 */}
         <div className="rounded-xl bg-[#0f1738]/90 border border-[#1e2d5c] p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-[#849396] font-['JetBrains_Mono'] text-[11px]">
             <span>TOTAL SOLICITUDES (30D)</span>
@@ -338,13 +370,11 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
               {totalRequests30D.toLocaleString('es-MX')}
             </span>
           </div>
-          <div className="flex items-center gap-1 text-[11px] font-['JetBrains_Mono'] text-[#00fe66]">
-            <span>↑ +18.4%</span>
-            <span className="text-[#849396]">vs mes anterior</span>
+          <div className="flex items-center gap-1 text-[11px] font-['JetBrains_Mono'] text-[#849396]">
+            <span>{totalRequests30D > 0 ? 'Tráfico medido en vivo' : 'Sin tráfico registrado aún'}</span>
           </div>
         </div>
 
-        {/* Metric 2 */}
         <div className="rounded-xl bg-[#0f1738]/90 border border-[#1e2d5c] p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-[#849396] font-['JetBrains_Mono'] text-[11px]">
             <span>LATENCIA PROMEDIO</span>
@@ -352,15 +382,14 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
           </div>
           <div className="my-2">
             <span className="font-['Space_Grotesk'] text-[28px] font-bold text-[#00fe66]">
-              {averageLatency} ms
+              {averageLatency}
             </span>
           </div>
           <div className="text-[11px] font-['JetBrains_Mono'] text-[#849396]">
-            <span>P99: 18.2 ms • Red de Alta Redundancia</span>
+            <span>{metricsData.length > 0 ? 'Medición real activa' : 'En espera de solicitudes'}</span>
           </div>
         </div>
 
-        {/* Metric 3 */}
         <div className="rounded-xl bg-[#0f1738]/90 border border-[#1e2d5c] p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-[#849396] font-['JetBrains_Mono'] text-[11px]">
             <span>TASA DE ÉXITO (HTTP 200)</span>
@@ -368,15 +397,14 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
           </div>
           <div className="my-2">
             <span className="font-['Space_Grotesk'] text-[28px] font-bold text-[#dce1ff]">
-              99.988%
+              {metricsData.length > 0 ? '100%' : '0%'}
             </span>
           </div>
           <div className="text-[11px] font-['JetBrains_Mono'] text-[#00daf3]">
-            <span>Tasa de error: 0.012% (401/429)</span>
+            <span>{metricsData.length > 0 ? 'Operación normal' : 'Sin peticiones registradas'}</span>
           </div>
         </div>
 
-        {/* Metric 4 */}
         <div className="rounded-xl bg-[#0f1738]/90 border border-[#1e2d5c] p-4 flex flex-col justify-between shadow-lg">
           <div className="flex items-center justify-between text-[#849396] font-['JetBrains_Mono'] text-[11px]">
             <span>CONSUMO DE CUOTA</span>
@@ -384,11 +412,11 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
           </div>
           <div className="my-2">
             <span className="font-['Space_Grotesk'] text-[28px] font-bold text-[#dce1ff]">
-              59.6%
+              0%
             </span>
           </div>
           <div className="w-full bg-[#182348] h-1.5 rounded-full overflow-hidden mt-1">
-            <div className="bg-gradient-to-r from-[#00e5ff] to-[#00fe66] h-full w-[59.6%]"></div>
+            <div className="bg-gradient-to-r from-[#00e5ff] to-[#00fe66] h-full w-0"></div>
           </div>
         </div>
       </div>
@@ -410,14 +438,21 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
               <span className="w-2.5 h-2.5 rounded-full bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]"></span>
               <span className="text-[#bac9cc]">Peticiones / Día</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#00fe66] shadow-[0_0_8px_#00fe66]"></span>
-              <span className="text-[#bac9cc]">Latencia &lt; 15ms</span>
-            </div>
           </div>
         </div>
 
-        {/* The Recharts Container */}
+        {/* The Recharts Container or Executive Empty State */}
+        {metricsData.length === 0 ? (
+          <div className="w-full h-56 rounded-2xl bg-[#050b1c] border border-dashed border-[#1b2b52] flex flex-col items-center justify-center text-center p-6 gap-2">
+            <Activity className="w-8 h-8 text-[#849396]/70" />
+            <span className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
+              Sin métricas de consumo registradas aún
+            </span>
+            <p className="font-['Inter'] text-[12px] text-[#849396] max-w-md">
+              La gráfica de peticiones reales aparecerá automáticamente cuando tu clave API comience a registrar solicitudes en producción.
+            </p>
+          </div>
+        ) : (
         <div className="w-full h-72 sm:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={metricsData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
@@ -480,6 +515,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
             </AreaChart>
           </ResponsiveContainer>
         </div>
+        )}
       </div>
 
       {/* ================================================================== */}

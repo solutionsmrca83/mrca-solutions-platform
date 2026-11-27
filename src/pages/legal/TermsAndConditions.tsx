@@ -101,7 +101,7 @@ export const TermsAndConditions: React.FC<TermsProps> = ({ onBack, onNavigate })
         <ul className="list-disc pl-5 space-y-2 text-slate-300">
           <li>
             <strong>Transferencia Electrónica Interbancaria (SPEI / Banxico):</strong> Acreditación en moneda nacional (MXN) a las cuentas 
-            corporativas designadas (incluyendo pasarelas bancarias y entidades autorizadas como Nu México o Stripe Escrow Dual).
+            corporativas designadas (exclusivamente mediante transferencia SPEI a Nu México).
           </li>
           <li>
             <strong>Facturación Fiscal Electrónica (CFDI 4.0):</strong> La emisión de comprobantes fiscales se realizará dentro de los plazos 

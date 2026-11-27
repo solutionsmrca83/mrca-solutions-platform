@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { supabase } from '../lib/supabase/client';
 
 interface TerminalLog {
   id: string;
@@ -8,30 +9,23 @@ interface TerminalLog {
   text: string;
 }
 
-const INITIAL_LOGS: TerminalLog[] = [
-  { id: '1', timestamp: '04:12:01.002', tag: '[INICIO]', tagColor: 'slate', text: 'Subsistema de Defensa Perimetral inicializado. Núcleo de seguridad en línea.' },
-  { id: '2', timestamp: '04:12:02.190', tag: '[RED]', tagColor: 'cyan', text: 'Inspección de tráfico cifrado activa en interfaz principal. Verificando conexiones TLS...' },
-  { id: '3', timestamp: '04:12:04.812', tag: '[WAF]', tagColor: 'yellow', text: 'Regla 942100 activada: Solicitud entrante validada contra filtros de seguridad.' },
-  { id: '4', timestamp: '04:12:05.109', tag: '[BLOQUEO]', tagColor: 'red', text: 'BLOQUEO origen=189.24.11.8 puerto=443 (Nodo externo no autorizado).' },
-  { id: '5', timestamp: '04:12:07.441', tag: '[FIRMA]', tagColor: 'cyan', text: 'Integridad firmada 0x889dfa1120 con módulo criptográfico FIPS 140-3.' },
-  { id: '6', timestamp: '04:12:09.912', tag: '[ACCESO]', tagColor: 'green', text: 'Sesión administrativa renovada con cifrado ECDSA-512 para Dirección.' },
-  { id: '7', timestamp: '04:12:12.302', tag: '[DEFENSA]', tagColor: 'green', text: 'Política de aislamiento de red aplicada: Base de datos protegida contra tráfico externo.' },
-  { id: '8', timestamp: '04:12:15.820', tag: '[SINCRONIZACIÓN]', tagColor: 'green', text: 'Notificación de pago verificada mediante firma criptográfica HMAC-SHA256.' },
-];
+function formatNowTime(): string {
+  const now = new Date();
+  return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+}
 
-const PERIODIC_LOG_TEMPLATES = [
-  { tag: '[BLOQUEO]', tagColor: 'red' as const, text: 'Conexión descartada desde red externa: Sondeo TLS anómalo bloqueado.' },
-  { tag: '[SPEI-BZX]', tagColor: 'green' as const, text: 'Validación CEP verificada ante Banco de México.' },
-  { tag: '[AUDITORÍA]', tagColor: 'slate' as const, text: 'Verificación de sesión administrativa activa y cifrada.' },
-  { tag: '[BÓVEDA]', tagColor: 'cyan' as const, text: 'Rotación preventiva de llaves validada: 99.98% integridad criptográfica.' },
-  { tag: '[REDUNDANCIA]', tagColor: 'green' as const, text: 'Sin anomalías detectadas en los nodos de servicios corporativos (128 hilos).' },
-  { tag: '[WAF]', tagColor: 'yellow' as const, text: 'Evaluación preventiva de reglas de seguridad completada. Estado: Limpio.' },
-];
+function severityToColor(severity?: string): TerminalLog['tagColor'] {
+  if (severity === 'critical') return 'red';
+  if (severity === 'warning') return 'yellow';
+  if (severity === 'success') return 'green';
+  return 'cyan';
+}
 
 export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
-  const [logs, setLogs] = useState<TerminalLog[]>(INITIAL_LOGS);
+  const [logs, setLogs] = useState<TerminalLog[]>([]);
   const [inputVal, setInputVal] = useState('');
   const [isLive, setIsLive] = useState(true);
+  const [connectionLabel, setConnectionLabel] = useState('VERIFICANDO SUPABASE...');
   const logsContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Auto-scroll internal terminal container ONLY (without hijacking window scroll)
@@ -41,85 +35,165 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
     }
   }, [logs]);
 
+  // Cargar registros reales desde Supabase (cero eventos sintéticos)
+  useEffect(() => {
+    let mounted = true;
 
+    async function loadRealAuditStream() {
+      const start = performance.now();
+      try {
+        const { data, error } = await supabase
+          .from('system_audit_logs')
+          .select('id, event_type, severity, actor, description, created_at')
+          .order('created_at', { ascending: false })
+          .limit(20);
+        const latency = Math.max(1, Math.round(performance.now() - start));
 
-  // Periodic simulated live packet stream
+        if (!mounted) return;
+
+        if (!error) {
+          setConnectionLabel(`SUPABASE EN LÍNEA (${latency} ms)`);
+          const mapped: TerminalLog[] = (data || [])
+            .slice()
+            .reverse()
+            .map((row: any) => ({
+              id: String(row.id),
+              timestamp: row.created_at
+                ? new Date(row.created_at).toLocaleTimeString('es-MX', { hour12: false })
+                : formatNowTime(),
+              tag: `[${String(row.event_type || 'EVENTO').toUpperCase()}]`,
+              tagColor: severityToColor(row.severity),
+              text: `${row.actor ? `${row.actor}: ` : ''}${row.description || ''}`,
+            }));
+          setLogs(mapped);
+        } else {
+          setConnectionLabel('SUPABASE DESCONECTADO');
+          setLogs([]);
+        }
+      } catch {
+        if (mounted) {
+          setConnectionLabel('SUPABASE DESCONECTADO');
+          setLogs([]);
+        }
+      }
+    }
+
+    void loadRealAuditStream();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Suscripción en tiempo real a system_audit_logs cuando isLive está activo
   useEffect(() => {
     if (!isLive) return;
 
-    const interval = setInterval(() => {
-      const now = new Date();
-      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${Math.floor(Math.random() * 900 + 100)}`;
-      const template = PERIODIC_LOG_TEMPLATES[Math.floor(Math.random() * PERIODIC_LOG_TEMPLATES.length)];
+    const channel = supabase
+      .channel('mrca-console-security-stream')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'system_audit_logs' },
+        (payload: any) => {
+          const row = payload?.new;
+          if (!row) return;
+          const incoming: TerminalLog = {
+            id: String(row.id || Date.now()),
+            timestamp: row.created_at
+              ? new Date(row.created_at).toLocaleTimeString('es-MX', { hour12: false })
+              : formatNowTime(),
+            tag: `[${String(row.event_type || 'EVENTO').toUpperCase()}]`,
+            tagColor: severityToColor(row.severity),
+            text: `${row.actor ? `${row.actor}: ` : ''}${row.description || ''}`,
+          };
+          setLogs((prev) => [...prev.slice(-29), incoming]);
+        }
+      )
+      .subscribe();
 
-      const newLog: TerminalLog = {
-        id: String(Date.now()),
-        timestamp: timeStr,
-        tag: template.tag,
-        tagColor: template.tagColor,
-        text: template.text,
-      };
-
-      setLogs((prev) => [...prev.slice(-25), newLog]);
-    }, 4000);
-
-    return () => clearInterval(interval);
+    return () => {
+      void supabase.removeChannel(channel);
+    };
   }, [isLive]);
 
-  const handleCommandSubmit = (e: React.FormEvent) => {
+  const handleCommandSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const cmd = inputVal.trim();
     if (!cmd) return;
 
-    const now = new Date();
-    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${Math.floor(Math.random() * 900 + 100)}`;
-
+    const timeStr = formatNowTime();
     const userLog: TerminalLog = {
       id: String(Date.now()),
       timestamp: timeStr,
-      tag: '[USER-EXEC]',
+      tag: '[ADMIN]',
       tagColor: 'cyan',
       text: cmd,
     };
-
-    let replyText = '';
-    let replyTag = '[STDOUT]';
-    let replyColor: 'green' | 'cyan' | 'red' | 'yellow' | 'slate' = 'green';
 
     const lower = cmd.toLowerCase();
     if (lower === 'clear') {
       setLogs([]);
       setInputVal('');
       return;
-    } else if (lower === 'help') {
-      replyText = 'Comandos disponibles: status, red, firewall, hsm, quorum, pagos, clear';
+    }
+
+    setInputVal('');
+    setLogs((prev) => [...prev, userLog]);
+
+    let replyText = '';
+    let replyTag = '[STDOUT]';
+    let replyColor: TerminalLog['tagColor'] = 'green';
+
+    if (lower === 'help') {
+      replyText = 'Comandos disponibles: status, pagos, tickets, clear';
     } else if (lower === 'status') {
-      replyText = 'SISTEMA MRCA SOLUTIONS: 100% EN LÍNEA. Latencia: 1.14ms. SOC-2 Tipo II Activo.';
-    } else if (lower === 'nids' || lower === 'red') {
-      replyText = 'Defensa Perimetral: 14 análisis activos. 2,410 IPs bloqueadas. 0 vulnerabilidades críticas.';
-    } else if (lower === 'iptables' || lower === 'firewall') {
-      replyText = 'Política de entrada activa: Bloqueo automático a tráfico externo no autenticado.';
-    } else if (lower === 'hsm') {
-      replyText = 'Módulo de seguridad FIPS 140-3: ACTIVO. Firma ECDSA P-384 verificada.';
-    } else if (lower === 'quorum') {
-      replyText = 'Resguardo Distribuido: 3/5 nodos activos. Clave maestra protegida por quórum.';
+      const start = performance.now();
+      const { error } = await supabase
+        .from('service_pricing')
+        .select('id', { count: 'exact', head: true });
+      const latency = Math.max(1, Math.round(performance.now() - start));
+      if (!error) {
+        setConnectionLabel(`SUPABASE EN LÍNEA (${latency} ms)`);
+        replyText = `SISTEMA MRCA SOLUTIONS: EN LÍNEA. Latencia real Supabase: ${latency} ms.`;
+      } else {
+        setConnectionLabel('SUPABASE DESCONECTADO');
+        replyText = 'SISTEMA MRCA SOLUTIONS: DESCONECTADO de Supabase.';
+        replyColor = 'red';
+      }
     } else if (lower === 'payout' || lower === 'pagos') {
-      replyText = 'Conciliación: Stripe $914,500 MXN / Banxico SPEI $514,450 MXN. Registros sincronizados.';
+      const { data, error } = await supabase.from('invoices').select('amount, status');
+      if (!error && Array.isArray(data)) {
+        const paid = data
+          .filter((i: any) => i.status === 'paid')
+          .reduce((acc: number, i: any) => acc + Number(i.amount || 0), 0);
+        const pending = data
+          .filter((i: any) => i.status !== 'paid')
+          .reduce((acc: number, i: any) => acc + Number(i.amount || 0), 0);
+        replyText = `Conciliación SPEI (Nu México): Liquidado $${paid.toLocaleString('es-MX')} MXN | Pendiente $${pending.toLocaleString('es-MX')} MXN (${data.length} factura(s)).`;
+      } else {
+        replyText = 'No fue posible consultar facturas SPEI en este momento.';
+        replyColor = 'yellow';
+      }
+    } else if (lower === 'tickets') {
+      const { count, error } = await supabase
+        .from('support_tickets')
+        .select('id', { count: 'exact', head: true });
+      replyText = !error
+        ? `Tickets de soporte registrados en Supabase: ${count || 0}.`
+        : 'No fue posible consultar tickets de soporte.';
     } else {
-      replyText = `Comando ejecutado: "${cmd}". Subproceso finalizado con código 0.`;
-      replyColor = 'cyan';
+      replyText = `Comando no reconocido: "${cmd}". Escribe "help" para ver los comandos disponibles.`;
+      replyColor = 'slate';
     }
 
     const replyLog: TerminalLog = {
       id: String(Date.now() + 1),
-      timestamp: timeStr,
+      timestamp: formatNowTime(),
       tag: replyTag,
       tagColor: replyColor,
       text: replyText,
     };
 
-    setLogs((prev) => [...prev, userLog, replyLog]);
-    setInputVal('');
+    setLogs((prev) => [...prev, replyLog]);
   };
 
   const getTagColorClass = (color: string) => {
@@ -173,13 +247,19 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
           compact ? 'h-40' : 'h-72'
         } overflow-y-auto pr-1 flex flex-col gap-1 text-[11px] md:text-[12px] leading-relaxed text-[#dce1ff] select-text no-scrollbar`}
       >
-        {logs.map((log) => (
-          <div key={log.id} className="flex items-start gap-1.5 break-all">
-            <span className="text-[#849396] shrink-0 text-[10px]">[{log.timestamp}]</span>
-            <span className={`shrink-0 ${getTagColorClass(log.tagColor)}`}>{log.tag}</span>
-            <span className="text-[#dce1ff]">{log.text}</span>
+        {logs.length === 0 ? (
+          <div className="flex-1 flex items-center justify-center text-center text-[#849396] text-[11px] px-3">
+            Sin registros aún en bitácora de seguridad. Escribe &quot;status&quot; o &quot;pagos&quot; para consultar métricas reales.
           </div>
-        ))}
+        ) : (
+          logs.map((log) => (
+            <div key={log.id} className="flex items-start gap-1.5 break-all">
+              <span className="text-[#849396] shrink-0 text-[10px]">[{log.timestamp}]</span>
+              <span className={`shrink-0 ${getTagColorClass(log.tagColor)}`}>{log.tag}</span>
+              <span className="text-[#dce1ff]">{log.text}</span>
+            </div>
+          ))
+        )}
       </div>
 
 
@@ -190,7 +270,7 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
           type="text"
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
-          placeholder="Escribe un comando (ej: help, status, red, hsm, clear)..."
+          placeholder="Escribe un comando (help, status, pagos, tickets, clear)..."
           className="w-full bg-transparent text-[12px] text-[#00e5ff] placeholder-[#3b494c] focus:outline-none font-['JetBrains_Mono']"
         />
         <button
@@ -203,8 +283,8 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
 
       {/* Status Footer Strip */}
       <div className="flex items-center justify-between text-[10px] text-[#849396] pt-1">
-        <span>INSPECCIÓN DE PAQUETES: DOBLE NÚCLEO ACTIVO</span>
-        <span className="text-[#00fe66]">0 PAQUETES PERDIDOS</span>
+        <span>CONSOLA DE AUDITORÍA EN VIVO</span>
+        <span className="text-[#00fe66]">{connectionLabel}</span>
       </div>
     </div>
   );
