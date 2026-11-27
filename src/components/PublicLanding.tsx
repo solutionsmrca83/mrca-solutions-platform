@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { HologramCanvas } from './HologramCanvas';
 import { ShamirSecretSharing } from './ShamirSecretSharing';
 import { SecurityScannerLeadGen } from './SecurityScannerLeadGen';
-import { AuditModal, HardwareTokenModal, InspectContractModal } from './Modals';
+import { AuditModal, InspectContractModal } from './Modals';
 import {
   ShieldCheck,
   TrendingUp,
@@ -12,22 +12,20 @@ import {
   Sparkles,
   ChevronRight,
   CheckCircle2,
-  KeyRound
 } from 'lucide-react';
 
 interface PublicLandingProps {
-  onNavigateToAdmin: () => void;
+  onNavigateToAdmin?: () => void;
   isMobileDrawerOpen: boolean;
   setIsMobileDrawerOpen: (open: boolean) => void;
 }
 
 export const PublicLanding: React.FC<PublicLandingProps> = ({
-  onNavigateToAdmin,
+  onNavigateToAdmin: _onNavigateToAdmin,
   isMobileDrawerOpen: _isMobileDrawerOpen,
   setIsMobileDrawerOpen: _setIsMobileDrawerOpen,
 }) => {
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
-  const [isHardwareTokenModalOpen, setIsHardwareTokenModalOpen] = useState(false);
   const [inspectDoc, setInspectDoc] = useState<{
     isOpen: boolean;
     title: string;
@@ -61,11 +59,11 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
     },
     {
       title: 'Certeza Legal & Cumplimiento',
-      subtitle: 'Contratos formales y respaldo fiscal',
-      desc: 'Operamos bajo estricto apego al marco jurídico mexicano. Facturación CFDI 4.0 con materialidad probatoria, custodia bancaria SPEI y obra por encargo según LFDA.',
+      subtitle: 'Contratos formales y respaldo corporativo',
+      desc: 'Formalizamos cada proyecto con contratos ejecutivos claros, acuerdos de nivel de servicio (SLA) verificables y propiedad intelectual protegida para tu organización.',
       icon: 'gavel',
-      features: ['Contratos con firma digital y sello SHA-256', 'Pena convencional y anticipos protegidos', 'Validación ante SAT y Código de Comercio'],
-      tag: 'CUMPLIMIENTO LEGAL & FISCAL',
+      features: ['Contratos con firma digital y sello SHA-256', 'Acuerdos de confidencialidad y propiedad intelectual', 'Trazabilidad formal y cumplimiento corporativo'],
+      tag: 'CUMPLIMIENTO CORPORATIVO',
     },
   ];
 
@@ -89,9 +87,9 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
       icon: <TrendingUp className="w-5 h-5 text-cyan-400" />,
     },
     {
-      metric: 'CFDI 4.0',
-      label: 'Cumplimiento SAT',
-      sublabel: 'Materialidad fiscal documentada',
+      metric: 'ISO 27001',
+      label: 'Estándar Corporativo',
+      sublabel: 'Procesos y contratos auditables',
       icon: <FileCheck className="w-5 h-5 text-emerald-400" />,
     },
   ];
@@ -147,32 +145,25 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               </div>
             </div>
 
-            <nav className="flex items-center gap-1.5 flex-wrap justify-center font-['Space_Grotesk'] text-[12px] font-medium">
+            <nav className="flex items-center gap-2 sm:gap-3 flex-nowrap justify-center overflow-x-auto no-scrollbar font-['Space_Grotesk'] text-[12px] font-medium shrink-0">
               <a
                 href="#soluciones"
-                className="px-3.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-300"
+                className="px-3.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-300 whitespace-nowrap"
               >
                 Soluciones B2B
               </a>
               <a
                 href="#seguridad"
-                className="px-3.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-300"
+                className="px-3.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-300 whitespace-nowrap"
               >
                 Seguridad &amp; Cifrado
               </a>
               <a
                 href="#contratos-legales"
-                className="px-3.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-300"
+                className="px-3.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-all duration-300 whitespace-nowrap"
               >
                 Cumplimiento Legal
               </a>
-              <button
-                onClick={onNavigateToAdmin}
-                className="ml-2 px-4 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-400 hover:text-slate-950 text-cyan-300 border border-cyan-500/40 hover:border-transparent transition-all duration-300 flex items-center gap-1.5 font-bold cursor-pointer shadow-[0_0_12px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.75)] hover:scale-105"
-              >
-                <KeyRound className="w-3.5 h-3.5" />
-                <span>Acceso Ejecutivo</span>
-              </button>
             </nav>
           </div>
         </section>
@@ -199,7 +190,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               </h1>
 
               <p className="font-['Inter'] text-[16px] sm:text-[18px] text-slate-300 max-w-2xl leading-relaxed">
-                Aceleramos tu negocio construyendo plataformas digitales de alto impacto que protegen tus activos estratégicos, multiplican la eficiencia operativa y garantizan total certeza legal ante el SAT y las leyes mexicanas.
+                Aceleramos tu negocio construyendo plataformas digitales de alto impacto que protegen tus activos estratégicos, multiplican la eficiencia operativa y escalan con total confiabilidad.
               </p>
 
               {/* Distinct Primary / Secondary Action Buttons */}
@@ -371,7 +362,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                     </span>
                   </div>
                   <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-['JetBrains_Mono'] text-[10px] font-bold">
-                    CFDI 4.0 SAT VIGENTE
+                    FIRMA DIGITAL SHA-256
                   </span>
                 </div>
 
@@ -459,14 +450,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
         onClose={() => setIsAuditModalOpen(false)}
         onSubmit={(data) => {
           alert(`Solicitud de Asesoría registrada para ${data.email}. Un arquitecto senior de MRCA Solutions le contactará en breve.`);
-        }}
-      />
-
-      <HardwareTokenModal
-        isOpen={isHardwareTokenModalOpen}
-        onClose={() => setIsHardwareTokenModalOpen(false)}
-        onSuccess={() => {
-          onNavigateToAdmin();
         }}
       />
 

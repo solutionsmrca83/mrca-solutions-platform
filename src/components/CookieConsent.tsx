@@ -106,7 +106,7 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
         <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-2.5 text-[11px] font-['JetBrains_Mono'] text-amber-300">
           <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
           <span>
-            <strong>ACCESO BLOQUEADO:</strong> Se requiere consentimiento explícito para habilitar los portales corporativos (Clientes, Academia y Administración).
+            <strong>ACCESO BLOQUEADO:</strong> Se requiere consentimiento explícito para habilitar los portales corporativos y herramientas seguras de la plataforma.
           </span>
         </div>
 
@@ -130,10 +130,10 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
             <div className="p-3 rounded-xl bg-slate-950/70 border border-cyan-500/20 flex flex-col gap-1">
               <div className="flex items-center gap-1.5 text-emerald-300 font-['Space_Grotesk'] font-bold text-[12px]">
                 <Fingerprint className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Materialidad SAT</span>
+                <span>Integridad Legal</span>
               </div>
               <p className="text-[11px] text-slate-400 leading-tight">
-                Trazabilidad inmutable SHA-256 para CFDI 4.0 y contratos B2B.
+                Trazabilidad inmutable SHA-256 para expedientes y contratos B2B.
               </p>
             </div>
 
