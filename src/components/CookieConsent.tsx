@@ -52,6 +52,7 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
   const handleAcceptCookies = () => {
     try {
       localStorage.setItem('mrca_cookie_consent', 'accepted');
+      window.dispatchEvent(new CustomEvent('mrca_cookie_consent_updated'));
     } catch {}
     setIsAccepted(true);
     onAccept();

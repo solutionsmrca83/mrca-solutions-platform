@@ -17,7 +17,7 @@ import {
   ChevronRight,
   FileText,
 } from 'lucide-react';
-import { NeuralCopilot } from '../NeuralCopilot';
+import { MrcaBotWidget } from '../MrcaBotWidget';
 import { ClientPortalTab } from '../ClientPortalView';
 
 interface ClientLayoutProps {
@@ -325,8 +325,8 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
         </main>
       </div>
 
-      {/* INTEGRATED MRCA QUANTUM NEURAL COPILOT (CLIENT SCOPE) */}
-      <NeuralCopilot scope="client" />
+      {/* ASISTENTE AUTOMATIZADO CRM & SOPORTE MRCA (CLIENT SCOPE) */}
+      <MrcaBotWidget scope="client" userEmail={clientEmail} />
     </div>
   );
 };

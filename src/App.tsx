@@ -16,6 +16,7 @@ import { supabase } from './lib/supabase/client';
 import { isUserAdmin, resolveUserRole, getEnrichedUser } from './lib/auth';
 import { ActiveView } from './types';
 import { NotFoundPage } from './components/NotFoundPage';
+import { MrcaBotWidget } from './components/MrcaBotWidget';
 
 export default function App() {
   const [activeView, setActiveView] = useState<ActiveView>('public');
@@ -769,8 +770,8 @@ export default function App() {
         </div>
       </main>
 
-      {/* FLOATING ACTION ARROWS (Framer Motion FABs for smooth scrolling) */}
-      <div className="fixed right-4 bottom-20 md:bottom-8 z-40 flex flex-col gap-2">
+      {/* FLOATING ACTION ARROWS (Framer Motion FABs — posicionados sobre el Asistente MRCA sin solaparse) */}
+      <div className="fixed right-4 bottom-36 md:bottom-24 md:right-6 z-30 flex flex-col gap-2">
         <motion.button
           whileHover={{ scale: 1.1, boxShadow: '0 0 20px rgba(0, 229, 255, 0.5)' }}
           whileTap={{ scale: 0.92 }}
@@ -921,6 +922,15 @@ export default function App() {
           }}
         />
       )}
+
+      {/* ASISTENTE AUTOMATIZADO CRM & SOPORTE MRCA (RESPETA COOKIE GATE) */}
+      <MrcaBotWidget
+        scope="public"
+        userEmail={sessionUser?.email}
+        userId={sessionUser?.id}
+        isCookieAccepted={isCookieAccepted}
+        onOpenPortal={handlePortalClientesClick}
+      />
     </div>
   );
 }

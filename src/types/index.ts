@@ -376,3 +376,65 @@ export interface AcademyTemplate {
   complexity: 'Básico' | 'Intermedio' | 'Avanzado';
 }
 
+// Automated Zero-Cost CRM & Level-1 Support Bot Types
+export type CrmLeadStatus =
+  | 'Nuevo'
+  | 'Aceptado Automáticamente'
+  | 'En Contrato'
+  | 'Rechazado';
+
+export interface CrmLeadRecord {
+  id: string;
+  client_name: string;
+  company_name: string;
+  email: string;
+  service_type: string;
+  estimated_budget?: string | null;
+  status: CrmLeadStatus;
+  bot_notes?: string | null;
+  contract_terms?: string | null;
+  auto_accepted: boolean;
+  session_id?: string | null;
+  created_at: string;
+  updated_at?: string;
+}
+
+export type BotSupportPriority = 'Baja' | 'Media' | 'Alta' | 'Crítica';
+export type BotSupportStatus = 'Abierto' | 'Resuelto por Bot' | 'Escalado a Humano';
+
+export interface BotSupportTicketRecord {
+  id: string;
+  user_id?: string | null;
+  client_email: string;
+  category: string;
+  subject: string;
+  description: string;
+  priority: BotSupportPriority | TicketPriority;
+  status: BotSupportStatus | TicketStatus;
+  bot_resolution?: string | null;
+  session_id?: string | null;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface BotChatLogRecord {
+  id: string;
+  session_id: string;
+  user_email?: string | null;
+  sender: 'user' | 'bot';
+  message: string;
+  action_triggered?: string | null;
+  created_at: string;
+}
+
+export interface ContractPrefillLead {
+  leadId?: string;
+  clientName: string;
+  companyName: string;
+  email: string;
+  serviceType: string;
+  estimatedBudget?: string | null;
+  botNotes?: string | null;
+}
+
+

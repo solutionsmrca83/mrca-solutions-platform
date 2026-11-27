@@ -21,7 +21,7 @@ import {
   ChevronRight,
   Users,
 } from 'lucide-react';
-import { NeuralCopilot } from '../NeuralCopilot';
+import { MrcaBotWidget } from '../MrcaBotWidget';
 import { isSuperAdmin, isPartner } from '../../lib/auth';
 
 
@@ -62,7 +62,7 @@ interface NavItem {
 const ADMIN_NAV_ITEMS: NavItem[] = [
   { id: 'principal', label: 'Panel Principal', icon: <Grid className="w-4 h-4" /> },
   { id: 'usuarios', label: 'Gestión Usuarios RBAC', icon: <Users className="w-4 h-4" />, badge: 'Superadmin', badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/30', superadminOnly: true },
-  { id: 'aprobaciones', label: 'Aprobación de Solicitudes', icon: <CheckCircle2 className="w-4 h-4" />, badge: '3 Pendientes', badgeColor: 'text-[#00fe66] bg-[#00fe66]/10 border-[#00fe66]/30' },
+  { id: 'aprobaciones', label: 'Aprobaciones Leads', icon: <CheckCircle2 className="w-4 h-4" />, badge: 'CRM Bot', badgeColor: 'text-[#00fe66] bg-[#00fe66]/10 border-[#00fe66]/30' },
   { id: 'finanzas', label: 'Finanzas & SPEI', icon: <DollarSign className="w-4 h-4" />, badge: 'Banxico T+0', badgeColor: 'text-[#00e5ff] bg-[#00e5ff]/10 border-[#00e5ff]/30' },
   { id: 'kali', label: 'Consola de Seguridad', icon: <Terminal className="w-4 h-4" />, badge: 'Monitoreo Activo', badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/30' },
   { id: 'proyectos', label: 'Gestión de Proyectos', icon: <Layers className="w-4 h-4" /> },
@@ -404,8 +404,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         </main>
       </div>
 
-      {/* INTEGRATED MRCA QUANTUM NEURAL COPILOT (ADMIN SCOPE) */}
-      <NeuralCopilot scope="admin" />
+      {/* ASISTENTE AUTOMATIZADO CRM & SOPORTE MRCA (ADMIN SCOPE) */}
+      <MrcaBotWidget scope="admin" userEmail={email} userId={sessionUser?.id} />
     </div>
   );
 };

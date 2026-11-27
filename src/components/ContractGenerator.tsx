@@ -32,12 +32,15 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase/client';
 import { isSuperAdmin, isPartner, getUserPermissions } from '../lib/auth';
-import { ClientContract, BudgetNegotiation } from '../types';
+import { mapServiceTypeToContractServices } from '../lib/mrcaBotEngine';
+import { ClientContract, BudgetNegotiation, ContractPrefillLead } from '../types';
 
 interface ContractGeneratorProps {
   showToast: (msg: string) => void;
   sessionUser?: any;
   initialMode?: 'generator' | 'negotiations' | 'history';
+  prefillLead?: ContractPrefillLead | null;
+  onPrefillConsumed?: () => void;
   onNavigateTab?: (tab: any) => void;
   onContractSent?: (contract: ClientContract) => void;
 }
@@ -164,6 +167,8 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
   showToast,
   sessionUser,
   initialMode = 'generator',
+  prefillLead = null,
+  onPrefillConsumed,
   onNavigateTab,
   onContractSent,
 }) => {
@@ -280,6 +285,26 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
   useEffect(() => {
     if (initialMode) setActiveTab(initialMode);
   }, [initialMode]);
+
+  // Pre-fill automático desde Consola CRM (1-clic "Enviar al Generador de Contratos")
+  useEffect(() => {
+    if (!prefillLead) return;
+    setCompanyName(prefillLead.companyName);
+    setRepresentativeName(prefillLead.clientName);
+    setEmail(prefillLead.email);
+    setSelectedServices(mapServiceTypeToContractServices(prefillLead.serviceType));
+    if (prefillLead.estimatedBudget && !prefillLead.estimatedBudget.toLowerCase().includes('por definir')) {
+      setTotalCost(prefillLead.estimatedBudget);
+    }
+    setCustomScopeNotes(
+      `Servicio solicitado vía Asistente CRM MRCA: ${prefillLead.serviceType}.${
+        prefillLead.botNotes ? ` ${prefillLead.botNotes}` : ''
+      }`
+    );
+    setActiveTab('generator');
+    showToast(`Datos de ${prefillLead.companyName} pre-cargados en el Generador de Contratos.`);
+    onPrefillConsumed?.();
+  }, [prefillLead, onPrefillConsumed, showToast]);
 
   // Handle Preset Client Auto-fill (Superadmin Only)
   const handleSelectPreset = (preset: (typeof PRESET_CLIENTS)[0]) => {

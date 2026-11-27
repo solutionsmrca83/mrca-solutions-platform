@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { KaliTerminal } from './KaliTerminal';
 import { ReAuthModal, NewTicketModal, InspectContractModal } from './Modals';
-import { LedgerEntry, KanbanTicket } from '../types';
+import { LedgerEntry, KanbanTicket, ContractPrefillLead } from '../types';
 import { supabase } from '../lib/supabase/client';
 import { AdminProjectApprovals } from './AdminProjectApprovals';
 import { AdminContractGenerator } from './AdminContractGenerator';
 import { ContractGenerator } from './ContractGenerator';
 import { AdminFinances } from './AdminFinances';
 import { AdminSupportTickets } from './AdminSupportTickets';
+import { AdminCrmConsole } from './admin/AdminCrmConsole';
 import { ClientFileVault } from './ClientFileVault';
 import { AdminAuditLogs } from './AdminAuditLogs';
 import { AdminBudgetNegotiations } from './AdminBudgetNegotiations';
@@ -175,6 +176,12 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
   const [fido2Active, setFido2Active] = useState(true);
   const [termsHash, setTermsHash] = useState('0x9d02a49f...e7b8c1');
   const [isSigningTerms, setIsSigningTerms] = useState(false);
+  const [contractPrefillLead, setContractPrefillLead] = useState<ContractPrefillLead | null>(null);
+
+  const handleSendLeadToContract = (lead: ContractPrefillLead) => {
+    setContractPrefillLead(lead);
+    setActiveTab('contratos');
+  };
 
   const [inspectModal, setInspectModal] = useState<{ isOpen: boolean; title: string; hash: string }>({
     isOpen: false,
@@ -450,7 +457,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">assignment_turned_in</span>
-              <span>SOLICITUDES &amp; APROBACIÓN</span>
+              <span>APROBACIONES LEADS</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
@@ -530,6 +537,8 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             showToast={showToast}
             sessionUser={sessionUser}
             initialMode="generator"
+            prefillLead={contractPrefillLead}
+            onPrefillConsumed={() => setContractPrefillLead(null)}
             onNavigateTab={(tab) => setActiveTab(tab)}
           />
         ) : activeTab === 'presupuestos' ? (
@@ -540,11 +549,27 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
             onNavigateTab={(tab) => setActiveTab(tab)}
           />
         ) : activeTab === 'aprobaciones' ? (
-          <AdminProjectApprovals onToast={showToast} />
+          <div className="flex flex-col gap-8">
+            <AdminCrmConsole
+              defaultSection="leads"
+              sessionUser={sessionUser}
+              showToast={showToast}
+              onSendToContractGenerator={handleSendLeadToContract}
+            />
+            <AdminProjectApprovals onToast={showToast} />
+          </div>
         ) : activeTab === 'finanzas' ? (
           <AdminFinances showToast={showToast} />
         ) : activeTab === 'soporte' ? (
-          <AdminSupportTickets showToast={showToast} />
+          <div className="flex flex-col gap-8">
+            <AdminCrmConsole
+              defaultSection="tickets"
+              sessionUser={sessionUser}
+              showToast={showToast}
+              onSendToContractGenerator={handleSendLeadToContract}
+            />
+            <AdminSupportTickets showToast={showToast} />
+          </div>
         ) : activeTab === 'boveda' ? (
           <ClientFileVault isAdmin={true} showToast={showToast} />
         ) : activeTab === 'auditoria' ? (
