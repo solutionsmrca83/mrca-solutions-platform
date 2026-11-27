@@ -54,7 +54,7 @@ const INITIAL_NEGOTIATIONS: BudgetNegotiation[] = [
     client_company_or_school: 'Logística Transfronteriza Del Norte S.A.',
     client_email: 'rvalenzuela@transnorte.com.mx',
     client_phone: '+52 81 8390 1200',
-    service_title: 'Sprint 03: Microservicios Cloud mTLS & Bóveda HSM',
+    service_title: 'Fase 03: Infraestructura Cloud Cifrada y Bóveda Segura',
     service_category: 'b2b',
     original_price: 185000,
     proposed_budget: 145000,
@@ -221,7 +221,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
     setIsProcessingId(null);
     if (showToast) {
       showToast(
-        `¡Precio aprobado para ${neg.client_name}! Enlace de checkout generado ($${finalApprovedPrice.toLocaleString('es-MX')} MXN).`
+        `¡Precio aprobado para ${neg.client_name}! Enlace de pago generado ($${finalApprovedPrice.toLocaleString('es-MX')} MXN).`
       );
     }
   };
@@ -297,14 +297,14 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="font-['Space_Grotesk'] text-[20px] sm:text-[22px] font-bold text-[#dce1ff]">
-                  Hub de Solicitudes de Presupuesto &amp; Negociaciones
+                  Centro de Solicitudes de Presupuesto y Negociaciones
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-full bg-[#00FF66]/15 border border-[#00FF66]/40 text-[#00FF66] font-['JetBrains_Mono'] text-[10px] font-bold uppercase tracking-wider">
-                  ENCLAVE DIRECTIVO
+                  DIRECCIÓN EJECUTIVA
                 </span>
               </div>
               <p className="font-['Inter'] text-[12px] text-[#bac9cc] mt-0.5">
-                Revisa contraofertas enviadas por Estudiantes y Clientes Corporativos. Modula el alcance y aprueba nuevos precios para actualizar dinámicamente sus enlaces de checkout.
+                Revisa contraofertas enviadas por Estudiantes y Clientes Corporativos. Modula el alcance y aprueba nuevos precios para actualizar dinámicamente sus enlaces de pago.
               </p>
             </div>
           </div>
@@ -351,7 +351,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
               {approvedCount}
             </span>
             <span className="font-['JetBrains_Mono'] text-[10px] text-[#00FF66]">
-              Checkouts activos vía SPEI/Stripe
+              Enlaces de pago activos vía SPEI/Stripe
             </span>
           </div>
 
@@ -376,7 +376,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
             { id: 'all', label: 'TODAS' },
             { id: 'pending', label: `PENDIENTES (${pendingCount})` },
             { id: 'student', label: 'ESTUDIANTES' },
-            { id: 'enterprise', label: 'ENTERPRISE B2B' },
+            { id: 'enterprise', label: 'EMPRESAS B2B' },
             { id: 'approved', label: 'APROBADAS' },
           ].map((tab) => (
             <button
@@ -482,7 +482,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
                       }`}
                     >
                       {isApproved
-                        ? 'PRECIO APROBADO & CHECKOUT ACTIVO'
+                        ? 'PRECIO APROBADO Y ENLACE ACTIVO'
                         : isPending
                         ? 'PENDIENTE DE RESOLUCIÓN'
                         : 'RECHAZADA'}
@@ -512,7 +512,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
                       {neg.client_company_or_school}
                     </span>
                     <div className="pt-2 text-[#bac9cc] flex flex-col gap-0.5 text-[11px]">
-                      <span>Email: <strong className="text-[#dce1ff] select-all">{neg.client_email}</strong></span>
+                      <span>Correo: <strong className="text-[#dce1ff] select-all">{neg.client_email}</strong></span>
                       {neg.client_phone && <span>Tel/WA: <strong className="text-[#dce1ff]">{neg.client_phone}</strong></span>}
                     </div>
                   </div>
@@ -580,7 +580,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
                   <div className="flex flex-col gap-1.5">
                     <label className="font-['JetBrains_Mono'] text-[11px] text-[#00E5FF] uppercase font-bold flex items-center gap-1.5">
                       <Edit3 className="w-3.5 h-3.5 text-[#00E5FF]" />
-                      <span>Ajuste de Alcance del Proyecto (Scope Modularization):</span>
+                      <span>Ajuste de Alcance del Proyecto (Modularización):</span>
                     </label>
                     <textarea
                       rows={2}
@@ -604,7 +604,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
                             Nuevo Precio Vigente: ${neg.approved_price?.toLocaleString('es-MX')} MXN
                           </span>
                           <span className="text-[#849396] text-[10px] line-clamp-1 select-all">
-                            Checkout: {neg.checkout_link}
+                            Enlace de pago: {neg.checkout_link}
                           </span>
                         </div>
                       </div>
@@ -616,7 +616,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
                           className="px-3 py-1.5 rounded-xl bg-[#00FF66]/20 hover:bg-[#00FF66]/30 text-[#00FF66] border border-[#00FF66]/40 font-bold flex items-center gap-1.5 transition-all"
                         >
                           {copiedLink === neg.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                          <span>{copiedLink === neg.id ? 'Copiado' : 'Copiar Checkout Link'}</span>
+                          <span>{copiedLink === neg.id ? 'Copiado' : 'Copiar Enlace de Pago'}</span>
                         </button>
                       </div>
                     </div>
@@ -662,7 +662,7 @@ export const AdminBudgetNegotiations: React.FC<AdminBudgetNegotiationsProps> = (
                           className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00E5FF] via-[#38ef7d] to-[#00FF66] hover:brightness-110 text-[#00363d] font-['Space_Grotesk'] text-[12px] font-extrabold uppercase tracking-wider flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(0,255,102,0.35)] hover:scale-[1.02] active:scale-[0.98]"
                         >
                           <CheckCircle2 className="w-4 h-4 text-[#00363d]" />
-                          <span>Aprobar Nuevo Precio &amp; Generar Checkout</span>
+                          <span>Aprobar Nuevo Precio y Generar Enlace</span>
                         </button>
                       </div>
                     </div>

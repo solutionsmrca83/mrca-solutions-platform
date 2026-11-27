@@ -48,7 +48,7 @@ export const VideoSplashPreloader: React.FC<VideoSplashPreloaderProps> = ({
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.02 }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[9999] bg-[#0A1128] text-[#dce1ff] flex flex-col items-center justify-between p-6 overflow-hidden select-none"
+          className="fixed inset-0 z-[9999] bg-[#060d24]/85 backdrop-blur-2xl text-[#dce1ff] flex flex-col items-center justify-between p-6 overflow-hidden select-none"
         >
           {/* Cyber Subtle Grid & Radial Glow Accents */}
           <div
@@ -72,14 +72,14 @@ export const VideoSplashPreloader: React.FC<VideoSplashPreloaderProps> = ({
                   MRCA SOLUTIONS
                 </span>
                 <span className="font-['JetBrains_Mono'] text-[9px] text-[#00fe66] uppercase tracking-widest mt-1">
-                  INGENIERÍA &amp; CIBERSEGURIDAD B2B // KERNEL BOOT
+                  INGENIERÍA &amp; CIBERSEGURIDAD B2B // INICIO SEGURO
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#141a32]/80 border border-[#00fe66]/30 backdrop-blur-md font-['JetBrains_Mono'] text-[11px] text-[#00fe66]">
               <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]" />
-              <span>SISTEMA ZERO-TRUST: CARGANDO</span>
+              <span>SISTEMA DE SEGURIDAD: CARGANDO</span>
             </div>
           </header>
 
@@ -94,7 +94,7 @@ export const VideoSplashPreloader: React.FC<VideoSplashPreloaderProps> = ({
             >
               <Cpu className="w-3.5 h-3.5 text-[#00e5ff]" />
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#00e5ff] tracking-widest uppercase font-semibold">
-                PLATAFORMA MRCA SOLUTIONS // CORE KERNEL v4.12
+                PLATAFORMA MRCA SOLUTIONS // NÚCLEO v4.12
               </span>
             </motion.div>
 
@@ -110,7 +110,7 @@ export const VideoSplashPreloader: React.FC<VideoSplashPreloaderProps> = ({
             >
               <img
                 src="/MRCA.SVG"
-                alt="MRCA Solutions - Technology Solutions"
+                alt="MRCA Solutions - Soluciones Tecnológicas"
                 className="w-full h-auto max-h-[260px] sm:max-h-[300px] object-contain drop-shadow-[0_0_40px_rgba(0,229,255,0.35)] filter hover:brightness-105 transition-all select-none"
               />
             </motion.div>
@@ -122,7 +122,7 @@ export const VideoSplashPreloader: React.FC<VideoSplashPreloaderProps> = ({
               transition={{ duration: 1.5, delay: 1 }}
               className="mt-4 font-['JetBrains_Mono'] text-[12px] sm:text-[13px] text-[#bac9cc] tracking-wide"
             >
-              INFRAESTRUCTURA RESILIENTE DE INGENIERÍA &amp; GOBERNANZA ZERO-TRUST
+              INFRAESTRUCTURA EMPRESARIAL DE INGENIERÍA Y CIBERSEGURIDAD
             </motion.p>
           </main>
 
@@ -150,9 +150,9 @@ export const VideoSplashPreloader: React.FC<VideoSplashPreloaderProps> = ({
             </div>
 
             <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[10px] text-[#849396] mt-0.5">
-              <span>HSM YUBI-V4: SECURE HANDSHAKE</span>
+              <span>MÓDULO DE SEGURIDAD: CONEXIÓN CIFRADA</span>
               <span className="text-[#00fe66] tracking-wider uppercase font-semibold">
-                BOOT SECRETS VERIFIED
+                CREDENCIALES DE INICIO VERIFICADAS
               </span>
             </div>
           </footer>

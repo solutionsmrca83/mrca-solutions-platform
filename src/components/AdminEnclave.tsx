@@ -28,7 +28,7 @@ const INITIAL_LEDGER: LedgerEntry[] = [
     client: 'Banco FinTech Corp',
     amount: 350000,
     currency: 'MXN',
-    service: 'Arquitectura Cloud Zero-Trust',
+    service: 'Infraestructura y Nube (Cloud)',
     gateway: 'Stripe Escrow (Dual)',
     gatewayType: 'stripe',
     hash: '0x4f8a921be4a288b18402fcae9120489',
@@ -40,7 +40,7 @@ const INITIAL_LEDGER: LedgerEntry[] = [
     client: 'NeoLogistics LatAm',
     amount: 180000,
     currency: 'MXN',
-    service: 'Hardening Kubernetes & Cilium',
+    service: 'Blindaje de Nube y Redundancia',
     gateway: 'SPEI Inmediato Banxico',
     gatewayType: 'spei',
     hash: '0x3b1c8812fa99a0d2491b490f840139b',
@@ -52,7 +52,7 @@ const INITIAL_LEDGER: LedgerEntry[] = [
     client: 'Grupo Inmobiliario Cero',
     amount: 225000,
     currency: 'MXN',
-    service: 'Auditoría Pentest Kali & SLA',
+    service: 'Auditoría de Ciberseguridad y SLA',
     gateway: 'Stripe Escrow (Dual)',
     gatewayType: 'stripe',
     hash: '0x88ea2910fa401d29381fc0491840182',
@@ -64,7 +64,7 @@ const INITIAL_LEDGER: LedgerEntry[] = [
     client: 'Quantum Health B2B',
     amount: 410000,
     currency: 'MXN',
-    service: 'Backend Rust/mTLS & Vault HW',
+    service: 'Servicios Core y Bóveda Segura',
     gateway: 'SPEI Inmediato Banxico',
     gatewayType: 'spei',
     hash: '0x12c84918ef74910248bc901a8401948',
@@ -80,7 +80,7 @@ const INITIAL_TICKETS: KanbanTicket[] = [
     category: 'TikTok B2B',
     categoryBadge: 'TikTok B2B',
     categoryBadgeColor: 'cyan',
-    description: 'Auditoría Pentest Completa & Red Team para e-commerce cloud.',
+    description: 'Auditoría integral de ciberseguridad para plataforma de comercio electrónico.',
     amountEst: '$320k MXN Est.',
     leadScore: 94,
     status: 'leads',
@@ -91,7 +91,7 @@ const INITIAL_TICKETS: KanbanTicket[] = [
     category: 'Instagram Ads',
     categoryBadge: 'Instagram Ads',
     categoryBadgeColor: 'purple',
-    description: 'Backend Rust de ultra-baja latencia con cifrado mTLS.',
+    description: 'Arquitectura de alta disponibilidad y cifrado bancario.',
     amountEst: '$190k MXN Est.',
     leadScore: 88,
     status: 'leads',
@@ -102,7 +102,7 @@ const INITIAL_TICKETS: KanbanTicket[] = [
     category: 'TikTok B2B',
     categoryBadge: 'TikTok B2B',
     categoryBadgeColor: 'cyan',
-    description: 'Configuración PostgreSQL RLS con Supabase HIPAA-ready.',
+    description: 'Configuración de bases de datos aisladas con cumplimiento HIPAA.',
     amountEst: '$260k MXN Est.',
     leadScore: 91,
     status: 'leads',
@@ -113,7 +113,7 @@ const INITIAL_TICKETS: KanbanTicket[] = [
     category: 'NDA Cripto OK',
     categoryBadge: 'NDA Cripto OK',
     categoryBadgeColor: 'green',
-    description: 'SLA 99.99% para gateway de validación aduanera Zero-Trust.',
+    description: 'SLA 99.99% para plataforma de validación aduanera segura.',
     slaNote: 'Firma ECDSA verificada por Socio',
     status: 'negotiation',
   },
@@ -123,7 +123,7 @@ const INITIAL_TICKETS: KanbanTicket[] = [
     category: 'Revisión CISO',
     categoryBadge: 'Revisión CISO',
     categoryBadgeColor: 'slate',
-    description: 'Cláusulas de dispersión escrow dual e indemnización PCI-DSS.',
+    description: 'Cláusulas de resguardo fiduciario dual e indemnización PCI-DSS.',
     slaNote: 'En revisión con Jefe (CEO/CISO)',
     status: 'negotiation',
   },
@@ -304,12 +304,12 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#222941] border border-[#00fe66]/30 shadow-inner">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#00fe66] animate-ping"></span>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66] uppercase tracking-wider font-semibold">
-                  CLUSTER-CDMX-ALPHA // ROOT-SESSION: 0X9F41B
+                  NODO CDMX ALFA // SESIÓN SEGURA: 0X9F41B
                 </span>
               </div>
               <div className="flex items-center gap-2 font-['JetBrains_Mono'] text-[10px] sm:text-[11px] text-[#bac9cc] uppercase">
                 <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00e5ff]">encrypted</span>
-                <span>HSM YUBI-V4: LOCKED</span>
+                <span>MÓDULO DE SEGURIDAD: ACTIVO</span>
                 <span className="text-[#3b494c]">•</span>
                 <span className="text-[#00daf3]">TLS 1.3 / ECDSA P-384</span>
               </div>
@@ -326,7 +326,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                     {sessionUser?.email ? sessionUser.email.split('@')[0] : 'Jefe'} <span className="text-[10px] text-[#bac9cc] font-normal">(CISO)</span>
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[9px] text-[#00fe66] tracking-wider uppercase font-semibold">
-                    {sessionUser?.role ? `AUTH: ${sessionUser.role.toUpperCase()}` : 'NIVEL 1 // SUPERADMIN'}
+                    {sessionUser?.role ? `ROL: ${sessionUser.role.toUpperCase()}` : 'NIVEL 1 // SUPERADMIN'}
                   </span>
                 </div>
               </div>
@@ -337,7 +337,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                 </div>
                 <div className="flex flex-col">
                   <span className="font-['Space_Grotesk'] text-[13px] text-[#dce1ff] font-bold leading-none">
-                    Socio <span className="text-[10px] text-[#bac9cc] font-normal">(CTO/VP Eng)</span>
+                    Socio <span className="text-[10px] text-[#bac9cc] font-normal">(Dirección Técnica)</span>
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[9px] text-[#00fe66] tracking-wider uppercase font-semibold">
                     NIVEL 1 // SUPERADMIN
@@ -347,10 +347,10 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
 
               <button
                 onClick={() => setIsReAuthModalOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 cursor-pointer"
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[16px]">lock_reset</span>
-                <span>RE-AUTH SESIÓN</span>
+                <span>REVALIDAR SESIÓN</span>
               </button>
 
               {onSignOut && (
@@ -416,7 +416,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">terminal</span>
-              <span>KALI AUDIT</span>
+              <span>CONSOLA DE SEGURIDAD</span>
             </button>
             <button
               onClick={() => setActiveTab('proyectos')}
@@ -489,7 +489,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               }`}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">security</span>
-              <span>AUDITORÍA ZERO-TRUST</span>
+              <span>AUDITORÍA DE SEGURIDAD</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             </button>
             <button
@@ -517,7 +517,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">manage_accounts</span>
               <span>GESTIÓN DE USUARIOS RBAC</span>
               <span className="px-1.5 py-0.2 rounded bg-amber-950/60 border border-amber-500/40 text-[9px] text-amber-300">
-                ROOT
+                RESTRINGIDO
               </span>
             </button>
           </div>
@@ -593,11 +593,11 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-cyan-400"></span>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400 uppercase font-semibold">
-                  DISPERSIÓN DUAL GATEWAY
+                  DISPERSIÓN EN PASARELAS
                 </span>
               </div>
               <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-400 font-semibold bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30">
-                LEDGER OK
+                CONCILIADO
               </span>
             </div>
             <div className="mt-3 flex flex-col gap-2">
@@ -630,13 +630,13 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
           <div className="rounded-xl bg-slate-900 border border-white/10 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-cyan-500/30 transition-all duration-300">
             <div className="flex items-center justify-between">
               <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400 uppercase font-semibold">
-                PIPELINE DE CLIENTES B2B
+                CARTERA DE CLIENTES B2B
               </span>
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </div>
             <div className="my-2">
               <div className="font-['Space_Grotesk'] text-[28px] sm:text-[32px] text-white font-bold">
-                34 <span className="text-[14px] text-slate-400 font-normal">LEADS ACTIVOS</span>
+                34 <span className="text-[14px] text-slate-400 font-normal">PROSPECTOS ACTIVOS</span>
               </div>
               <div className="font-['JetBrains_Mono'] text-[10.5px] text-emerald-400 mt-1">
                 +42% sem // 68.2% CONVERSIÓN
@@ -665,7 +665,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               </div>
             </div>
             <div className="font-['JetBrains_Mono'] text-[10px] text-emerald-300 bg-emerald-950/60 px-2.5 py-1 rounded truncate border border-emerald-500/30">
-              PROTECCIÓN ACTIVA // CILIUM eBPF OK
+              PROTECCIÓN ACTIVA // REDUNDANCIA EN LÍNEA
             </div>
           </div>
         </section>
@@ -744,7 +744,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                             <td className="py-3.5 px-4 whitespace-nowrap">
                               <span className="text-emerald-400 font-['JetBrains_Mono'] text-[10.5px] flex items-center gap-1 font-semibold">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                {item.status}
+                                {item.status === 'LEDGER OK' ? 'CONCILIADO' : item.status === 'PENDING' ? 'PENDIENTE' : 'DISPERSADO'}
                               </span>
                             </td>
                             <td className="py-3.5 px-4 text-right whitespace-nowrap">
@@ -782,7 +782,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                   </div>
                   <div>
                     <h2 className="font-['Space_Grotesk'] text-[18px] text-white font-bold leading-none">
-                      Pipeline &amp; Proyectos B2B
+                      Cartera y Proyectos B2B
                     </h2>
                     <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400">Control de entregables y negociaciones</span>
                   </div>
@@ -815,7 +815,7 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
                     <p className="font-['Inter'] text-[12px] text-slate-300 leading-relaxed">{t.description}</p>
                     <div className="flex items-center justify-between pt-1.5 mt-1 border-t border-white/5 text-[10.5px] font-['JetBrains_Mono']">
                       <span className="text-emerald-400 font-bold">{t.amountEst || 'En SLA'}</span>
-                      {t.leadScore && <span className="text-slate-400">Score: <strong className="text-white">{t.leadScore}</strong></span>}
+                      {t.leadScore && <span className="text-slate-400">Puntaje: <strong className="text-white">{t.leadScore}</strong></span>}
                       {t.slaNote && <span className="text-cyan-400">{t.slaNote}</span>}
                     </div>
                   </div>
@@ -826,10 +826,10 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
               <div className="flex flex-col gap-3 pt-3 border-t border-white/10">
                 <div className="flex items-center justify-between">
                   <span className="font-['Space_Grotesk'] text-[13px] text-white font-bold uppercase tracking-wide">
-                    Progreso de Sprints Activos
+                    Progreso de Fases Activas
                   </span>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30 font-bold">
-                    SPRINT 24-B EN CURSO
+                    FASE 24-B EN CURSO
                   </span>
                 </div>
 
@@ -956,9 +956,9 @@ export const AdminEnclave: React.FC<AdminEnclaveProps> = ({
         <div className="py-6 flex flex-col items-center justify-center gap-1 font-['JetBrains_Mono'] text-[11px] text-[#849396] text-center border-t border-[#181e36] mt-4">
           <div className="flex items-center gap-1.5 text-[#00e5ff]">
             <span translate="no" className="notranslate material-symbols-outlined text-[15px]">lock</span>
-            <span>MRCA SOLUTIONS // PRIVILEGED ACCESS ENCLAVE</span>
+            <span>MRCA SOLUTIONS // CONSOLA DE ACCESO RESTRINGIDO</span>
           </div>
-          <span>CONFIDENTIAL - STRICT ACCESS ONLY FOR JEFE & SOCIO</span>
+          <span>CONFIDENCIAL - ACCESO EXCLUSIVO PARA DIRECCIÓN GENERAL</span>
         </div>
       </div>
 

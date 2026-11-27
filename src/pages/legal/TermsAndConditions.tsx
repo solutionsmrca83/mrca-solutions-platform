@@ -24,7 +24,7 @@ export const TermsAndConditions: React.FC<TermsProps> = ({ onBack, onNavigate })
           empresarial provista por <strong>MRCA Solutions</strong> (en adelante, "LA COMPAÑÍA"), constituida 
           conforme a las leyes mercantiles de los Estados Unidos Mexicanos, aplicable a cualquier persona moral o física con 
           actividad empresarial (en adelante, "EL CLIENTE") que contrate servicios de ingeniería de software, arquitectura en la nube, 
-          auditoría criptográfica o infraestructura Zero-Trust.
+          auditoría de ciberseguridad o infraestructura de alta disponibilidad.
         </p>
         <p>
           Al acceder, autenticarse mediante credenciales criptográficas, firmas digitales o desplegar instancias de software de LA COMPAÑÍA, 
@@ -52,7 +52,7 @@ export const TermsAndConditions: React.FC<TermsProps> = ({ onBack, onNavigate })
         <ul className="list-disc pl-5 space-y-2 text-slate-300">
           <li>
             <strong>Compromiso de Credenciales y Llaves de API:</strong> Filtración, robo o divulgación de contraseñas, tokens de sesión, 
-            claves maestras o llaves de API (API Keys) generadas en el portal de clientes por falta de resguardo interno o almacenamiento en texto plano.
+            claves maestras o llaves de API (claves de integración) generadas en el portal de clientes por falta de resguardo interno o almacenamiento en texto plano.
           </li>
           <li>
             <strong>Ingeniería Social y Phishing Interno:</strong> Accesos no autorizados derivados de ataques de suplantación dirigidos al personal 
@@ -110,7 +110,7 @@ export const TermsAndConditions: React.FC<TermsProps> = ({ onBack, onNavigate })
         </ul>
         <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/30 space-y-2">
           <p className="font-bold text-red-300">
-            POLÍTICA ESTRICTA DE NO REEMBOLSOS (NO REFUND POLICY):
+            POLÍTICA ESTRICTA DE NO REEMBOLSOS:
           </p>
           <p className="text-[13px] text-slate-300">
             Debido a la naturaleza de los servicios de ingeniería de alta precisión, aprovisionamiento dedicado de microservicios en la nube, 

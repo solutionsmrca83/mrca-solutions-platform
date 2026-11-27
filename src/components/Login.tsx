@@ -101,7 +101,7 @@ export const Login: React.FC<LoginProps> = ({
       'MRCA-SUPERADMIN-BOOTSTRAP-KEY-2026';
 
     if (setupToken.trim() !== expectedToken.trim()) {
-      setSetupError('Token de Inicialización inválido. Acceso denegado por Zero-Trust.');
+      setSetupError('Token de Inicialización inválido. Acceso denegado por política de seguridad.');
       setSetupLoading(false);
       return;
     }
@@ -250,7 +250,7 @@ export const Login: React.FC<LoginProps> = ({
   return (
     <div
       id="login-view-root"
-      className="min-h-screen bg-[#0A1128] text-[#dce1ff] flex flex-col items-center justify-center p-4 relative overflow-hidden font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d]"
+      className="min-h-screen bg-transparent text-[#dce1ff] flex flex-col items-center justify-center p-4 relative overflow-hidden font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d]"
     >
       {/* Cyber Subtle Grid Background */}
       <div
@@ -292,7 +292,7 @@ export const Login: React.FC<LoginProps> = ({
           />
           <span className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3] uppercase tracking-widest mt-2 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse" />
-            CONSOLA DE AUTENTICACIÓN MULTI-ROL ZERO-TRUST v4.12
+            CONSOLA DE ACCESO CORPORATIVO MULTI-ROL v4.12
           </span>
         </motion.div>
 
@@ -374,7 +374,7 @@ export const Login: React.FC<LoginProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="w-full rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-emerald-500/30 hover:border-emerald-400 p-6 sm:p-8 shadow-[0_0_20px_rgba(16,185,129,0.25)] transition-all duration-300"
+                className="w-full rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-emerald-500/30 hover:border-emerald-400 p-6 sm:p-8 shadow-[0_0_20px_rgba(16,185,129,0.25)] transition-all duration-300 animate-border-pulse"
               >
                 <StudentAuthModule
                   onSuccess={async (user) => {
@@ -400,20 +400,20 @@ export const Login: React.FC<LoginProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="w-full rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-cyan-500/30 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.3)] flex flex-col gap-4 transition-all duration-300"
+                className="w-full rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-cyan-500/40 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.3)] flex flex-col gap-4 transition-all duration-300 animate-border-pulse"
               >
                 <div className="flex flex-col">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
                     <span className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3] uppercase tracking-wider font-semibold">
-                      SUPABASE ZERO-TRUST AUTH // ENCLAVE GATE
+                      ACCESO SEGURO // PORTAL DE ADMINISTRACIÓN
                     </span>
                   </div>
                   <h3 className="font-['Space_Grotesk'] text-[24px] font-bold text-white">
                     Acceso Restringido /admin
                   </h3>
                   <p className="font-['Inter'] text-[13px] text-slate-300 leading-relaxed mt-1">
-                    El Enclave de Administración requiere una sesión criptográfica validada para Jefe (CISO) y Socios autorizados.
+                    La Consola de Administración requiere una sesión corporativa validada para Dirección General y Socios autorizados.
                   </p>
                 </div>
 
@@ -446,7 +446,7 @@ export const Login: React.FC<LoginProps> = ({
                         : 'text-slate-400 hover:text-white'
                     }`}
                   >
-                    Magic Link OTP
+                    Enlace de Acceso Único
                   </button>
                 </div>
 
@@ -503,15 +503,15 @@ export const Login: React.FC<LoginProps> = ({
                   <button
                     type="submit"
                     disabled={adminLoading}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.01] flex items-center justify-center gap-2 mt-1 cursor-pointer disabled:opacity-50"
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] flex items-center justify-center gap-2 mt-1 cursor-pointer disabled:opacity-50"
                   >
                     <span translate="no" className="notranslate material-symbols-outlined text-[18px]">vpn_key</span>
                     <span>
                       {adminLoading
-                        ? 'Validando con Supabase...'
+                        ? 'Validando credenciales...'
                         : adminAuthMode === 'password'
-                        ? 'Autenticar en Enclave'
-                        : 'Enviar Magic Link'}
+                        ? 'Ingresar a Consola'
+                        : 'Enviar Enlace de Acceso'}
                     </span>
                   </button>
                 </form>
@@ -523,7 +523,7 @@ export const Login: React.FC<LoginProps> = ({
                     className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 transition-all duration-300 font-['JetBrains_Mono'] text-[10px] font-semibold cursor-pointer"
                   >
                     <span translate="no" className="notranslate material-symbols-outlined text-[14px]">shield</span>
-                    <span>Simular Llave Raíz de Desarrollador (Zero-Trust Sandbox)</span>
+                    <span>Acceder en Modo Demostración (Administrador)</span>
                   </button>
 
                   {/* Master Bootstrap Key Trigger */}
@@ -533,13 +533,13 @@ export const Login: React.FC<LoginProps> = ({
                     className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 transition-all duration-300 font-['JetBrains_Mono'] text-[10px] font-bold cursor-pointer"
                   >
                     <Key className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Inicializar Cuenta Root CISO (Master Setup Key)</span>
+                    <span>Configuración Inicial de Administrador (Llave Maestra)</span>
                   </button>
                 </div>
 
                 <div className="flex items-center justify-between text-[10px] font-['JetBrains_Mono'] text-slate-400 pt-2 border-t border-slate-800">
-                  <span>SUPABASE RLS POLICY</span>
-                  <span className="text-cyan-400">ENFORCED: JWT HS256/RS256</span>
+                  <span>POLÍTICA DE SEGURIDAD ACTIVA</span>
+                  <span className="text-cyan-400">CIFRADO VERIFICADO</span>
                 </div>
               </motion.div>
             )}
@@ -555,7 +555,7 @@ export const Login: React.FC<LoginProps> = ({
               className="text-amber-400/80 hover:text-amber-300 transition-colors flex items-center gap-1 text-[10px] cursor-pointer"
             >
               <Key className="w-3 h-3 text-amber-400" />
-              <span>Master Setup Key</span>
+              <span>Llave de Configuración Maestra</span>
             </button>
 
             <button
@@ -602,7 +602,7 @@ export const Login: React.FC<LoginProps> = ({
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative w-full max-w-lg rounded-3xl bg-[#0e1633] border border-amber-500/40 p-6 sm:p-8 shadow-[0_0_60px_rgba(245,158,11,0.2)] z-10 flex flex-col gap-4 text-left font-['Inter']"
+              className="relative w-full max-w-lg rounded-3xl bg-[#0e1633] border border-amber-500/40 p-6 sm:p-8 shadow-[0_0_60px_rgba(245,158,11,0.2)] z-10 flex flex-col gap-4 text-left font-['Inter'] animate-border-pulse"
             >
               {/* Header */}
               <div className="flex items-center justify-between pb-3 border-b border-amber-500/20">
@@ -612,10 +612,10 @@ export const Login: React.FC<LoginProps> = ({
                   </div>
                   <div>
                     <h3 className="font-['Space_Grotesk'] text-[18px] font-bold text-white leading-tight">
-                      Inicialización Root (Master Setup)
+                      Configuración Inicial de Administrador
                     </h3>
                     <span className="font-['JetBrains_Mono'] text-[10px] text-amber-400 uppercase tracking-wider">
-                      Desbloqueo CISO // Zero-Trust Bootstrap
+                      Acceso Maestro // Inicialización Segura
                     </span>
                   </div>
                 </div>
@@ -644,7 +644,7 @@ export const Login: React.FC<LoginProps> = ({
                 {/* Master Token */}
                 <div>
                   <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-amber-300 mb-1">
-                    Master Bootstrap Key / Token de Inicialización
+                    Llave Maestra / Token de Inicialización
                   </label>
                   <input
                     type="password"

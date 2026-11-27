@@ -43,7 +43,7 @@ const INITIAL_INVOICES: Invoice[] = [
     client_email: 'cliente@enterprise.corp',
     amount: 185000,
     status: 'pending',
-    description: 'Sprint 03: Microservicios Cloud mTLS & Bóveda Criptográfica HSM',
+    description: 'Fase 03: Infraestructura Cloud Cifrada y Bóveda de Seguridad',
     due_date: '24 Oct 2026',
     created_at: '12 Oct 2026',
   },
@@ -54,7 +54,7 @@ const INITIAL_INVOICES: Invoice[] = [
     client_email: 'cliente@enterprise.corp',
     amount: 120000,
     status: 'verification_in_progress',
-    description: 'Anticipo de Auditoría Ofensiva Pentest Kali Linux & Hardening eBPF',
+    description: 'Anticipo de Auditoría Integral de Ciberseguridad y Blindaje',
     due_date: '18 Oct 2026',
     spei_tracking_key: '2026101240014BND00008891230194',
     payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv074.pdf',
@@ -67,7 +67,7 @@ const INITIAL_INVOICES: Invoice[] = [
     client_email: 'cliente@enterprise.corp',
     amount: 350000,
     status: 'paid',
-    description: 'Sprint 01 & 02: Arquitectura Zero-Trust C4 & Modelado Relacional PostgreSQL RLS',
+    description: 'Fases 01 y 02: Arquitectura de Seguridad y Base de Datos Aislada',
     due_date: '05 Oct 2026',
     spei_tracking_key: '2026100540014BND00007712490182',
     payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv062.pdf',
@@ -355,7 +355,7 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
       {/* ================================================================== */}
       {/* 3. GLOWING SECURE CONTAINER: TRANSFER DETAILS (NU MÉXICO)          */}
       {/* ================================================================== */}
-      <div className="relative rounded-3xl bg-[#091129]/95 border-2 border-[#00E5FF]/50 p-6 sm:p-7 shadow-[0_0_35px_rgba(0,229,255,0.22)] backdrop-blur-2xl flex flex-col gap-5 overflow-hidden">
+      <div className="relative rounded-3xl bg-[#091129]/95 border-2 border-[#00E5FF]/50 p-6 sm:p-7 shadow-[0_0_35px_rgba(0,229,255,0.22)] backdrop-blur-2xl flex flex-col gap-5 overflow-hidden animate-border-pulse">
         <div className="absolute top-0 right-0 w-80 h-36 bg-gradient-to-b from-[#00E5FF]/10 to-transparent pointer-events-none"></div>
 
         <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 pb-3 border-b border-[#1b2b52]">
@@ -375,7 +375,7 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
 
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#00FF66]/15 border border-[#00FF66]/40 font-['JetBrains_Mono'] text-[11px] text-[#00FF66] font-semibold">
             <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-pulse"></span>
-            <span>0.0% RECARGO // BANXICO DIRECT</span>
+            <span>0.0% COMISIÓN // SPEI DIRECTO</span>
           </div>
         </div>
 
@@ -635,7 +635,7 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
                                 amount: effectiveAmount,
                               })
                             }
-                            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#00E5FF] to-[#00b4d8] hover:brightness-110 text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.3)] flex items-center gap-1.5"
+                            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#00E5FF] to-[#00b4d8] hover:brightness-110 text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 cursor-pointer flex items-center gap-1.5"
                           >
                             <Upload className="w-3.5 h-3.5" />
                             <span>Reportar Pago SPEI</span>
@@ -740,7 +740,7 @@ export const ClientBillingHub: React.FC<ClientBillingHubProps> = ({
       {/* ================================================================== */}
       {selectedInvoiceForPayment && (
         <div className="fixed inset-0 z-50 bg-[#060c1e]/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
-          <div className="relative w-full max-w-xl rounded-3xl bg-[#091129] border-2 border-[#00E5FF]/50 p-6 sm:p-7 shadow-[0_0_50px_rgba(0,229,255,0.3)] flex flex-col gap-5">
+          <div className="relative w-full max-w-xl rounded-3xl bg-[#091129] border-2 border-[#00E5FF]/50 p-6 sm:p-7 shadow-[0_0_50px_rgba(0,229,255,0.3)] flex flex-col gap-5 animate-border-pulse">
             <div className="flex items-center justify-between pb-3 border-b border-[#1b2b52]">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-[#141f42] border border-[#00E5FF]/40 flex items-center justify-center text-[#00E5FF]">

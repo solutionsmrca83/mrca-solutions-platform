@@ -116,7 +116,7 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
   };
 
   const copyCredentials = (user: ManagedUser) => {
-    const credText = `[MRCA SOLUTIONS // CREDENCIALES DE ACCESO]\nPlataforma: Enclave B2B Zero-Trust\nUsuario: ${user.email}\nRol Asignado: ${user.role.toUpperCase()}\nClave Inicial: ${user.initial_password_hint || 'Configurada al aprovisionar'}\nURL Acceso: ${window.location.origin}/admin`;
+    const credText = `[MRCA SOLUTIONS // CREDENCIALES DE ACCESO]\nPlataforma: Consola Corporativa B2B\nUsuario: ${user.email}\nRol Asignado: ${user.role.toUpperCase()}\nClave Inicial: ${user.initial_password_hint || 'Configurada al aprovisionar'}\nURL Acceso: ${window.location.origin}/admin`;
     navigator.clipboard.writeText(credText);
     setCopiedKey(true);
     showToast('Credenciales copiadas al portapapeles.');
@@ -158,14 +158,14 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
 
           <div className="flex flex-col gap-1">
             <span className="font-['JetBrains_Mono'] text-[11px] text-red-400 font-bold uppercase tracking-widest">
-              SOC-2 SECURITY GATE // ZERO-TRUST BARRIER
+              CONTROL DE SEGURIDAD SOC-2 // ACCESO RESTRINGIDO
             </span>
             <h2 className="font-['Space_Grotesk'] text-[24px] font-bold text-white">
               Acceso Restringido: Solo Superadmin
             </h2>
             <p className="font-['Inter'] text-[13px] text-slate-300 leading-relaxed mt-1">
               El módulo de Gestión y Aprovisionamiento de Usuarios está reservado exclusivamente para la credencial de{' '}
-              <strong className="text-amber-400">Fundador (Superadmin Root)</strong>. Tu cuenta actual no posee privilegios para crear o modificar roles en Supabase Auth.
+              <strong className="text-amber-400">Dirección General (Superadmin Principal)</strong>. Tu cuenta actual no posee privilegios para crear o modificar roles en la plataforma.
             </p>
           </div>
 
@@ -199,11 +199,11 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                 Gestión de Usuarios & Jerarquía RBAC
               </h1>
               <span className="px-2 py-0.5 rounded text-[10px] font-['JetBrains_Mono'] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase tracking-wider">
-                SUPERADMIN ONLY
+                SOLO SUPERADMIN
               </span>
             </div>
             <p className="font-['Inter'] text-[12px] text-slate-300 mt-0.5">
-              Aprovisionamiento directo en Supabase Auth para Socios (Partners) y Empleados (Staff).
+              Aprovisionamiento directo de accesos corporativos para Socios y Colaboradores.
             </p>
           </div>
         </div>
@@ -216,7 +216,7 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
               Autoridad Criptográfica
             </span>
             <span className="text-[11px] font-['JetBrains_Mono'] text-[#00fe66] font-bold">
-              ROOT JEFE // AUTORIZADO
+              ADMINISTRADOR PRINCIPAL // AUTORIZADO
             </span>
           </div>
         </div>
@@ -226,7 +226,7 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="p-4 rounded-xl bg-[#0e1633]/90 border border-slate-800 flex flex-col justify-between">
           <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400 uppercase">
-            Total Usuarios Enclave
+            Total Usuarios Activos
           </span>
           <div className="font-['Space_Grotesk'] text-[24px] font-bold text-white mt-1">
             {usersList.length}
@@ -239,35 +239,35 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
 
         <div className="p-4 rounded-xl bg-[#0e1633]/90 border border-emerald-500/20 flex flex-col justify-between">
           <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400 uppercase">
-            Socios (Partners)
+            Socios Directores
           </span>
           <div className="font-['Space_Grotesk'] text-[24px] font-bold text-emerald-400 mt-1">
             {usersList.filter((u) => u.role === 'partner' || u.role === 'stealth_partner').length}
           </div>
           <span className="text-[10px] font-['JetBrains_Mono'] text-emerald-400/80 mt-1">
-            Segundo de Mando (CTO)
+            Dirección Técnica
           </span>
         </div>
 
         <div className="p-4 rounded-xl bg-[#0e1633]/90 border border-cyan-500/20 flex flex-col justify-between">
           <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400 uppercase">
-            Empleados (Staff)
+            Colaboradores
           </span>
           <div className="font-['Space_Grotesk'] text-[24px] font-bold text-cyan-400 mt-1">
             {usersList.filter((u) => u.role === 'employee').length}
           </div>
           <span className="text-[10px] font-['JetBrains_Mono'] text-cyan-400/80 mt-1">
-            Staff Operativo
+            Equipo Operativo
           </span>
         </div>
 
         <div className="p-4 rounded-xl bg-[#0e1633]/90 border border-amber-500/20 flex flex-col justify-between">
           <span className="font-['JetBrains_Mono'] text-[10px] text-slate-400 uppercase">
-            Jerarquía Zero-Trust
+            Jerarquía de Seguridad
           </span>
           <div className="font-['Space_Grotesk'] text-[18px] font-bold text-amber-400 mt-1 flex items-center gap-1">
             <ShieldCheck className="w-5 h-5" />
-            <span>ENFORCED</span>
+            <span>ACTIVA</span>
           </div>
           <span className="text-[10px] font-['JetBrains_Mono'] text-amber-400/80 mt-1">
             Aislamiento de Roles
@@ -341,12 +341,12 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-['Space_Grotesk'] text-[13px] font-bold text-emerald-400">
-                        Socio (Partner)
+                        Socio
                       </span>
                       {role === 'partner' && <Check className="w-3.5 h-3.5 text-emerald-400" />}
                     </div>
                     <span className="text-[10px] text-slate-300 leading-snug">
-                      Segundo de Mando: Finanzas, Contratos y Bóveda.
+                      Dirección Técnica: Finanzas, Contratos y Bóveda.
                     </span>
                   </button>
 
@@ -362,12 +362,12 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-['Space_Grotesk'] text-[13px] font-bold text-cyan-400">
-                        Empleado (Staff)
+                        Colaborador
                       </span>
                       {role === 'employee' && <Check className="w-3.5 h-3.5 text-cyan-400" />}
                     </div>
                     <span className="text-[10px] text-slate-300 leading-snug">
-                      Staff Operativo: Soporte y resolución de tickets.
+                      Equipo Operativo: Soporte y resolución de tickets.
                     </span>
                   </button>
                 </div>
@@ -412,7 +412,7 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
               <button
                 type="submit"
                 disabled={isProvisioning}
-                className="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-[#00e5ff] to-[#00fe66] hover:brightness-110 text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                className="w-full mt-2 py-2.5 rounded-xl bg-gradient-to-r from-[#00e5ff] to-[#00fe66] hover:brightness-110 text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
                 {isProvisioning ? (
                   <>
@@ -452,7 +452,7 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                   </div>
                   <div className="text-[11px] font-['JetBrains_Mono'] text-slate-300 flex flex-col gap-1 bg-[#060d24] p-2.5 rounded-lg border border-slate-800">
                     <div>
-                      <span className="text-slate-500">Email:</span>{' '}
+                      <span className="text-slate-500">Correo:</span>{' '}
                       <span className="text-white font-bold">{provisionedSuccess.email}</span>
                     </div>
                     <div>
@@ -519,7 +519,13 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                       : 'text-slate-400 hover:text-white bg-[#060d24] border border-transparent'
                   }`}
                 >
-                  {filterId === 'all' ? 'Todos' : filterId}
+                  {filterId === 'all'
+                    ? 'Todos'
+                    : filterId === 'superadmin'
+                    ? 'Superadmin'
+                    : filterId === 'partner'
+                    ? 'Socios'
+                    : 'Colaboradores'}
                 </button>
               ))}
             </div>
@@ -567,7 +573,7 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                                   : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                               }`}
                             >
-                              {user.role}
+                              {isUserSuper ? 'Superadmin' : isUserPartner ? 'Socio' : 'Colaborador'}
                             </span>
                           </div>
                           <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400">
@@ -607,9 +613,9 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-cyan-900/40">
               <span className="font-['Space_Grotesk'] text-[14px] font-bold text-white flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-[#00fe66]" />
-                <span>Matriz de Autorizaciones RBAC (Zero-Trust)</span>
+                <span>Matriz de Autorizaciones RBAC</span>
               </span>
-              <span className="text-[10px] font-['JetBrains_Mono'] text-slate-500">SOC-2 TYPE II</span>
+              <span className="text-[10px] font-['JetBrains_Mono'] text-slate-500">SOC-2 TIPO II</span>
             </div>
 
             <div className="overflow-x-auto">
@@ -618,37 +624,37 @@ export const UserAccessManager: React.FC<UserAccessManagerProps> = ({
                   <tr className="border-b border-slate-800 text-slate-400">
                     <th className="py-2 pr-3">Módulo / Capacidad</th>
                     <th className="py-2 px-2 text-center text-amber-400">Superadmin</th>
-                    <th className="py-2 px-2 text-center text-emerald-400">Partner</th>
-                    <th className="py-2 px-2 text-center text-cyan-400">Employee</th>
+                    <th className="py-2 px-2 text-center text-emerald-400">Socio</th>
+                    <th className="py-2 px-2 text-center text-cyan-400">Colaborador</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 text-slate-300">
                   <tr>
                     <td className="py-2 pr-3 font-semibold text-white">Gestión y Creación de Usuarios</td>
-                    <td className="py-2 px-2 text-center text-emerald-400 font-bold">TOTAL (ROOT)</td>
+                    <td className="py-2 px-2 text-center text-emerald-400 font-bold">TOTAL (PRINCIPAL)</td>
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-3 font-semibold text-white">Gobernanza Raíz & Revocación JWT</td>
-                    <td className="py-2 px-2 text-center text-emerald-400 font-bold">TOTAL (ROOT)</td>
+                    <td className="py-2 pr-3 font-semibold text-white">Gobernanza Principal y Revocación de Sesiones</td>
+                    <td className="py-2 px-2 text-center text-emerald-400 font-bold">TOTAL (PRINCIPAL)</td>
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-3">Finanzas & Dispersión SPEI / Stripe</td>
+                    <td className="py-2 pr-3">Finanzas y Dispersión SPEI / Stripe</td>
                     <td className="py-2 px-2 text-center text-emerald-400">HABILITADO</td>
                     <td className="py-2 px-2 text-center text-emerald-400">HABILITADO</td>
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-3">Generación & Firma Contratos B2B</td>
+                    <td className="py-2 pr-3">Generación y Firma de Contratos B2B</td>
                     <td className="py-2 px-2 text-center text-emerald-400">HABILITADO</td>
                     <td className="py-2 px-2 text-center text-emerald-400">HABILITADO</td>
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>
                   </tr>
                   <tr>
-                    <td className="py-2 pr-3">Terminal Kali Linux & Auditoría SOC-2</td>
+                    <td className="py-2 pr-3">Consola de Seguridad y Auditoría SOC-2</td>
                     <td className="py-2 px-2 text-center text-emerald-400">HABILITADO</td>
                     <td className="py-2 px-2 text-center text-emerald-400">HABILITADO</td>
                     <td className="py-2 px-2 text-center text-red-400 font-bold">BLOQUEADO</td>

@@ -340,16 +340,16 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
 
           <div className="flex items-center justify-between pt-1">
             <span className="text-[11px] text-[#849396]">
-              Su ticket será enrutado a la cola Kanban del Enclave Administrativo.
+              Su ticket será enrutado directamente a nuestra mesa de ingeniería.
             </span>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`px-6 py-3 rounded-xl font-bold uppercase tracking-wider transition-all flex items-center gap-2 ${
+              className={`px-6 py-3 rounded-xl font-bold uppercase tracking-wider transition-all hover:scale-105 cursor-pointer flex items-center gap-2 ${
                 priority === 'critical'
                   ? 'bg-gradient-to-r from-[#ff3333] to-[#ff5555] text-white shadow-[0_0_25px_rgba(255,51,51,0.6)]'
-                  : 'bg-gradient-to-r from-[#00E5FF] to-[#00b4d8] text-[#00363d] shadow-[0_0_20px_rgba(0,229,255,0.4)]'
+                  : 'bg-gradient-to-r from-[#00E5FF] to-[#00b4d8] text-[#00363d] shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)]'
               }`}
             >
               {isSubmitting ? (
@@ -417,7 +417,7 @@ export const ClientSupportTickets: React.FC<ClientSupportTicketsProps> = ({
                           : 'bg-[#00FF66]/20 text-[#00FF66] border border-[#00FF66]/40'
                       }`}
                     >
-                      Prioridad {t.priority}
+                      Prioridad {t.priority === 'critical' ? 'Crítica' : t.priority === 'medium' ? 'Media' : 'Baja'}
                     </span>
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-[10px] font-['JetBrains_Mono'] font-bold uppercase ${

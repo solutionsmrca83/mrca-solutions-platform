@@ -439,7 +439,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
       {/* ===================================================================== */}
       <div
         id="printable-contract-document"
-        className="relative w-full rounded-2xl bg-[#050B1E] border-2 border-cyan-500/40 p-6 sm:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl flex flex-col gap-6 text-[#dce1ff] overflow-hidden"
+        className="relative w-full rounded-2xl bg-[#050B1E] border-2 border-cyan-500/40 p-6 sm:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl flex flex-col gap-6 text-[#dce1ff] overflow-hidden animate-border-pulse"
         style={{
           backgroundImage:
             'radial-gradient(ellipse at 85% 8%, rgba(0, 229, 255, 0.06), transparent 65%)',
@@ -448,7 +448,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
         {/* Security Watermark in Background */}
         <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center opacity-[0.03] z-0 overflow-hidden rotate-[-25deg]">
           <span className="font-['Space_Grotesk'] text-[70px] sm:text-[110px] font-black uppercase tracking-widest text-cyan-400 text-center whitespace-nowrap">
-            MRCA SOLUTIONS LEGAL ENCLAVE
+            MRCA SOLUTIONS DOCUMENTO LEGAL
           </span>
         </div>
 
@@ -533,25 +533,25 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
               <li className="flex items-start gap-2 text-[12px] text-slate-200">
                 <span className="text-cyan-400 font-bold mt-0.5">•</span>
                 <span>
-                  <strong className="text-white">Cloud Architecture:</strong> Microservicios distribuidos de alta concurrencia y orquestación Kubernetes.
+                  <strong className="text-white">Infraestructura y Nube (Cloud):</strong> Arquitectura distribuida de alta disponibilidad y escalamiento automático.
                 </span>
               </li>
               <li className="flex items-start gap-2 text-[12px] text-slate-200">
                 <span className="text-cyan-400 font-bold mt-0.5">•</span>
                 <span>
-                  <strong className="text-white">Zero-Trust Deployment:</strong> Aislamiento mTLS, microsegmentación perimetral y llaves FIPS 140-3.
+                  <strong className="text-white">Seguridad Perimetral Avanzada:</strong> Aislamiento cifrado, protección de accesos y resguardo de credenciales FIPS 140-3.
                 </span>
               </li>
               <li className="flex items-start gap-2 text-[12px] text-slate-200">
                 <span className="text-cyan-400 font-bold mt-0.5">•</span>
                 <span>
-                  <strong className="text-white">SOC-2 Audit:</strong> Auditoría forense continua, hardening de infraestructura y preparación NIST CSF.
+                  <strong className="text-white">Auditoría de Ciberseguridad:</strong> Evaluación continua de riesgos, blindaje de infraestructura y cumplimiento normativo.
                 </span>
               </li>
               <li className="flex items-start gap-2 text-[12px] text-slate-200">
                 <span className="text-cyan-400 font-bold mt-0.5">•</span>
                 <span>
-                  <strong className="text-white">Web App Development:</strong> Desarrollo frontend y microservicios protegidos con políticas PostgreSQL RLS.
+                  <strong className="text-white">Desarrollo Web &amp; SaaS:</strong> Desarrollo de plataformas corporativas rápidas y bases de datos protegidas.
                 </span>
               </li>
             </ul>
@@ -620,7 +620,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
             </h4>
             <p className="text-slate-300 text-[12.5px]">
               El Prestador garantiza al Cliente una disponibilidad ininterrumpida mensual de la infraestructura del{' '}
-              <strong className="text-emerald-400 font-mono">{uptime}</strong>. Ante eventualidades operativas o incidentes de criticidad alta, el tiempo de respuesta inicial y contención por parte del CISO Red Team será de máximo{' '}
+              <strong className="text-emerald-400 font-mono">{uptime}</strong>. Ante eventualidades operativas o incidentes de criticidad alta, el tiempo de respuesta inicial y contención por parte del equipo de respuesta a incidentes de MRCA será de máximo{' '}
               <strong className="text-cyan-400 font-mono">{responseTime}</strong> continuo.
             </p>
           </div>
@@ -698,7 +698,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
                     MRCA SOLUTIONS S.A.P.I. DE C.V.
                   </div>
                   <div className="text-[9.5px] text-slate-400">
-                    SELLO ROOT HSM YUBIKEY FIPS 140-3
+                    SELLO CRIPTOGRÁFICO DE SEGURIDAD FIPS 140-3
                   </div>
                 </div>
               </div>
@@ -855,7 +855,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
               <button
                 type="button"
                 onClick={() => setIsSignModalOpen(true)}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 text-[#00363d] font-['JetBrains_Mono'] text-[12.5px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 text-[#00363d] font-['JetBrains_Mono'] text-[12.5px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <FileSignature className="w-4 h-4" />
                 <span>
@@ -1026,7 +1026,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
                         ? 'border-white scale-110 shadow-[0_0_8px_#00e5ff]'
                         : 'border-transparent opacity-60'
                     }`}
-                    title="Tech Cyan"
+                    title="Cian Corporativo"
                   />
                   <button
                     type="button"
@@ -1036,7 +1036,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
                         ? 'border-white scale-110 shadow-[0_0_8px_#00fe66]'
                         : 'border-transparent opacity-60'
                     }`}
-                    title="Terminal Green"
+                    title="Verde Esmeralda"
                   />
                 </div>
               </div>
@@ -1117,7 +1117,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
                   type="button"
                   onClick={handleAcceptAndSeal}
                   disabled={isCanvasEmpty || isProcessingSignature}
-                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
                 >
                   {isProcessingSignature ? (
                     <>

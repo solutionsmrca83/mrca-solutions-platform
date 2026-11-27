@@ -32,7 +32,7 @@ const DEFAULT_ADMIN_INVOICES: Invoice[] = [
     client_email: 'cliente@enterprise.corp',
     amount: 120000,
     status: 'verification_in_progress',
-    description: 'Anticipo de Auditoría Ofensiva Pentest Kali Linux & Hardening eBPF',
+    description: 'Anticipo de Auditoría Integral de Ciberseguridad y Blindaje',
     due_date: '18 Oct 2026',
     spei_tracking_key: '2026101240014BND00008891230194',
     payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv074.pdf',
@@ -45,7 +45,7 @@ const DEFAULT_ADMIN_INVOICES: Invoice[] = [
     client_email: 'cliente@enterprise.corp',
     amount: 185000,
     status: 'pending',
-    description: 'Sprint 03: Microservicios Cloud mTLS & Bóveda Criptográfica HSM',
+    description: 'Fase 03: Infraestructura Cloud Cifrada y Bóveda de Seguridad',
     due_date: '24 Oct 2026',
     created_at: '12 Oct 2026',
   },
@@ -56,7 +56,7 @@ const DEFAULT_ADMIN_INVOICES: Invoice[] = [
     client_email: 'cliente@enterprise.corp',
     amount: 350000,
     status: 'paid',
-    description: 'Sprint 01 & 02: Arquitectura Zero-Trust C4 & Modelado Relacional PostgreSQL RLS',
+    description: 'Fases 01 y 02: Arquitectura de Seguridad y Base de Datos Aislada',
     due_date: '05 Oct 2026',
     spei_tracking_key: '2026100540014BND00007712490182',
     payment_proof_url: 'https://enclave.mrcasolutions.com/proofs/spei_recibo_inv062.pdf',
@@ -190,7 +190,7 @@ export const AdminFinances: React.FC<AdminFinancesProps> = ({ showToast }) => {
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-[#00E5FF]/15 border border-[#00E5FF]/30 text-[#00E5FF] font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider uppercase flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                ADMIN ENCLAVE // FINANZAS &amp; AUDITORÍA SPEI
+                CONSOLA DE ADMINISTRACIÓN // FINANZAS Y AUDITORÍA SPEI
               </span>
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#00FF66] font-semibold">
                 • CUENTA CONCENTRADORA NU MÉXICO OK
@@ -508,7 +508,7 @@ export const AdminFinances: React.FC<AdminFinancesProps> = ({ showToast }) => {
       {/* ================================================================== */}
       {inspectingInvoice && (
         <div className="fixed inset-0 z-50 bg-[#060c1e]/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in">
-          <div className="relative w-full max-w-lg rounded-3xl bg-[#091129] border-2 border-[#00E5FF]/50 p-6 shadow-[0_0_50px_rgba(0,229,255,0.3)] flex flex-col gap-4 font-['JetBrains_Mono'] text-[12px]">
+          <div className="relative w-full max-w-lg rounded-3xl bg-[#091129] border-2 border-[#00E5FF]/50 p-6 shadow-[0_0_50px_rgba(0,229,255,0.3)] flex flex-col gap-4 font-['JetBrains_Mono'] text-[12px] animate-border-pulse">
             <div className="flex items-center justify-between pb-3 border-b border-[#1b2b52]">
               <div className="flex items-center gap-2">
                 <FileText className="w-5 h-5 text-[#00E5FF]" />

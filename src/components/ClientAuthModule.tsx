@@ -158,7 +158,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
       if (nextFailures >= MAX_LOGIN_ATTEMPTS) {
         setIsLockedOut(true);
         setCooldownRemaining(30);
-        setErrorMsg('Límite de seguridad alcanzado (3 intentos fallidos). Cooldown activo por 30 segundos.');
+        setErrorMsg('Límite de seguridad alcanzado (3 intentos fallidos). Tiempo de espera activo por 30 segundos.');
       } else {
         setErrorMsg(
           `${err.message || 'Error de credenciales.'} Intentos restantes: ${
@@ -262,7 +262,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
-        className="w-full max-w-xl mx-auto rounded-3xl bg-slate-900/60 backdrop-blur-xl border border-cyan-500/30 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.25)] flex flex-col items-center text-center gap-5 transition-all duration-300"
+        className="w-full max-w-xl mx-auto rounded-3xl bg-slate-900/60 backdrop-blur-xl border border-cyan-500/40 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.25)] flex flex-col items-center text-center gap-5 transition-all duration-300 animate-border-pulse"
       >
         <div className="relative">
           <div className="w-16 h-16 rounded-2xl bg-cyan-950/80 border-2 border-cyan-400 flex items-center justify-center text-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.4)]">
@@ -279,7 +279,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             Cuenta Corporativa Activa
           </h2>
           <p className="font-['Inter'] text-[13px] text-slate-300 leading-relaxed max-w-md mx-auto">
-            La empresa <strong className="text-cyan-300">{registeredData.company}</strong> ({registeredData.fullName}) cuenta con acceso al Portal de Clientes bajo estándar de cifrado Zero-Trust.
+            La empresa <strong className="text-cyan-300">{registeredData.company}</strong> ({registeredData.fullName}) cuenta con acceso al Portal de Clientes bajo estándar de seguridad corporativa avanzada.
           </p>
         </div>
 
@@ -305,7 +305,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             setIsPendingVerification(false);
             setMode('login');
           }}
-          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
         >
           <span>Acceder con mis Credenciales</span>
           <ArrowRight className="w-4 h-4" />
@@ -315,7 +315,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
   }
 
   return (
-    <div className="w-full max-w-xl mx-auto rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-cyan-500/30 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.25)] flex flex-col gap-6 relative overflow-hidden transition-all duration-300">
+    <div className="w-full max-w-xl mx-auto rounded-3xl bg-slate-900/50 backdrop-blur-xl border border-cyan-500/40 hover:border-cyan-400 p-6 sm:p-8 shadow-[0_0_25px_rgba(6,182,212,0.25)] flex flex-col gap-6 relative overflow-hidden transition-all duration-300 animate-border-pulse">
       {/* Background radial glow */}
       <div className="absolute top-0 right-1/4 w-64 h-32 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -334,7 +334,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             MRCA SOLUTIONS
           </span>
           <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold">
-            B2B ZERO-TRUST
+            PORTAL B2B SEGURO
           </span>
         </div>
         <p className="font-['Inter'] text-[13px] text-slate-300">
@@ -430,7 +430,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300">
-                  Contraseña de Acceso / Passkey
+                  Contraseña de Acceso
                 </label>
                 <button
                   type="button"
@@ -493,7 +493,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                   <span>ALERTA DE SEGURIDAD // BLOQUEO ACTIVO</span>
                 </div>
                 <p className="font-['Inter'] text-[12px] text-red-200 leading-snug">
-                  Ha agotado los intentos permitidos. Cooldown de seguridad activo.
+                  Ha agotado los intentos permitidos. Tiempo de espera de seguridad activo.
                 </p>
                 <div className="font-['JetBrains_Mono'] text-[13px] text-white font-extrabold mt-1 py-1 rounded bg-red-500/30">
                   TIEMPO RESTANTE: {cooldownRemaining}s
@@ -507,7 +507,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
               className={`w-full py-3.5 rounded-xl font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 mt-2 ${
                 isLockedOut
                   ? 'bg-red-950/40 text-red-300 border border-red-500/40 opacity-70 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.01] cursor-pointer disabled:opacity-50'
+                  : 'bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] cursor-pointer disabled:opacity-50'
               }`}
             >
               <Lock className="w-4 h-4" />
@@ -551,7 +551,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             {/* Field 1: Full Name */}
             <div>
               <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
-                Nombre Completo (Full Name)
+                Nombre Completo
               </label>
               <div className="relative">
                 <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
@@ -569,7 +569,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             {/* Field 2: Company Name */}
             <div>
               <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
-                Empresa / Razón Social (Company Name)
+                Empresa / Razón Social
               </label>
               <div className="relative">
                 <Building className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
@@ -587,7 +587,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             {/* Field 3: Work Email */}
             <div>
               <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
-                Correo Corporativo (Work Email)
+                Correo Corporativo
               </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
@@ -606,7 +606,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300">
-                  Contraseña Maestra (Password)
+                  Contraseña de Acceso
                 </label>
                 <span
                   className={`text-[10px] font-['JetBrains_Mono'] font-bold ${
@@ -621,7 +621,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
                     ? 'NIVEL B2B SEGURO ✓'
                     : regPassword.length > 0
                     ? `${metCount}/5 REQUISITOS`
-                    : 'B2B STANDARD'}
+                    : 'ESTÁNDAR B2B'}
                 </span>
               </div>
               <div className="relative">
@@ -719,7 +719,7 @@ export const ClientAuthModule: React.FC<ClientAuthModuleProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer mt-1 disabled:opacity-50"
             >
               <Building className="w-4 h-4" />
               <span>{loading ? 'Registrando Cuenta...' : 'Crear Cuenta B2B Inmediata'}</span>

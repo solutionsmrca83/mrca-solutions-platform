@@ -97,7 +97,7 @@ export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
               </div>
               <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#00fe66]/15 border border-[#00fe66]/30 text-[#00fe66] font-['JetBrains_Mono'] text-[10px]">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>ECDSA VERIFIED</span>
+                <span>FIRMA VERIFICADA</span>
               </div>
             </div>
 
@@ -120,7 +120,7 @@ export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
 
               {/* Watermark */}
               <div className="absolute bottom-2 right-3 font-['JetBrains_Mono'] text-[9px] text-[#00fe66]/40 uppercase tracking-widest select-none">
-                MRCA SECURE ENCLAVE SEAL
+                SELLO DE SEGURIDAD MRCA
               </div>
             </div>
 
@@ -161,7 +161,7 @@ export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
         </div>
       ) : (
         // STATE: INTERACTIVE SIGNATURE PAD
-        <div className="relative flex flex-col gap-3 rounded-2xl bg-[#091129]/95 border-2 border-[#00e5ff]/40 p-4 shadow-[0_0_24px_rgba(0,229,255,0.15)] backdrop-blur-xl">
+        <div className="relative flex flex-col gap-3 rounded-2xl bg-[#091129]/95 border-2 border-[#00e5ff]/40 p-4 shadow-[0_0_24px_rgba(0,229,255,0.15)] backdrop-blur-xl animate-border-pulse">
           {/* Header & Instructions */}
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
                 className={`w-5 h-5 rounded-full bg-[#00e5ff] border-2 transition-all ${
                   penColor === '#00e5ff' ? 'border-white scale-110 shadow-[0_0_8px_#00e5ff]' : 'border-transparent opacity-60'
                 }`}
-                title="Tech Cyan"
+                title="Cian Corporativo"
               />
               <button
                 type="button"
@@ -187,7 +187,7 @@ export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
                 className={`w-5 h-5 rounded-full bg-[#00fe66] border-2 transition-all ${
                   penColor === '#00fe66' ? 'border-white scale-110 shadow-[0_0_8px_#00fe66]' : 'border-transparent opacity-60'
                 }`}
-                title="Terminal Green"
+                title="Verde Esmeralda"
               />
             </div>
           </div>
@@ -250,7 +250,7 @@ export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
               type="button"
               onClick={handleConfirmSignature}
               disabled={isEmpty || isProcessing}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00e5ff] to-[#00b4d8] hover:from-[#5af2ff] hover:to-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00e5ff] to-[#00b4d8] hover:from-[#5af2ff] hover:to-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {isProcessing ? (
                 <>

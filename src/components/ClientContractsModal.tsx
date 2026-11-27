@@ -32,7 +32,7 @@ export const ClientContractsModal: React.FC<ClientContractsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#040817]/90 backdrop-blur-2xl p-2 sm:p-4 md:p-6 overflow-y-auto font-['Inter'] animate-in fade-in duration-200">
-      <div className="relative w-full max-w-5xl bg-[#091129]/95 border-2 border-cyan-400/60 rounded-3xl shadow-[0_20px_70px_rgba(0,229,255,0.25)] flex flex-col max-h-[94vh] overflow-hidden">
+      <div className="relative w-full max-w-5xl bg-[#091129]/95 border-2 border-cyan-400/60 rounded-3xl shadow-[0_20px_70px_rgba(0,229,255,0.25)] flex flex-col max-h-[94vh] overflow-hidden animate-border-pulse">
         {/* Top Header */}
         <div className="px-6 py-4 bg-[#070e24] border-b border-cyan-900/50 flex items-center justify-between gap-4 shrink-0 no-print">
           <div className="flex items-center gap-3">

@@ -19,8 +19,8 @@ interface SystemHealthWidgetProps {
 const DEFAULT_SERVICES: SystemHealthService[] = [
   {
     id: 'srv-api-backend',
-    name: 'API Backend (Cluster Alpha)',
-    category: 'Next.js 15 / Rust Core',
+    name: 'Servicios Principales (Nodo Alfa)',
+    category: 'Arquitectura Web de Alto Rendimiento',
     status: 'operational',
     uptime: '99.98%',
     latency: '11.8 ms',
@@ -28,8 +28,8 @@ const DEFAULT_SERVICES: SystemHealthService[] = [
   },
   {
     id: 'srv-db-rls',
-    name: 'Bases de Datos PostgreSQL (RLS)',
-    category: 'Supabase Enterprise mTLS',
+    name: 'Bases de Datos Corporativas',
+    category: 'Aislamiento y Cifrado Empresarial',
     status: 'operational',
     uptime: '99.99%',
     latency: '4.2 ms',
@@ -37,8 +37,8 @@ const DEFAULT_SERVICES: SystemHealthService[] = [
   },
   {
     id: 'srv-microservices',
-    name: 'Microservicios Cloud & eBPF',
-    category: 'Cilium Network Mesh',
+    name: 'Infraestructura en la Nube',
+    category: 'Red Corporativa con Redundancia',
     status: 'operational',
     uptime: '99.95%',
     latency: '8.4 ms',
@@ -46,8 +46,8 @@ const DEFAULT_SERVICES: SystemHealthService[] = [
   },
   {
     id: 'srv-vault-hsm',
-    name: 'Bóveda Criptográfica HSM',
-    category: 'FIPS 140-3 Hardware Enclave',
+    name: 'Bóveda Criptográfica de Seguridad',
+    category: 'Resguardo Certificado FIPS 140-3',
     status: 'operational',
     uptime: '100.0%',
     latency: '1.9 ms',
@@ -120,7 +120,7 @@ export const SystemHealthWidget: React.FC<SystemHealthWidgetProps> = ({ classNam
             onClick={handleManualRefresh}
             disabled={isRefreshing}
             className="p-2 rounded-xl bg-[#0d1633] hover:bg-[#182348] text-[#bac9cc] hover:text-[#00E5FF] border border-[#1e2d58] transition-all"
-            title="Sondear latencia del cluster"
+            title="Actualizar estado de disponibilidad"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[#00E5FF]' : ''}`} />
           </button>

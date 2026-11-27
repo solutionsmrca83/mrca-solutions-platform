@@ -381,7 +381,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
                   </div>
                   <div>
                     <span className="font-['Space_Grotesk'] text-[13px] font-bold text-[#dce1ff] block">
-                      Sprint Urgente &lt; 48 Horas (+${URGENT_PRICE} MXN)
+                      Entrega Urgente &lt; 48 Horas (+${URGENT_PRICE} MXN)
                     </span>
                     <p className="font-['Inter'] text-[11px] text-[#bac9cc]">
                       Prioridad inmediata de desarrollo continuo para entregas de emergencia.
@@ -396,7 +396,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
                     checked={isUrgent}
                     onChange={() => {}}
                     className="sr-only peer"
-                    aria-label="Sprint Urgente < 48 Horas"
+                    aria-label="Entrega Urgente < 48 Horas"
                   />
                   <div className="w-11 h-6 bg-[#1a2548] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#c084fc]"></div>
                 </div>
@@ -444,7 +444,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
         {/* ==================================================================== */}
         {/* RIGHT COLUMN: Real-Time Dynamic Summary & Stripe Action (5 cols)     */}
         {/* ==================================================================== */}
-        <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl bg-gradient-to-b from-[#101b3d] to-[#0a1128] border-2 border-[#00e5ff]/50 p-6 shadow-2xl relative">
+        <div className="lg:col-span-5 flex flex-col justify-between rounded-3xl bg-gradient-to-b from-[#101b3d] to-[#0a1128] border-2 border-[#00e5ff]/50 p-6 shadow-2xl relative animate-border-pulse">
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between pb-3 border-b border-[#23315a]">
               <span className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-wider text-[#00daf3] font-bold">
@@ -463,7 +463,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
                 </span>
                 {appliedDiscount && (
                   <span className="px-2 py-0.5 rounded-full bg-[#00fe66]/20 border border-[#00fe66]/40 text-[#00fe66] font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider uppercase animate-pulse">
-                    -{appliedDiscount.discountPercentage}% OFF ({appliedDiscount.coupon?.code})
+                    -{appliedDiscount.discountPercentage}% DESC. ({appliedDiscount.coupon?.code})
                   </span>
                 )}
               </div>
@@ -628,7 +628,7 @@ export const PricingCalculator: React.FC<PricingCalculatorProps> = ({
               id="btn-reserve-stripe-academy"
               onClick={handleCheckoutStripe}
               disabled={isReserving}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:from-[#5affff] hover:to-[#5aff96] text-[#00363d] font-['Space_Grotesk'] text-[15px] font-extrabold uppercase tracking-wider transition-all shadow-[0_0_30px_rgba(0,229,255,0.45)] flex items-center justify-center gap-2.5 hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:from-[#5affff] hover:to-[#5aff96] text-[#00363d] font-['Space_Grotesk'] text-[15px] font-extrabold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] flex items-center justify-center gap-2.5 hover:scale-105 active:scale-[0.98] cursor-pointer"
             >
               <ExternalLink className="w-5 h-5 text-[#00363d]" />
               <span>

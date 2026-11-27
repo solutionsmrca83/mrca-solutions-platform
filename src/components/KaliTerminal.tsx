@@ -9,23 +9,23 @@ interface TerminalLog {
 }
 
 const INITIAL_LOGS: TerminalLog[] = [
-  { id: '1', timestamp: '04:12:01.002', tag: '[BOOT]', tagColor: 'slate', text: 'Kali Defense Subsystem Initialized. Zero-Trust Kernel OK.' },
-  { id: '2', timestamp: '04:12:02.190', tag: '[eBPF]', tagColor: 'cyan', text: 'Hooked into eth0 socket filter. Profiling TCP handshakes...' },
-  { id: '3', timestamp: '04:12:04.812', tag: '[WAF]', tagColor: 'yellow', text: 'Rule 942100 triggered: Inbound payload evaluated against SQLi AST parser.' },
-  { id: '4', timestamp: '04:12:05.109', tag: '[IPTABLES]', tagColor: 'red', text: 'DROP src=189.24.11.8 proto=TCP dport=443 (Known Malicious Relay).' },
-  { id: '5', timestamp: '04:12:07.441', tag: '[ECDSA]', tagColor: 'cyan', text: 'Signed payload hash 0x889dfa1120 with Yubi-HSM slot 0x01.' },
-  { id: '6', timestamp: '04:12:09.912', tag: '[AUTH]', tagColor: 'green', text: 'SuperAdmin session refreshed: token JWT-ECDSA-512 for Jefe & Socio.' },
-  { id: '7', timestamp: '04:12:12.302', tag: '[NIDS]', tagColor: 'green', text: 'Cilium eBPF network policy enforced: Isolated database subnet from egress 0.0.0.0/0.' },
-  { id: '8', timestamp: '04:12:15.820', tag: '[SYNC]', tagColor: 'green', text: 'Stripe Webhook event: evt_3N82b99214a verified via HMAC-SHA256.' },
+  { id: '1', timestamp: '04:12:01.002', tag: '[INICIO]', tagColor: 'slate', text: 'Subsistema de Defensa Perimetral inicializado. Núcleo de seguridad en línea.' },
+  { id: '2', timestamp: '04:12:02.190', tag: '[RED]', tagColor: 'cyan', text: 'Inspección de tráfico cifrado activa en interfaz principal. Verificando conexiones TLS...' },
+  { id: '3', timestamp: '04:12:04.812', tag: '[WAF]', tagColor: 'yellow', text: 'Regla 942100 activada: Solicitud entrante validada contra filtros de seguridad.' },
+  { id: '4', timestamp: '04:12:05.109', tag: '[BLOQUEO]', tagColor: 'red', text: 'BLOQUEO origen=189.24.11.8 puerto=443 (Nodo externo no autorizado).' },
+  { id: '5', timestamp: '04:12:07.441', tag: '[FIRMA]', tagColor: 'cyan', text: 'Integridad firmada 0x889dfa1120 con módulo criptográfico FIPS 140-3.' },
+  { id: '6', timestamp: '04:12:09.912', tag: '[ACCESO]', tagColor: 'green', text: 'Sesión administrativa renovada con cifrado ECDSA-512 para Dirección.' },
+  { id: '7', timestamp: '04:12:12.302', tag: '[DEFENSA]', tagColor: 'green', text: 'Política de aislamiento de red aplicada: Base de datos protegida contra tráfico externo.' },
+  { id: '8', timestamp: '04:12:15.820', tag: '[SINCRONIZACIÓN]', tagColor: 'green', text: 'Notificación de pago verificada mediante firma criptográfica HMAC-SHA256.' },
 ];
 
 const PERIODIC_LOG_TEMPLATES = [
-  { tag: '[IPTABLES]', tagColor: 'red' as const, text: 'Packet drop from AS4837: Anomalous TLS SNI probe.' },
-  { tag: '[SPEI-BZX]', tagColor: 'green' as const, text: 'CEP validation verified with Banco de México certificate authority.' },
-  { tag: '[SSH-AUDIT]', tagColor: 'slate' as const, text: 'Session keepalive ACK: socio_superadmin (ed25519-sk-token).' },
-  { tag: '[VAULT-HW]', tagColor: 'cyan' as const, text: 'HSM key rotatory check: entropy pool validated 99.98% TrueRNG.' },
-  { tag: '[CILIUM]', tagColor: 'green' as const, text: 'Zero anomalous ingress across mesh microservices (128 threads).' },
-  { tag: '[WAF]', tagColor: 'yellow' as const, text: 'ModSecurity zero-day rule evaluated. Status: Clean.' },
+  { tag: '[BLOQUEO]', tagColor: 'red' as const, text: 'Conexión descartada desde red externa: Sondeo TLS anómalo bloqueado.' },
+  { tag: '[SPEI-BZX]', tagColor: 'green' as const, text: 'Validación CEP verificada ante Banco de México.' },
+  { tag: '[AUDITORÍA]', tagColor: 'slate' as const, text: 'Verificación de sesión administrativa activa y cifrada.' },
+  { tag: '[BÓVEDA]', tagColor: 'cyan' as const, text: 'Rotación preventiva de llaves validada: 99.98% integridad criptográfica.' },
+  { tag: '[REDUNDANCIA]', tagColor: 'green' as const, text: 'Sin anomalías detectadas en los nodos de servicios corporativos (128 hilos).' },
+  { tag: '[WAF]', tagColor: 'yellow' as const, text: 'Evaluación preventiva de reglas de seguridad completada. Estado: Limpio.' },
 ];
 
 export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
@@ -92,19 +92,19 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
       setInputVal('');
       return;
     } else if (lower === 'help') {
-      replyText = 'Comandos disponibles: status, nids, iptables, hsm, quorum, payout, ping, clear';
+      replyText = 'Comandos disponibles: status, red, firewall, hsm, quorum, pagos, clear';
     } else if (lower === 'status') {
-      replyText = 'SISTEMA MRCA SOLUTIONS: 100% OPERACIONAL. Latencia: 1.14ms. SOC-2 Nivel II Activo.';
-    } else if (lower === 'nids') {
-      replyText = 'Cilium eBPF: 14 scans activos. 2,410 IP bloqueadas. 0 vulnerabilidades críticas.';
-    } else if (lower === 'iptables') {
-      replyText = 'Chain INPUT (policy DROP). Default: Block all untrusted non-mTLS ingress.';
+      replyText = 'SISTEMA MRCA SOLUTIONS: 100% EN LÍNEA. Latencia: 1.14ms. SOC-2 Tipo II Activo.';
+    } else if (lower === 'nids' || lower === 'red') {
+      replyText = 'Defensa Perimetral: 14 análisis activos. 2,410 IPs bloqueadas. 0 vulnerabilidades críticas.';
+    } else if (lower === 'iptables' || lower === 'firewall') {
+      replyText = 'Política de entrada activa: Bloqueo automático a tráfico externo no autenticado.';
     } else if (lower === 'hsm') {
-      replyText = 'YubiHSM 2 hardware enclave: LOCKED. Slot 0x01 ECDSA P-384 OK.';
+      replyText = 'Módulo de seguridad FIPS 140-3: ACTIVO. Firma ECDSA P-384 verificada.';
     } else if (lower === 'quorum') {
-      replyText = 'Shamir Secret Sharing: 3/5 nodos activos. Master key reconstructable.';
-    } else if (lower === 'payout') {
-      replyText = 'Escrow Sync: Stripe $914,500 MXN / Banxico SPEI $514,450 MXN. Ledger synced.';
+      replyText = 'Resguardo Distribuido: 3/5 nodos activos. Clave maestra protegida por quórum.';
+    } else if (lower === 'payout' || lower === 'pagos') {
+      replyText = 'Conciliación: Stripe $914,500 MXN / Banxico SPEI $514,450 MXN. Registros sincronizados.';
     } else {
       replyText = `Comando ejecutado: "${cmd}". Subproceso finalizado con código 0.`;
       replyColor = 'cyan';
@@ -148,7 +148,7 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
           <span className="w-2.5 h-2.5 rounded-full bg-[#849396]"></span>
           <span className="w-2.5 h-2.5 rounded-full bg-[#00fe66]"></span>
           <span className="text-[11px] text-[#00e5ff] ml-1 truncate">
-            mrca@kali-defense:~/nids-live TTY-1
+            mrca@defensa-red:~/monitoreo-en-vivo TTY-1
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -160,7 +160,7 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
             title="Pausar o reanudar telemetría en vivo"
           >
             <span className={`w-1.5 h-1.5 rounded-full ${isLive ? 'bg-[#00fe66] animate-pulse' : 'bg-[#849396]'}`}></span>
-            {isLive ? 'NIDS-LIVE' : 'PAUSADO'}
+            {isLive ? 'EN VIVO' : 'PAUSADO'}
           </button>
           <span className="text-[9px] text-[#849396] hidden sm:inline">SHA-256</span>
         </div>
@@ -190,7 +190,7 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
           type="text"
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
-          placeholder="Escribe un comando (ej: help, status, nids, hsm, clear)..."
+          placeholder="Escribe un comando (ej: help, status, red, hsm, clear)..."
           className="w-full bg-transparent text-[12px] text-[#00e5ff] placeholder-[#3b494c] focus:outline-none font-['JetBrains_Mono']"
         />
         <button
@@ -203,8 +203,8 @@ export const KaliTerminal: React.FC<{ compact?: boolean }> = ({ compact = false 
 
       {/* Status Footer Strip */}
       <div className="flex items-center justify-between text-[10px] text-[#849396] pt-1">
-        <span>PACKET INSPECT: DUAL-CORE eBPF</span>
-        <span className="text-[#00fe66]">0 DROPS BUFFER</span>
+        <span>INSPECCIÓN DE PAQUETES: DOBLE NÚCLEO ACTIVO</span>
+        <span className="text-[#00fe66]">0 PAQUETES PERDIDOS</span>
       </div>
     </div>
   );

@@ -148,7 +148,7 @@ export default function App() {
             return;
 
           } else {
-            showToast('Acceso restringido: Se requieren privilegios de Administrador Zero-Trust.');
+            showToast('Acceso restringido: Se requieren privilegios de Administrador.');
             setActiveView('client');
             return;
           }
@@ -254,7 +254,7 @@ export default function App() {
 
   const handlePortalClientesClick = () => {
     if (!isCookieAccepted) {
-      showToast('[BLOQUEO ZERO-TRUST] Debe aceptar las cookies de seguridad antes de acceder a los portales.');
+      showToast('[SEGURIDAD ACTIVA] Debe aceptar las cookies de seguridad antes de acceder a los portales.');
       return;
     }
     if (sessionUser) {
@@ -269,7 +269,7 @@ export default function App() {
 
   const navigateToAdmin = async () => {
     if (!isCookieAccepted) {
-      showToast('[BLOQUEO ZERO-TRUST] Debe aceptar las cookies de seguridad antes de acceder al Enclave Admin.');
+      showToast('[SEGURIDAD ACTIVA] Debe aceptar las cookies de seguridad antes de acceder al panel administrativo.');
       return;
     }
     let user = sessionUser;
@@ -289,7 +289,7 @@ export default function App() {
         }
         window.scrollTo({ top: 0, behavior: 'instant' });
         setActiveView('admin');
-        showToast('[SESIÓN VERIFICADA] Enclave Admin Zero-Trust activado.');
+        showToast('[SESIÓN VERIFICADA] Consola de Administración activada.');
 
       } else {
         showToast('Acceso denegado: Su cuenta no posee privilegios de Administrador.');
@@ -393,7 +393,7 @@ export default function App() {
               window.history.pushState(null, '', '/admin');
             }
             setActiveView('admin');
-            showToast('Bienvenido al Enclave de Administración Zero-Trust.');
+            showToast('Bienvenido al Panel de Administración Corporativa.');
           } else if (user?.role === 'student') {
             if (window.location.pathname !== '/academy') {
               window.history.pushState(null, '', '/academy');
@@ -591,11 +591,11 @@ export default function App() {
 
           {/* Right Action Area */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Zero Trust Status */}
+            {/* Security Status */}
             <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900/80 border border-cyan-500/30 text-slate-300 shadow-[0_0_10px_rgba(6,182,212,0.15)]">
               <span translate="no" className="notranslate material-symbols-outlined text-[15px] text-cyan-400">lock</span>
               <span className="font-['JetBrains_Mono'] text-[10px] uppercase font-semibold text-cyan-300">
-                Zero Trust v2.4
+                Seguridad Activa v2.4
               </span>
             </div>
 
@@ -603,7 +603,7 @@ export default function App() {
             <button
               onClick={async () => {
                 if (!isCookieAccepted) {
-                  showToast('[BLOQUEO ZERO-TRUST] Acepte las cookies de seguridad antes de autenticarse.');
+                  showToast('[SEGURIDAD ACTIVA] Acepte las cookies de seguridad antes de autenticarse.');
                   return;
                 }
                 if (!sessionUser) {
@@ -637,8 +637,8 @@ export default function App() {
                   }
                 }
               }}
-              className="relative w-9 h-9 rounded-full bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 flex items-center justify-center hover:shadow-[0_0_20px_rgba(6,182,212,0.6)] transition-all duration-300 cursor-pointer"
-              title={sessionUser ? `Sesión Activa: ${sessionUser.email} (${sessionUser.role || 'usuario'})` : 'Autenticación Supabase'}
+              className="relative w-9 h-9 rounded-full bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 flex items-center justify-center hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all duration-300 cursor-pointer"
+              title={sessionUser ? `Sesión Activa: ${sessionUser.email} (${sessionUser.role || 'usuario'})` : 'Acceso al Portal Corporativo'}
             >
               <span translate="no" className="notranslate material-symbols-outlined text-[20px]">person</span>
               {sessionUser && (
@@ -750,9 +750,9 @@ export default function App() {
             </div>
             <div>
               <p className="font-['JetBrains_Mono'] text-[13px] text-[#dce1ff] font-semibold">
-                Acceso Zero-Trust
+                Acceso Corporativo Seguro
               </p>
-              <p className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66]">v2.4.1 SECURED</p>
+              <p className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66]">v2.4.1 PROTEGIDO</p>
             </div>
           </div>
         </div>
@@ -834,30 +834,30 @@ export default function App() {
 
 
       {/* FOOTER */}
-      <footer className="w-full bg-[#060d24] border-t border-[#181e36] py-8 text-center md:text-left">
+      <footer className="w-full bg-[#060d24]/80 backdrop-blur-md border-t border-[#181e36] py-8 text-center md:text-left">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col items-center md:items-start gap-1">
             <div className="flex items-center gap-2">
               <span className="font-['Space_Grotesk'] text-[16px] text-[#dce1ff] font-bold">MRCA Solutions</span>
               <span className="font-['JetBrains_Mono'] text-[10px] px-2 py-0.5 rounded bg-[#181e36] text-[#00daf3]">
-                SYS.VER.4.12
+                VERSIÓN 4.12
               </span>
             </div>
             <p className="font-['Inter'] text-[12px] text-[#bac9cc]">
-              Operational precision and zero-trust high-assurance systems architecture.
+              Precisión operativa y arquitectura de sistemas empresariales de alta confiabilidad.
             </p>
           </div>
 
           <div className="flex items-center gap-4 font-['JetBrains_Mono'] text-[11px] text-[#bac9cc] uppercase">
-            <span className="hover:text-[#00e5ff] cursor-pointer">SOC2 Type II</span>
+            <span className="hover:text-[#00e5ff] cursor-pointer">SOC 2 Tipo II</span>
             <span>•</span>
             <span className="hover:text-[#00e5ff] cursor-pointer">ISO 27001</span>
             <span>•</span>
-            <span className="hover:text-[#00e5ff] cursor-pointer">Encrypted Enclave</span>
+            <span className="hover:text-[#00e5ff] cursor-pointer">Entorno Cifrado</span>
           </div>
 
           <div className="font-['JetBrains_Mono'] text-[11px] text-[#849396]">
-            © 2025-2026 MRCA Solutions Inc. All rights reserved.
+            © 2025-2026 MRCA Solutions. Todos los derechos reservados.
           </div>
         </div>
       </footer>
@@ -893,7 +893,7 @@ export default function App() {
               window.history.pushState(null, '', '/admin');
             }
             setActiveView('admin');
-            showToast('Bienvenido al Enclave de Administración Zero-Trust.');
+            showToast('Bienvenido al Panel de Administración Corporativa.');
           } else if (user?.role === 'student') {
             if (window.location.pathname !== '/academy') {
               window.history.pushState(null, '', '/academy');
@@ -914,7 +914,7 @@ export default function App() {
         <CookieConsent
           onAccept={() => {
             setIsCookieAccepted(true);
-            showToast('[ZERO-TRUST AUTORIZADO] Consentimiento registrado. Portales habilitados.');
+            showToast('[ACCESO HABILITADO] Consentimiento registrado. Portales corporativos desbloqueados.');
           }}
           onNavigateToPrivacy={() => {
             setActiveView('legal-privacidad');

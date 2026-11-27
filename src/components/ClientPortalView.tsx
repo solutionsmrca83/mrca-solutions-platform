@@ -47,7 +47,7 @@ const INITIAL_CONTRACTS: ClientContract[] = [
     uptime: '99.999%',
     response_time: '1h',
     services: ['cloud_arch', 'zero_trust', 'soc2_audit', 'webapp_dev'],
-    content: `ACUERDO BILATERAL DE CONFIDENCIALIDAD Y PROTECCIÓN CRIPTOGRÁFICA (NDA ZERO-TRUST)
+    content: `ACUERDO BILATERAL DE CONFIDENCIALIDAD Y PROTECCIÓN CRIPTOGRÁFICA (NDA CORPORATIVO)
 
 ENTRE LAS PARTES:
 MRCA SOLUTIONS S.A.P.I. DE C.V., representada por su Enclave de Dirección Ejecutiva (Jefe & Socio), y por la otra parte:
@@ -75,46 +75,46 @@ SELLO SHA-256 PREVIO: 0x9f41b8a72e90c8a1b490f840139b8192`,
 const CAPABILITIES: EngineeringCapability[] = [
   {
     id: 'web_apps',
-    title: 'Web Apps de Alta Concurrencia',
-    subtitle: 'Frontend React/Next.js + Backend Rust/Go/Node',
+    title: 'Desarrollo Web & SaaS de Alta Concurrencia',
+    subtitle: 'Plataformas Corporativas Modernas + Servicios Escalables',
     description:
-      'Sistemas distribuidos de ultra-baja latencia, arquitecturas SPA/SSR seguras, integración mTLS y rendimiento FCP < 0.5s.',
+      'Sistemas distribuidos de respuesta inmediata, portales web corporativos seguros, conexiones cifradas y velocidad optimizada para operación empresarial.',
     icon: 'web',
-    technologies: ['Next.js', 'React 19', 'Rust', 'Tailwind', 'TypeScript', 'Vite'],
+    technologies: ['Next.js', 'React 19', 'TypeScript', 'Arquitectura SaaS', 'API Segura'],
     sla: '99.98% DISPONIBILIDAD',
-    badge: 'CORE INGENIERÍA',
+    badge: 'INGENIERÍA CORE',
   },
   {
     id: 'databases',
-    title: 'Bases de Datos & Arquitectura RLS',
-    subtitle: 'PostgreSQL, Supabase Enterprise & Partitioning',
+    title: 'Bases de Datos y Aislamiento Empresarial',
+    subtitle: 'PostgreSQL Corporativo y Respaldos con Redundancia',
     description:
-      'Modelado relacional con políticas Row Level Security (RLS) granulares, sharding, encriptación a nivel de campo y preparación SOC-2/HIPAA.',
+      'Modelado relacional con aislamiento estricto por empresa, cifrado de datos sensibles, alta disponibilidad y preparación para auditorías regulatorias.',
     icon: 'database',
-    technologies: ['PostgreSQL', 'Supabase RLS', 'Redis', 'pgcrypto', 'GraphQL', 'Prisma'],
-    sla: 'ZERO DATA LEAK',
+    technologies: ['PostgreSQL', 'Aislamiento por Cliente', 'Cifrado AES-256', 'Redundancia Activa'],
+    sla: 'CERO FUGAS DE DATOS',
     badge: 'ALTA SEGURIDAD',
   },
   {
     id: 'custom_scripts',
-    title: 'Custom Scripts & Automatización',
-    subtitle: 'Pipelines eBPF, Kali Bots & Integración API',
+    title: 'Automatización e Integración de Procesos',
+    subtitle: 'Flujos Operativos, Conectores API y Conciliación SPEI',
     description:
-      'Automatización de procesos operativos B2B, bots transaccionales de alta disponibilidad, scripts de análisis forense y webhooks bancarios SPEI Banxico / Nu México.',
+      'Automatización de procesos operativos B2B, integración de sistemas internos, reportes ejecutivos automáticos y conciliación bancaria SPEI Banxico / Nu México.',
     icon: 'terminal',
-    technologies: ['Python 3.12', 'Bash', 'Kali Linux', 'Docker', 'Webhooks', 'Cilium'],
-    sla: 'SUB-SECOND EXEC',
+    technologies: ['Python', 'Automatización B2B', 'Integraciones API', 'Webhooks SPEI'],
+    sla: 'EJECUCIÓN INMEDIATA',
     badge: 'AUTOMATIZACIÓN',
   },
   {
     id: 'security',
-    title: 'Seguridad Ofensiva & Hardening',
-    subtitle: 'Pentesting Red Team & Hardening Kubernetes',
+    title: 'Auditoría de Ciberseguridad y Blindaje',
+    subtitle: 'Evaluación Preventiva de Riesgos y Protección en la Nube',
     description:
-      'Auditorías de penetración continuas con Kali Linux, hardening de clústeres K8s con Cilium, análisis de código estático (SAST) y gestión de HSM YubiKey.',
+      'Auditorías continuas de seguridad, blindaje de infraestructura en la nube, revisión de vulnerabilidades críticas y gestión de llaves criptográficas.',
     icon: 'shield_lock',
-    technologies: ['Kali Pentest', 'Cilium eBPF', 'SOC-2 Type II', 'YubiKey HSM', 'OWASP Top 10'],
-    sla: 'ENCLAVE LEVEL 4',
+    technologies: ['Auditoría Integral', 'Protección Cloud', 'SOC-2 Tipo II', 'OWASP Top 10'],
+    sla: 'SEGURIDAD NIVEL 4',
     badge: 'DEFENSA ACTIVA',
   },
 ];
@@ -142,7 +142,7 @@ const INITIAL_CHAT: ClientChatMessage[] = [
     id: 'c3',
     sender: 'admin',
     senderName: 'Socio (CTO)',
-    text: 'Enterado. Podemos estructurar el sprint adaptándonos a su fase presupuestal. Puede enviarnos los payloads o IPs privadas en este canal con cifrado AES-256.',
+    text: 'Enterado. Podemos estructurar el plan de trabajo adaptándonos a su fase presupuestal. Puede enviarnos sus archivos o especificaciones en este canal con cifrado AES-256.',
     timestamp: 'Hoy, 10:25 AM',
     isEncrypted: true,
     cipherHash: '0x88ea...1d29',
@@ -314,7 +314,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                 </span>
               </div>
               <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 bg-slate-950 px-2.5 py-0.5 rounded border border-white/5">
-                SPRINT 2 DE 4
+                FASE 2 DE 4
               </span>
             </div>
 
@@ -344,7 +344,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
 
             <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11.5px] font-['Inter'] text-slate-300">
               <span>SLA Activo:</span>
-              <strong className="text-emerald-400 font-['JetBrains_Mono']">99.999% Five-Nines VIP</strong>
+              <strong className="text-emerald-400 font-['JetBrains_Mono']">99.999% Disponibilidad VIP</strong>
             </div>
           </div>
 
@@ -490,7 +490,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             }`}
           >
             <Activity className="w-4 h-4" />
-            <span>Roadmap &amp; Entregables</span>
+            <span>Plan de Entregas</span>
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           </button>
 
@@ -504,7 +504,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             }`}
           >
             <Key className="w-4 h-4" />
-            <span>API Keys &amp; Telemetría</span>
+            <span>Claves API y Métricas</span>
           </button>
 
           <button
@@ -572,7 +572,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             }`}
           >
             <span translate="no" className="notranslate material-symbols-outlined text-[17px]">enhanced_encryption</span>
-            <span>Carga Cifrada Inbox</span>
+            <span>Bandeja Cifrada</span>
           </button>
 
           <button
@@ -585,7 +585,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
             }`}
           >
             <ShieldAlert className="w-4 h-4 text-cyan-400" />
-            <span>Auditoría Zero-Trust</span>
+            <span>Auditoría de Seguridad</span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           </button>
 
@@ -794,7 +794,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
 
                 <div className="hidden sm:flex items-center gap-2 font-['JetBrains_Mono'] text-[10px] text-[#bac9cc] bg-[#060d24] px-3 py-1.5 rounded-lg border border-[#222941]">
                   <span translate="no" className="notranslate material-symbols-outlined text-[14px] text-[#00e5ff]">key</span>
-                  <span>ECDSA HANDSHAKE OK</span>
+                  <span>CONEXIÓN CIFRADA ACTIVA</span>
                 </div>
               </div>
 
@@ -832,7 +832,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                         <p>{msg.text}</p>
                         {msg.cipherHash && (
                           <div className="mt-2 pt-1.5 border-t border-white/10 flex items-center justify-between font-['JetBrains_Mono'] text-[9px] text-[#849396]">
-                            <span>AES-256 SEAL</span>
+                            <span>SELLO AES-256</span>
                             <span className="font-mono text-[#00daf3]">{msg.cipherHash}</span>
                           </div>
                         )}
@@ -941,7 +941,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                       TikTok B2B Tech
                     </span>
                     <span className="font-['JetBrains_Mono'] text-[10px] text-[#bac9cc]">
-                      Casos de Éxito & Pentest
+                      Casos de Éxito y Seguridad
                     </span>
                   </div>
                 </a>
@@ -961,7 +961,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
       {/* Capability Specification Detail Modal */}
       {selectedCapability && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/90 backdrop-blur-xl p-4">
-          <div className="relative w-full max-w-xl rounded-3xl bg-[#141a32] border border-[#00e5ff]/40 p-6 sm:p-7 shadow-2xl flex flex-col gap-5">
+          <div className="relative w-full max-w-xl rounded-3xl bg-[#141a32] border border-[#00e5ff]/40 p-6 sm:p-7 shadow-2xl flex flex-col gap-5 animate-border-pulse">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-[#060d24] border border-[#00e5ff]/40 flex items-center justify-center text-[#00e5ff]">
@@ -1015,7 +1015,7 @@ export const ClientPortalView: React.FC<ClientPortalViewProps> = ({
                   setActiveTab('chat');
                   setInputMessage(`Deseamos iniciar análisis de viabilidad para: "${cap.title}".`);
                 }}
-                className="px-5 py-2.5 rounded-xl bg-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+                className="px-5 py-2.5 rounded-xl bg-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
               >
                 Iniciar Propuesta en Chat
               </button>

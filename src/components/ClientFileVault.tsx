@@ -36,42 +36,42 @@ const INITIAL_VAULT_FILES: VaultFile[] = [
     file_type: 'TAR.GZ',
     file_size: '142.8 MB',
     sha256_hash: '0x8f2a1b94d1837c9e01f28b492a40e1928bc391f049281a98ec38194b19028aef',
-    encryption_type: 'AES-256-GCM / Hardware HSM',
+    encryption_type: 'AES-256-GCM / Módulo de Seguridad',
     download_url: '#download-tar',
-    description: 'Código fuente completo auditado, manifiestos Kubernetes & mTLS Cilium.',
+    description: 'Código fuente completo auditado, configuración de nube y redundancia activa.',
     created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
   },
   {
     id: 'VF-02',
-    filename: 'schema_postgresql_zero_trust_with_rls.sql',
+    filename: 'esquema_postgresql_aislamiento_empresarial.sql',
     file_type: 'SQL',
     file_size: '18.4 MB',
     sha256_hash: '0x3c990218ab44019283fec102948bc10948ac01928471bce1094827104928b104',
-    encryption_type: 'AES-256-GCM / Client-Key Sealed',
+    encryption_type: 'AES-256-GCM / Sellado por Cliente',
     download_url: '#download-sql',
-    description: 'Esquema de base de datos con políticas Row-Level Security y funciones criptográficas.',
+    description: 'Esquema de base de datos con aislamiento por empresa y funciones cifradas.',
     created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
   },
   {
     id: 'VF-03',
-    filename: 'informe_pentest_kali_firmado_ciso.pdf',
+    filename: 'informe_auditoria_seguridad_firmado_ciso.pdf',
     file_type: 'PDF',
     file_size: '6.2 MB',
     sha256_hash: '0x17db029481bc2049182bc4019283fe819204bc91029482bc0192840192840192',
-    encryption_type: 'ECDSA P-384 / PDF Digital Sello',
+    encryption_type: 'ECDSA P-384 / Sello Digital PDF',
     download_url: '#download-pdf',
-    description: 'Certificado de auditoría de seguridad y pentesting con validez legal internacional.',
+    description: 'Certificado de auditoría integral de ciberseguridad con validez legal internacional.',
     created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
   },
   {
     id: 'VF-04',
-    filename: 'credenciales_vault_infra_keys.enc',
+    filename: 'credenciales_boveda_infraestructura.enc',
     file_type: 'ENC',
     file_size: '840 KB',
     sha256_hash: '0x4918ef0291823bc019284910293847ac01928374650192837465019283746501',
-    encryption_type: 'Asymmetric RSA-4096 / GPG Enclave',
+    encryption_type: 'Cifrado Asimétrico RSA-4096 / Bóveda',
     download_url: '#download-enc',
-    description: 'Tokens y certificados mTLS para conexión al clúster de producción.',
+    description: 'Claves y certificados cifrados para conexión segura a su infraestructura.',
     created_at: new Date(Date.now() - 86400000 * 10).toISOString(),
   },
 ];
@@ -110,7 +110,7 @@ export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
             file_type: d.file_type,
             file_size: d.file_size,
             sha256_hash: d.sha256_hash,
-            encryption_type: d.encryption_type || 'AES-256-GCM / Zero-Knowledge',
+            encryption_type: d.encryption_type || 'AES-256-GCM / Conocimiento Cero',
             download_url: d.download_url,
             description: d.description,
             created_at: d.created_at,
@@ -232,7 +232,7 @@ export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
             <div className="flex items-center gap-2 mb-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-pulse shadow-[0_0_8px_rgba(0,255,102,0.8)]" />
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#00E5FF] tracking-wider uppercase font-semibold">
-                BÓVEDA DE ENTREGABLES // ZERO-KNOWLEDGE
+                BÓVEDA DE ENTREGABLES // CONOCIMIENTO CERO
               </span>
             </div>
             <h2 className="font-['Space_Grotesk'] text-2xl sm:text-3xl font-bold text-[#DCE1FF]">
@@ -395,7 +395,7 @@ export const ClientFileVault: React.FC<ClientFileVaultProps> = ({
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-lg rounded-2xl bg-[#141A32] border border-[#00FF66]/40 p-6 shadow-2xl flex flex-col gap-4"
+            className="w-full max-w-lg rounded-2xl bg-[#141A32] border border-[#00FF66]/40 p-6 shadow-2xl flex flex-col gap-4 animate-border-pulse"
           >
             <div className="flex items-center justify-between border-b border-[#181E36] pb-3">
               <div className="flex items-center gap-2 text-[#00FF66]">

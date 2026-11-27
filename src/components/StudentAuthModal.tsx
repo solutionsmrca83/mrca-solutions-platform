@@ -174,14 +174,14 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
         <div className="flex-1 flex flex-col gap-0.5 text-left">
           <div className="flex items-center gap-1.5">
             <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-emerald-400 uppercase tracking-wide">
-              Beneficio Estudiantil 50% OFF
+              Beneficio Estudiantil 50% de Descuento
             </span>
             <span className="px-1.5 py-0.2 rounded bg-emerald-400 text-slate-950 font-['JetBrains_Mono'] text-[9px] font-extrabold">
               BECA-50
             </span>
           </div>
           <p className="font-['Inter'] text-[12px] text-slate-300 leading-snug">
-            Acceso preferencial para proyectos de titulación y software open-source con el cupón <strong className="text-emerald-400 font-mono">BECA-50</strong>.
+            Acceso preferencial para proyectos de titulación y software de código abierto con el cupón <strong className="text-emerald-400 font-mono">BECA-50</strong>.
           </p>
         </div>
       </motion.div>
@@ -194,7 +194,7 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
       >
         <span className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-emerald-400 group-hover:rotate-12 transition-transform" />
-          <span>Explorar Galería de Plantillas Quick-Start</span>
+          <span>Explorar Galería de Plantillas Listas para Usar</span>
         </span>
         <ArrowRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
       </button>
@@ -244,7 +244,7 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
         {mode === 'register' && (
           <div>
             <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
-              Nombre Completo (Full Name)
+              Nombre Completo
             </label>
             <div className="relative">
               <User className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
@@ -279,7 +279,7 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
 
         <div>
           <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-slate-300 mb-1">
-            Contraseña de Acceso (Password)
+            Contraseña de Acceso
           </label>
           <div className="relative">
             <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
@@ -324,7 +324,7 @@ export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] hover:scale-[1.01] flex items-center justify-center gap-2 mt-1 cursor-pointer disabled:opacity-50"
+          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] flex items-center justify-center gap-2 mt-1 cursor-pointer disabled:opacity-50"
         >
           <KeyRound className="w-4 h-4" />
           <span>

@@ -25,65 +25,65 @@ interface LiveRoadmapProps {
 const INITIAL_ROADMAP: RoadmapItem[] = [
   {
     id: 'sprint-01',
-    phaseCode: 'FASE 01 // DISCOVERY & SPECS',
-    title: 'Arquitectura Zero-Trust & Discovery de Requerimientos',
-    subtitle: 'Diseño C4, Modelado de Amenazas STRIDE y Especificación mTLS',
+    phaseCode: 'FASE 01 // DIAGNÓSTICO Y DISEÑO',
+    title: 'Arquitectura de Seguridad y Levantamiento de Requerimientos',
+    subtitle: 'Diseño de Arquitectura, Análisis de Riesgos y Cifrado Corporativo',
     category: 'architecture',
     status: 'completed',
     progress: 100,
     startDate: '15 Sep 2026',
     targetDate: '28 Sep 2026',
     description:
-      'Revisión exhaustiva de la superficie de ataque, delimitación de inquilinos y diseño de la topología distribuida con políticas Zero-Trust integradas desde la raíz.',
+      'Revisión exhaustiva de la superficie de operación, delimitación de accesos y diseño de arquitectura distribuida con seguridad integrada desde el origen.',
     deliverables: [
-      { text: 'Diagrama de Arquitectura C4 en Enclave Cifrado', done: true },
-      { text: 'Modelado de Amenazas STRIDE & OWASP Top 10', done: true },
-      { text: 'Especificación de Handshake mTLS y certificados TLS 1.3', done: true },
+      { text: 'Diagrama de Arquitectura Corporativa en Entorno Cifrado', done: true },
+      { text: 'Modelado de Riesgos y Estándares OWASP Top 10', done: true },
+      { text: 'Especificación de cifrado mutuo y certificados TLS 1.3', done: true },
       { text: 'Acuerdo de Confidencialidad Criptográfico (NDA) Firmado', done: true },
     ],
     commitHash: '0x7a81be492a01948bd01948c02',
     architectLead: 'Jefe (CISO)',
-    slaVerification: '100% CUMPLIDO // APROBACIÓN DUAL OK',
+    slaVerification: '100% CUMPLIDO // APROBACIÓN DUAL VERIFICADA',
   },
   {
     id: 'sprint-02',
-    phaseCode: 'FASE 02 // DATABASE HARDENING',
-    title: 'Modelado Relacional PostgreSQL & Aislamiento RLS',
-    subtitle: 'Row Level Security estricto, Particionamiento e Inmutabilidad',
+    phaseCode: 'FASE 02 // BLINDAJE DE DATOS',
+    title: 'Modelado Relacional PostgreSQL y Aislamiento Empresarial',
+    subtitle: 'Aislamiento estricto por cliente, Particionamiento e Inmutabilidad',
     category: 'database',
     status: 'completed',
     progress: 100,
     startDate: '29 Sep 2026',
     targetDate: '10 Oct 2026',
     description:
-      'Implementación del esquema de base de datos multi-inquilino en PostgreSQL. Configuración de políticas de seguridad por fila para garantizar aislamiento absoluto entre clientes.',
+      'Implementación del esquema de base de datos multiempresa en PostgreSQL. Configuración de políticas de seguridad por fila para garantizar aislamiento absoluto entre clientes.',
     deliverables: [
-      { text: 'Políticas RLS en tablas transaccionales y auditoría', done: true },
-      { text: 'Funciones de seguridad SECURITY DEFINER blindadas', done: true },
-      { text: 'Trigger de hashing de auditoría continua en SHA-256', done: true },
-      { text: 'Pruebas de evasión RLS superadas sin fugas', done: true },
+      { text: 'Políticas de aislamiento en tablas transaccionales y auditoría', done: true },
+      { text: 'Funciones de seguridad y control de acceso blindadas', done: true },
+      { text: 'Auditoría continua con integridad criptográfica SHA-256', done: true },
+      { text: 'Pruebas de aislamiento superadas sin exposición de datos', done: true },
     ],
     commitHash: '0x3b1c8812fa99a0d2491b490f84',
     architectLead: 'Socio (CTO)',
-    slaVerification: 'ZERO DATA LEAK // VERIFICADO BANXICO',
+    slaVerification: 'CERO FUGAS DE DATOS // VERIFICADO',
   },
   {
     id: 'sprint-03',
-    phaseCode: 'FASE 03 // SPRINT ACTIVO',
-    title: 'Microservicios mTLS & Bóveda Criptográfica HSM',
-    subtitle: 'Next.js 15 + Rust Core, Tokenización Shamir y Webhooks',
+    phaseCode: 'FASE 03 // FASE ACTIVA',
+    title: 'Servicios Cifrados y Bóveda Criptográfica',
+    subtitle: 'Plataforma Web de Alto Rendimiento, Resguardo de Claves y Webhooks',
     category: 'security',
     status: 'active',
     progress: 68,
     startDate: '11 Oct 2026',
     targetDate: '24 Oct 2026',
     description:
-      'Construcción de los endpoints transaccionales con cifrado asimétrico y firma digital de contratos. Integración del esquema de fragmentación de secretos Shamir.',
+      'Construcción de servicios transaccionales con cifrado asimétrico y firma digital de contratos. Integración del resguardo distribuido de llaves de seguridad.',
     deliverables: [
       { text: 'Componente de Firma Digital Vectorial con Sello Criptográfico', done: true },
-      { text: 'Dashboard de Consumo de API Keys y Telemetría en Tiempo Real', done: true },
-      { text: 'Pipeline de Webhooks SPEI Banxico & Stripe Escrow', done: false },
-      { text: 'Pruebas de estrés de 15,000 solicitudes concurrentes', done: false },
+      { text: 'Panel de Consumo de Claves API y Métricas en Tiempo Real', done: true },
+      { text: 'Integración de Notificaciones SPEI Banxico y Conciliación', done: false },
+      { text: 'Pruebas de carga de 15,000 solicitudes concurrentes', done: false },
     ],
     commitHash: '0x9f41b8a72ec9104810a9f82bc1',
     architectLead: 'Socio (CTO)',
@@ -91,45 +91,45 @@ const INITIAL_ROADMAP: RoadmapItem[] = [
   },
   {
     id: 'sprint-04',
-    phaseCode: 'FASE 04 // AUDITORÍA OFENSIVA',
-    title: 'Pentest Red Team Kali Linux & SAST/DAST Continuo',
-    subtitle: 'Simulación de amenazas avanzadas, Evasión Zero-Day y Fixes',
+    phaseCode: 'FASE 04 // AUDITORÍA DE SEGURIDAD',
+    title: 'Auditoría Integral de Ciberseguridad y Pruebas de Intrusión',
+    subtitle: 'Simulación de amenazas avanzadas, Revisión de Código y Correcciones',
     category: 'security',
     status: 'upcoming',
     progress: 0,
     startDate: '25 Oct 2026',
     targetDate: '07 Nov 2026',
     description:
-      'Evaluación ofensiva automatizada y manual de las aplicaciones web, APIs y clúster Kubernetes. Generación de reporte de remediación forense bajo estándar SOC-2.',
+      'Evaluación preventiva automatizada y manual de las aplicaciones web, interfaces de integración e infraestructura en la nube. Emisión de informe ejecutivo bajo estándar SOC-2.',
     deliverables: [
-      { text: 'Pruebas de penetración externas con suite Kali Linux', done: false },
-      { text: 'Análisis de dependencias y vulnerabilidades en contenedores', done: false },
-      { text: 'Simulación de inyección de payloads y desbordamiento', done: false },
+      { text: 'Pruebas externas de intrusión y validación perimetral', done: false },
+      { text: 'Análisis de dependencias y vulnerabilidades en la nube', done: false },
+      { text: 'Validación contra inyecciones de código y accesos indebidos', done: false },
       { text: 'Emisión del Certificado de Seguridad Nivel 4', done: false },
     ],
-    commitHash: '0xpending_pipeline_build',
+    commitHash: '0xpendiente_validacion',
     architectLead: 'Jefe (CISO)',
-    slaVerification: 'SLA GARANTIZADO 72H REPORTE FORENSE',
+    slaVerification: 'SLA GARANTIZADO 72H INFORME FORENSE',
   },
   {
     id: 'sprint-05',
-    phaseCode: 'FASE 05 // GO-LIVE & ESCROW',
-    title: 'Despliegue Cilium eBPF & Dispersión Escrow Dual',
-    subtitle: 'Cluster Kubernetes Blindado y Entrega Formal de Propiedad Intelectual',
+    phaseCode: 'FASE 05 // PUESTA EN PRODUCCIÓN',
+    title: 'Despliegue con Redundancia y Entrega Formal',
+    subtitle: 'Infraestructura en la Nube Blindada y Entrega de Propiedad Intelectual',
     category: 'production',
     status: 'upcoming',
     progress: 0,
     startDate: '08 Nov 2026',
     targetDate: '20 Nov 2026',
     description:
-      'Puesta en marcha en infraestructura de producción de alta disponibilidad. Dispersión final de fondos mediante firma dual autorizada por Jefe y Socio.',
+      'Puesta en marcha en infraestructura de producción de alta disponibilidad. Cierre financiero y entrega formal de activos digitales y documentación.',
     deliverables: [
-      { text: 'Despliegue multirregión con Cilium Service Mesh', done: false },
-      { text: 'Pruebas UAT con el equipo técnico de la empresa', done: false },
+      { text: 'Despliegue multirregión con redundancia activa', done: false },
+      { text: 'Pruebas de aceptación (UAT) con el equipo de la empresa', done: false },
       { text: 'Transferencia de repositorios y llaves maestras', done: false },
-      { text: 'Dispersión Escrow Dual condicionada al SLA 99.99%', done: false },
+      { text: 'Liberación final condicionada al SLA 99.99%', done: false },
     ],
-    commitHash: '0xpending_dual_signature',
+    commitHash: '0xpendiente_firma_dual',
     architectLead: 'Equipo Core Enclave',
     slaVerification: '99.99% DISPONIBILIDAD CONVENIDA POR CONTRATO',
   },
@@ -167,7 +167,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-[#00fe66]/15 border border-[#00fe66]/30 text-[#00fe66] font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider uppercase flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5" />
-                LIVE ROADMAP // CRONOGRAMA INTERACTIVO B2B
+                PLAN EN VIVO // CRONOGRAMA INTERACTIVO B2B
               </span>
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#00daf3]">
                 • CLIENTE: {clientCompany}
@@ -175,10 +175,10 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
             </div>
 
             <h2 className="font-['Space_Grotesk'] text-[22px] sm:text-[26px] font-bold text-[#dce1ff]">
-              Hoja de Ruta del Proyecto &amp; Entregables en Tiempo Real
+              Plan de Entregas del Proyecto en Tiempo Real
             </h2>
             <p className="font-['Inter'] text-[13px] text-[#bac9cc] max-w-3xl">
-              Monitoree el avance sprint por sprint con trazabilidad criptográfica. Los nodos completados emiten pulsos en <strong className="text-[#00fe66]">Terminal Green (#00FF66)</strong> y el sprint en ejecución activa pulsa en <strong className="text-[#00e5ff]">Tech Cyan (#00E5FF)</strong>.
+              Monitoree el avance fase por fase con trazabilidad criptográfica. Los hitos completados aparecen en <strong className="text-[#00fe66]">Verde Esmeralda (#00FF66)</strong> y la fase en ejecución activa destaca en <strong className="text-[#00e5ff]">Cian Corporativo (#00E5FF)</strong>.
             </p>
           </div>
 
@@ -210,11 +210,11 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar font-['JetBrains_Mono'] text-[11px]">
           <span className="text-[#849396] mr-1 hidden sm:inline">Filtrar:</span>
           {[
-            { id: 'all', label: 'Todos los Sprints (5)' },
+            { id: 'all', label: 'Todas las Fases (5)' },
             { id: 'architecture', label: 'Arquitectura' },
-            { id: 'database', label: 'Base de Datos RLS' },
-            { id: 'security', label: 'Seguridad & Pentest' },
-            { id: 'production', label: 'Producción & Escrow' },
+            { id: 'database', label: 'Base de Datos Aislada' },
+            { id: 'security', label: 'Seguridad y Auditoría' },
+            { id: 'production', label: 'Despliegue y Entrega' },
           ].map((f) => (
             <button
               key={f.id}
@@ -372,7 +372,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
                 </div>
                 <div>
                   <h4 className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
-                    Detalles del Sprint Seleccionado
+                    Detalles de la Fase Seleccionada
                   </h4>
                   <span className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3]">
                     {selectedSprint.id.toUpperCase()}
@@ -406,7 +406,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
             {/* Deliverables Checklist */}
             <div className="flex flex-col gap-2.5 bg-[#050a1c] p-4 rounded-xl border border-[#16254a]">
               <div className="flex items-center justify-between font-['JetBrains_Mono'] text-[11px] text-[#849396]">
-                <span>ENTREGABLES &amp; CHECKLIST:</span>
+                <span>ENTREGABLES Y LISTA DE VERIFICACIÓN:</span>
                 <span className="text-[#00fe66]">
                   {selectedSprint.deliverables.filter((d) => d.done).length} de {selectedSprint.deliverables.length} Completados
                 </span>
@@ -465,7 +465,7 @@ export const LiveRoadmap: React.FC<LiveRoadmapProps> = ({
               className="w-full py-2.5 rounded-xl bg-[#141f42] hover:bg-[#1d2c5e] text-[#00e5ff] border border-[#00e5ff]/30 font-['JetBrains_Mono'] text-[11px] font-semibold transition-all flex items-center justify-center gap-1.5"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-[#00fe66]" />
-              <span>Verificar Certificado del Sprint</span>
+              <span>Verificar Certificado de la Fase</span>
             </button>
           </div>
         </div>

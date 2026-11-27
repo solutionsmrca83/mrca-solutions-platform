@@ -76,14 +76,14 @@ export const AVAILABLE_SERVICES: ServiceOption[] = [
   },
   {
     id: 'pentest_offensive',
-    name: 'Pentesting Ofensivo Kali Linux',
-    description: 'Simulación de adversarios Red Team, vectores de ataque OWASP Top 10 y reglas de combate formales (RoE).',
+    name: 'Auditoría Ofensiva y Pruebas de Intrusión',
+    description: 'Evaluación controlada de seguridad, análisis de riesgos OWASP Top 10 y plan formal de mitigación ejecutiva.',
     category: 'security',
   },
   {
     id: 'escrow_custody',
-    name: 'Custodia Escrow Dual Banxico',
-    description: 'Dispersión condicionada 2-de-2 firmas con soporte SPEI Inmediato y liquidación contra entregables UAT.',
+    name: 'Resguardo Fiduciario y Pagos SPEI',
+    description: 'Dispersión condicionada con doble autorización, soporte SPEI Inmediato y liquidación contra entregables aprobados.',
     category: 'cloud',
   },
 ];
@@ -532,15 +532,15 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
 
           <div className="flex flex-col gap-2">
             <span className="font-['JetBrains_Mono'] text-[11px] font-bold text-amber-400 uppercase tracking-widest px-3 py-1 rounded-full bg-amber-950/60 border border-amber-500/30 w-max mx-auto">
-              RBAC LEVEL 2 REQUIRED // PROTOCOLO DE SEGURIDAD ZERO-TRUST
+              NIVEL DE ACCESO 2 REQUERIDO // CONTROL DE SEGURIDAD ACTIVO
             </span>
             <h3 className="font-['Space_Grotesk'] text-[24px] font-bold text-white">
               Acceso Restringido: Generador de Contratos &amp; SLA
             </h3>
             <p className="font-['Inter'] text-[13px] text-slate-300 max-w-lg leading-relaxed">
-              La emisión y firma de acuerdos legales corporativos, cesión patrimonial (LFDA Art. 83/84) y materialidad fiscal SAT CFDI 4.0 está restringida de forma estricta a los roles de gobernanza raíz{' '}
-              <strong className="text-amber-300">Superadmin (Jefe/CISO)</strong> y{' '}
-              <strong className="text-cyan-300">Partner (Socio/CTO)</strong>.
+              La emisión y firma de acuerdos legales corporativos, cesión patrimonial (LFDA Art. 83/84) y materialidad fiscal SAT CFDI 4.0 está restringida de forma estricta a los roles de gobernanza principal{' '}
+              <strong className="text-amber-300">Superadmin (Dirección)</strong> y{' '}
+              <strong className="text-cyan-300">Socio (Dirección Técnica)</strong>.
             </p>
           </div>
 
@@ -564,7 +564,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
               onClick={() => onNavigateTab('principal')}
               className="mt-2 px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] cursor-pointer"
             >
-              Volver al Dashboard Principal
+              Volver al Panel Principal
             </button>
           )}
         </div>
@@ -589,12 +589,12 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
               </span>
               <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-['JetBrains_Mono'] text-[10px] font-semibold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                RBAC AUTORIZADO: {isSuper ? 'SUPERADMIN ROOT' : isPrtnr ? 'SOCIO PARTNER' : 'DIRECCIÓN EJECUTIVA'}
+                RBAC AUTORIZADO: {isSuper ? 'ADMINISTRADOR PRINCIPAL' : isPrtnr ? 'SOCIO DIRECTOR' : 'DIRECCIÓN EJECUTIVA'}
               </span>
             </div>
 
             <h1 className="font-['Space_Grotesk'] text-[24px] sm:text-[28px] font-bold text-white tracking-tight">
-              B2B Contract &amp; SLA Generator // Enclave MRCA
+              Generador de Contratos B2B y Acuerdos SLA // MRCA
             </h1>
             <p className="font-['Inter'] text-[13px] text-slate-300 max-w-3xl leading-relaxed">
               Módulo de redacción legal automatizada para servicios de ciberseguridad, nube y desarrollo de software con estricto apego a las disposiciones fiscales del SAT, materialidad demostrable y cesión patrimonial bajo la Ley Federal del Derecho de Autor.
@@ -690,7 +690,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   Cargar Perfil de Cliente Corporativo
                 </span>
                 <span className="text-[10px] text-slate-400 font-['JetBrains_Mono']">
-                  {isSuper ? 'Pre-configurado' : 'Modo Lectura (Superadmin Only)'}
+                  {isSuper ? 'Pre-configurado' : 'Modo Lectura (Solo Superadmin)'}
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -747,7 +747,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <Building className="w-3 h-3 text-cyan-400" />
-                      <span>Razón Social / Empresa (Company Name)</span>
+                      <span>Razón Social / Empresa</span>
                     </span>
                     {!isSuper && <span className="text-[10px] text-amber-400 font-mono">Solo Superadmin</span>}
                   </label>
@@ -774,7 +774,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <User className="w-3 h-3 text-cyan-400" />
-                      <span>Representante Legal / Apoderado (Representative Name)</span>
+                      <span>Representante Legal / Apoderado</span>
                     </span>
                     {!isSuper && <span className="text-[10px] text-amber-400 font-mono">Solo Superadmin</span>}
                   </label>
@@ -826,7 +826,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                     <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
                       <span className="flex items-center gap-1.5">
                         <Hash className="w-3 h-3 text-cyan-400" />
-                        <span>Legal ID / RFC Mexicano</span>
+                        <span>RFC / Identificación Fiscal</span>
                       </span>
                       {!isSuper && <span className="text-[9px] text-amber-400">Lectura</span>}
                     </label>
@@ -915,7 +915,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
               {/* Custom Scope Description */}
               <div className="flex flex-col gap-1.5 mt-1">
                 <label className="font-['JetBrains_Mono'] text-[11px] text-slate-300 font-medium flex items-center justify-between">
-                  <span>Notas de Alcance Técnico Personalizado (SOW)</span>
+                  <span>Notas de Alcance y Entregables Personalizados</span>
                   {!isSuper && <span className="text-[10px] text-amber-400">Solo Superadmin</span>}
                 </label>
                 {isSuper ? (
@@ -996,7 +996,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                     >
                       <option value="50% Anticipo, 50% Entrega">50% Anticipo, 50% Entrega</option>
                       <option value="30% Anticipo, 40% Hito Alpha, 30% Despliegue">30% Anticipo, 40% Alpha, 30% Despliegue</option>
-                      <option value="100% Custodia Escrow Dual (Stripe/Banxico SPEI)">100% Custodia Escrow Dual</option>
+                      <option value="100% Resguardo Fiduciario Dual (SPEI Banxico)">100% Resguardo Fiduciario Dual</option>
                       <option value="Mensualidad Recurrente con CFDI 4.0">Mensualidad Recurrente con CFDI 4.0</option>
                     </select>
                   ) : (
@@ -1168,7 +1168,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                 </span>
               </div>
               <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-400 bg-cyan-950/80 px-2.5 py-0.5 rounded border border-cyan-500/30">
-                CFDI 4.0 SAT OK
+                CFDI 4.0 SAT VIGENTE
               </span>
             </div>
 
@@ -1184,7 +1184,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
               {/* Security Watermark in background */}
               <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center opacity-[0.03] z-0 overflow-hidden rotate-[-25deg]">
                 <span className="font-['Space_Grotesk'] text-[60px] sm:text-[90px] font-black uppercase tracking-widest text-cyan-400 text-center whitespace-nowrap">
-                  MRCA SOLUTIONS OFFICIAL ENCLAVE
+                  MRCA SOLUTIONS DOCUMENTO OFICIAL
                 </span>
               </div>
 
@@ -1338,7 +1338,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   </h4>
                   <p className="text-slate-300 text-[12px]">
                     El Prestador garantiza al Cliente una disponibilidad ininterrumpida mensual de la infraestructura del{' '}
-                    <strong className="text-emerald-400 font-mono">{uptime}</strong>. Ante eventualidades operativas o incidentes de criticidad alta, el tiempo de respuesta inicial y contención por parte del CISO Red Team será de máximo{' '}
+                    <strong className="text-emerald-400 font-mono">{uptime}</strong>. Ante eventualidades operativas o incidentes de criticidad alta, el tiempo de respuesta inicial y contención por parte del equipo de respuesta a incidentes de MRCA será de máximo{' '}
                     <strong className="text-cyan-400 font-mono">{responseTime}</strong> continuo.
                   </p>
                 </div>
@@ -1411,7 +1411,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                       <ShieldCheck className="w-5 h-5 shrink-0" />
                       <div>
                         <div className="font-bold text-white text-[11px]">MRCA SOLUTIONS S.A.P.I. DE C.V.</div>
-                        <div className="text-[9px] text-slate-400">SELLO ROOT HSM YUBIKEY FIPS 140-3</div>
+                        <div className="text-[9px] text-slate-400">SELLO CRIPTOGRÁFICO DE SEGURIDAD FIPS 140-3</div>
                       </div>
                     </div>
                     <div className="text-[9px] text-cyan-400 font-mono break-all bg-[#060D24] p-2 rounded border border-cyan-500/20">
@@ -1446,7 +1446,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
             </div>
 
             {/* ACTION BAR AT BOTTOM */}
-            <div className="w-full bg-[#0A1128]/95 border-2 border-cyan-500/40 rounded-2xl p-4 sm:p-5 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] flex flex-wrap items-center justify-between gap-3">
+            <div className="w-full bg-[#0A1128]/95 border-2 border-cyan-500/40 rounded-2xl p-4 sm:p-5 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.8)] flex flex-wrap items-center justify-between gap-3 animate-border-pulse">
               <div className="flex items-center gap-2">
                 <span className="font-['JetBrains_Mono'] text-[11px] text-slate-300">
                   {draftSavedAt ? (
@@ -1481,7 +1481,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                 <button
                   type="button"
                   onClick={handleGenerateCryptoLink}
-                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-[#00daf3] hover:from-cyan-400 hover:to-cyan-300 text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all flex items-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.4)]"
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-[#00daf3] hover:from-cyan-400 hover:to-cyan-300 text-[#00363d] font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all flex items-center gap-2 cursor-pointer shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105"
                 >
                   <Share2 className="w-4 h-4" />
                   <span>Generar Enlace Criptográfico del Contrato</span>
@@ -1492,7 +1492,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                   type="button"
                   onClick={handleExportPdf}
                   disabled={isExportingPdf}
-                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all flex items-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50"
+                  className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[11px] font-bold uppercase transition-all flex items-center gap-2 cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.3)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 disabled:opacity-50"
                 >
                   {isExportingPdf ? (
                     <>
@@ -1570,7 +1570,13 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                             : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                         }`}
                       >
-                        {neg.status.toUpperCase()}
+                        {neg.status === 'approved'
+                          ? 'APROBADO'
+                          : neg.status === 'rejected'
+                          ? 'RECHAZADO'
+                          : neg.status === 'counter_offered'
+                          ? 'CONTRAOFERTA'
+                          : 'PENDIENTE'}
                       </span>
                       <span className="text-[10px] text-slate-500 font-['JetBrains_Mono']">
                         {neg.service_category?.toUpperCase() || 'B2B'}
@@ -1584,7 +1590,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                     <div className="flex flex-wrap items-center gap-3 font-['JetBrains_Mono'] text-[11px] text-slate-400">
                       <span>Contacto: <strong className="text-slate-200">{neg.client_name}</strong></span>
                       <span>•</span>
-                      <span>Email: {neg.client_email}</span>
+                      <span>Correo: {neg.client_email}</span>
                       <span>•</span>
                       <span>
                         Presp. Solicitado:{' '}
@@ -1635,7 +1641,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
               </h2>
             </div>
             <span className="font-['JetBrains_Mono'] text-[11px] text-slate-400">
-              {sentContracts.length} contratos en Ledger Criptográfico
+              {sentContracts.length} contratos en Registro Criptográfico
             </span>
           </div>
 
@@ -1670,7 +1676,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
                     <span>•</span>
                     <span>Representante: {c.client_name}</span>
                     <span>•</span>
-                    <span>Email: {c.client_email}</span>
+                    <span>Correo: {c.client_email}</span>
                   </div>
 
                   {c.signature_hash && (
@@ -1707,7 +1713,7 @@ HASH INTEGRIDAD SHA-256: 0x9f41b8a72ec9104810a9f82bc1948d01f829019b`;
       {/* ===================================================================== */}
       {cryptoLinkModal.isOpen && (
         <div className="fixed inset-0 z-50 bg-[#060D24]/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-xl rounded-2xl bg-[#0A1128] border-2 border-cyan-500/50 p-6 shadow-[0_0_50px_rgba(0,229,255,0.3)] flex flex-col gap-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-xl rounded-2xl bg-[#0A1128] border-2 border-cyan-500/50 p-6 shadow-[0_0_50px_rgba(0,229,255,0.3)] flex flex-col gap-4 animate-in fade-in duration-200 animate-border-pulse">
             <div className="flex items-center justify-between pb-3 border-b border-cyan-900/40">
               <div className="flex items-center gap-2 text-cyan-400">
                 <Share2 className="w-5 h-5" />

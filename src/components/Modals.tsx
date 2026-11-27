@@ -24,7 +24,7 @@ export const ReAuthModal: React.FC<ModalProps & { onConfirm: (method: string) =>
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2 h-2 rounded-full bg-[#00e5ff] animate-ping"></span>
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3] uppercase tracking-wider font-semibold">
-                ADMIN Only • Supabase Secured
+                SOLO ADMINISTRACIÓN • ACCESO PROTEGIDO
               </span>
             </div>
             <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff]">
@@ -40,31 +40,31 @@ export const ReAuthModal: React.FC<ModalProps & { onConfirm: (method: string) =>
         </div>
 
         <p className="font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed">
-          Confirme su sesión criptográfica en el clúster seguro para preservar privilegios de dispersión dual y auditoría para Jefe y Socio.
+          Confirme su sesión corporativa en el servidor seguro para preservar privilegios de autorización dual y auditoría para Dirección y Socios.
         </p>
 
         <div className="flex flex-col gap-2.5 pt-1">
           <button
-            onClick={() => onConfirm('GitHub SSO Enclave')}
-            className="flex items-center justify-center gap-2.5 px-4 py-3 rounded-lg bg-[#181e36] hover:bg-[#222941] border border-[#3b494c] text-[#dce1ff] transition-all font-['JetBrains_Mono'] text-[12px] font-medium"
+            onClick={() => onConfirm('Acceso Corporativo SSO')}
+            className="flex items-center justify-center gap-2.5 px-4 py-3 rounded-lg bg-[#181e36] hover:bg-[#222941] border border-[#3b494c] text-[#dce1ff] transition-all font-['JetBrains_Mono'] text-[12px] font-medium cursor-pointer"
           >
             <svg translate="no" className="notranslate w-4 h-4 fill-current text-[#dce1ff]" viewBox="0 0 24 24">
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
             </svg>
-            <span>Continuar con GitHub SSO (Enclave)</span>
+            <span>Continuar con Acceso Corporativo (SSO)</span>
           </button>
 
           <button
-            onClick={() => onConfirm('Supabase FIDO2')}
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold hover:bg-[#c3f5ff] transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+            onClick={() => onConfirm('Credencial Corporativa FIDO2')}
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold hover:from-cyan-300 hover:to-teal-300 transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 cursor-pointer"
           >
             <span translate="no" className="notranslate material-symbols-outlined text-[18px]">verified_user</span>
-            <span>Credencial Corporativa Supabase FIDO2</span>
+            <span>Credencial Corporativa Verificada</span>
           </button>
         </div>
 
         <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-[#849396] pt-2 border-t border-[#181e36]">
-          <span>ECDSA SESSION HASH</span>
+          <span>SELLO DE SESIÓN ACTIVA</span>
           <span className="text-[#00daf3]">7a9f...e021</span>
         </div>
       </div>
@@ -92,7 +92,7 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
               ASESORÍA ESTRATÉGICA &amp; DESARROLLO B2B
             </span>
             <h3 className="font-['Space_Grotesk'] text-[22px] font-bold text-[#dce1ff]">
-              Comenzar Proyecto / Consultoría Estratégica
+              Comenzar Proyecto
             </h3>
           </div>
           <button onClick={onClose} className="text-[#bac9cc] hover:text-[#dce1ff] cursor-pointer">
@@ -152,7 +152,7 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
                 className="w-full bg-[#060d24] border border-[#3b494c] rounded-lg px-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none"
               >
                 <option value="tier1">Prioridad Alta (Inmediato 24h)</option>
-                <option value="scheduled">Programado en Sprint</option>
+                <option value="scheduled">Planificación Mensual</option>
                 <option value="institutional">Consultoría Institucional</option>
               </select>
             </div>
@@ -160,7 +160,7 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
 
           <div className="p-3 bg-[#0b1229] rounded-lg border border-[#222941] flex items-center gap-2 text-[11px] font-['JetBrains_Mono'] text-[#bac9cc]">
             <span translate="no" className="notranslate material-symbols-outlined text-[#00fe66] text-[16px]">verified</span>
-            <span>Atención confidencial directa y propuesta técnica en menos de 24 horas</span>
+            <span>Atención confidencial directa y propuesta ejecutiva en menos de 24 horas</span>
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-2">
@@ -173,7 +173,7 @@ export const AuditModal: React.FC<ModalProps & { onSubmit: (data: any) => void }
             </button>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[13px] font-bold shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 cursor-pointer"
+              className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[13px] font-bold shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 cursor-pointer"
             >
               Comenzar Proyecto
             </button>
@@ -216,30 +216,30 @@ export const HardwareTokenModal: React.FC<ModalProps & { onSuccess: () => void }
 
         <div className="flex flex-col gap-1">
           <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff]">
-            {step === 'prompt' && 'Autenticación FIDO2 / YubiKey'}
-            {step === 'verifying' && 'Validando Handshake mTLS...'}
-            {step === 'granted' && '¡Acceso Concedido a Alpha-1!'}
+            {step === 'prompt' && 'Autenticación con Llave Física de Seguridad'}
+            {step === 'verifying' && 'Validando Identidad Segura...'}
+            {step === 'granted' && '¡Acceso Concedido!'}
           </h3>
           <p className="font-['Inter'] text-[12px] text-[#bac9cc]">
-            {step === 'prompt' && 'Toque el sensor de su hardware token o confirme el desafío biométrico WebAuthn.'}
-            {step === 'verifying' && 'Verificando firma ECDSA P-384 con la autoridad certificadora de MRCA Solutions...'}
-            {step === 'granted' && 'Clave efímera generada. Redirigiendo a Enclave Seguro.'}
+            {step === 'prompt' && 'Toque el sensor de su llave física de seguridad o confirme la verificación biométrica.'}
+            {step === 'verifying' && 'Verificando firma digital con la autoridad certificadora de MRCA Solutions...'}
+            {step === 'granted' && 'Sesión verificada. Redirigiendo a la Consola Segura.'}
           </p>
         </div>
 
         {step === 'prompt' && (
           <button
             onClick={handleSimulateTouch}
-            className="w-full py-3 rounded-lg bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)]"
+            className="w-full py-3 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 cursor-pointer"
           >
-            Tocar Llave FIDO2 / Confirmar Biometría
+            Confirmar Llave Física / Biometría
           </button>
         )}
 
         {step === 'verifying' && (
           <div className="flex items-center gap-2 text-[#00fe66] font-['JetBrains_Mono'] text-[12px] animate-pulse">
             <span translate="no" className="notranslate material-symbols-outlined text-[18px]">sync</span>
-            <span>Handshake en proceso (0.82ms)...</span>
+            <span>Verificación segura en proceso (0.82ms)...</span>
           </div>
         )}
 
@@ -261,11 +261,11 @@ export const InspectContractModal: React.FC<
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/85 backdrop-blur-xl p-4">
-      <div className="relative w-full max-w-lg p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/30 shadow-2xl flex flex-col gap-4">
+      <div className="relative w-full max-w-lg p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/40 shadow-2xl flex flex-col gap-4 animate-border-pulse">
         <div className="flex items-start justify-between">
           <div>
             <span className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] uppercase tracking-wider font-semibold">
-              DOCUMENTO CRIPTOGRÁFICO VERIFICADO
+              DOCUMENTO LEGAL VERIFICADO
             </span>
             <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff]">{title}</h3>
           </div>
@@ -283,10 +283,10 @@ export const InspectContractModal: React.FC<
           </div>
           <div className="flex justify-between text-[#849396]">
             <span>ESTÁNDAR:</span>
-            <span className="text-[#00e5ff]">FIPS 140-3 LEVEL 4</span>
+            <span className="text-[#00e5ff]">FIPS 140-3 NIVEL 4</span>
           </div>
           <div className="flex flex-col gap-0.5 pt-1 border-t border-[#181e36]">
-            <span className="text-[#849396]">HASH SHA-256 INMUTABLE:</span>
+            <span className="text-[#849396]">SELLO SHA-256 INMUTABLE:</span>
             <span className="text-[#00daf3] break-all select-all font-semibold">{hash}</span>
           </div>
         </div>
@@ -295,16 +295,16 @@ export const InspectContractModal: React.FC<
           <button
             onClick={() => {
               navigator.clipboard?.writeText(hash);
-              alert('Hash copiado al portapapeles');
+              alert('Sello copiado al portapapeles');
             }}
-            className="px-4 py-2 rounded-lg bg-[#181e36] hover:bg-[#222941] text-[#00e5ff] text-[12px] font-['JetBrains_Mono'] flex items-center gap-1.5"
+            className="px-4 py-2 rounded-lg bg-[#181e36] hover:bg-[#222941] text-[#00e5ff] text-[12px] font-['JetBrains_Mono'] flex items-center gap-1.5 cursor-pointer"
           >
             <span translate="no" className="notranslate material-symbols-outlined text-[16px]">content_copy</span>
-            Copiar Hash
+            Copiar Sello
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-[#00e5ff] text-[#00363d] text-[12px] font-['JetBrains_Mono'] font-bold"
+            className="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 text-[12px] font-['JetBrains_Mono'] font-bold shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
           >
             Aceptar
           </button>
@@ -328,14 +328,14 @@ export const NewTicketModal: React.FC<ModalProps & { onAdd: (ticket: Partial<Kan
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#060d24]/85 backdrop-blur-xl p-4">
-      <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/30 shadow-2xl flex flex-col gap-4">
+      <div className="relative w-full max-w-md p-6 rounded-2xl bg-[#141a32] border border-[#00e5ff]/40 shadow-2xl flex flex-col gap-4 animate-border-pulse">
         <div className="flex items-start justify-between">
           <div>
             <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff] uppercase font-semibold">
-              PIPELINE INGENIERÍA // SUPABASE RLS
+              GESTIÓN DE PROYECTOS // CONTROL SEGURO
             </span>
             <h3 className="font-['Space_Grotesk'] text-[20px] font-bold text-[#dce1ff]">
-              Crear Nuevo Ticket
+              Crear Nueva Oportunidad
             </h3>
           </div>
           <button onClick={onClose} className="text-[#bac9cc] hover:text-[#dce1ff]">
@@ -351,8 +351,8 @@ export const NewTicketModal: React.FC<ModalProps & { onAdd: (ticket: Partial<Kan
               description,
               amountEst,
               status: category,
-              category: category === 'leads' ? 'TikTok B2B' : 'SLA Firmas',
-              categoryBadge: category === 'leads' ? 'TikTok B2B' : 'En Revisión',
+              category: category === 'leads' ? 'Comercial B2B' : 'Propuesta y Firmas',
+              categoryBadge: category === 'leads' ? 'Comercial B2B' : 'En Revisión',
               categoryBadgeColor: category === 'leads' ? 'cyan' : 'green',
               leadScore: 92,
             });
@@ -376,12 +376,12 @@ export const NewTicketModal: React.FC<ModalProps & { onAdd: (ticket: Partial<Kan
 
           <div>
             <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-              Detalles de la Arquitectura
+              Detalles del Proyecto
             </label>
             <textarea
               required
               rows={3}
-              placeholder="Descripción del requerimiento Zero-Trust, mTLS o Vault..."
+              placeholder="Descripción de objetivos, solución empresarial y alcance..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-lg px-3 py-2 text-[13px] text-[#dce1ff] focus:outline-none"
@@ -391,16 +391,16 @@ export const NewTicketModal: React.FC<ModalProps & { onAdd: (ticket: Partial<Kan
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc] mb-1">
-                Fase Pipeline
+                Etapa del Proyecto
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as any)}
                 className="w-full bg-[#060d24] border border-[#3b494c] rounded-lg px-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none"
               >
-                <option value="leads">1. Leads Redes</option>
-                <option value="negotiation">2. SLA Draft & Firmas</option>
-                <option value="active">3. Progreso Ingeniería</option>
+                <option value="leads">1. Prospectos Comerciales</option>
+                <option value="negotiation">2. Propuesta y Firmas</option>
+                <option value="active">3. Proyecto en Desarrollo</option>
               </select>
             </div>
             <div>
@@ -420,15 +420,15 @@ export const NewTicketModal: React.FC<ModalProps & { onAdd: (ticket: Partial<Kan
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-[#181e36] text-[#bac9cc] text-[12px] font-['JetBrains_Mono']"
+              className="px-4 py-2 rounded-lg bg-[#181e36] text-[#bac9cc] text-[12px] font-['JetBrains_Mono'] cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-lg bg-[#00e5ff] text-[#00363d] font-['JetBrains_Mono'] text-[12px] font-bold shadow-[0_0_15px_rgba(0,229,255,0.4)]"
+              className="px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
             >
-              Registrar Ticket
+              Registrar Proyecto
             </button>
           </div>
         </form>
@@ -650,14 +650,14 @@ export const LoginModal: React.FC<
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
                 <span className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3] uppercase tracking-wider font-semibold">
-                  SUPABASE ZERO-TRUST AUTH // ENCLAVE GATE
+                  ACCESO SEGURO // PORTAL DE ADMINISTRACIÓN
                 </span>
               </div>
               <h3 className="font-['Space_Grotesk'] text-[22px] font-bold text-[#dce1ff]">
                 Acceso Restringido /admin
               </h3>
               <p className="font-['Inter'] text-[13px] text-[#bac9cc] leading-relaxed mt-1">
-                El Enclave de Administración requiere una sesión criptográfica validada para Jefe (CISO) y Socio (CTO).
+                La Consola de Administración requiere una sesión corporativa verificada para Dirección General y Socios autorizados.
               </p>
             </div>
 
@@ -690,7 +690,7 @@ export const LoginModal: React.FC<
                     : 'text-[#bac9cc] hover:text-[#dce1ff]'
                 }`}
               >
-                Magic Link OTP
+                Enlace de Acceso Único
               </button>
             </div>
 
@@ -746,22 +746,22 @@ export const LoginModal: React.FC<
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] flex items-center justify-center gap-2 mt-1 cursor-pointer"
+                className="w-full py-2.5 rounded-lg bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] flex items-center justify-center gap-2 mt-1 cursor-pointer"
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[18px]">vpn_key</span>
                 <span>
                   {loading
-                    ? 'Validando con Supabase...'
+                    ? 'Validando credenciales...'
                     : authMode === 'password'
-                    ? 'Autenticar en Enclave'
-                    : 'Enviar Magic Link'}
+                    ? 'Ingresar a Consola'
+                    : 'Enviar Enlace de Acceso'}
                 </span>
               </button>
             </form>
 
             <div className="flex items-center gap-2 my-1 text-[#3b494c]">
               <div className="flex-1 h-px bg-[#222941]"></div>
-              <span className="font-['JetBrains_Mono'] text-[10px] text-[#849396] uppercase">O SSO Corporativo</span>
+              <span className="font-['JetBrains_Mono'] text-[10px] text-[#849396] uppercase">O Acceso Corporativo</span>
               <div className="flex-1 h-px bg-[#222941]"></div>
             </div>
 
@@ -769,27 +769,27 @@ export const LoginModal: React.FC<
               <button
                 type="button"
                 onClick={() => handleOAuthLogin('github')}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#181e36] hover:bg-[#222941] border border-[#3b494c] text-[#dce1ff] transition-all font-['JetBrains_Mono'] text-[11px]"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#181e36] hover:bg-[#222941] border border-[#3b494c] text-[#dce1ff] transition-all font-['JetBrains_Mono'] text-[11px] cursor-pointer"
               >
                 <svg translate="no" className="notranslate w-4 h-4 fill-current text-[#dce1ff]" viewBox="0 0 24 24">
                   <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                 </svg>
-                <span>GitHub Enterprise SSO (mTLS Enclave)</span>
+                <span>Acceso Corporativo Empresarial (SSO)</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleBypassDemo}
-                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00fe66]/10 hover:bg-[#00fe66]/20 border border-[#00fe66]/30 text-[#00fe66] transition-all font-['JetBrains_Mono'] text-[10px] font-semibold"
+                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00fe66]/10 hover:bg-[#00fe66]/20 border border-[#00fe66]/30 text-[#00fe66] transition-all font-['JetBrains_Mono'] text-[10px] font-semibold cursor-pointer"
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[14px]">shield</span>
-                <span>Simular Llave Raíz de Desarrollador (Zero-Trust Sandbox)</span>
+                <span>Acceder en Modo Demostración (Administrador)</span>
               </button>
             </div>
 
             <div className="flex items-center justify-between text-[10px] font-['JetBrains_Mono'] text-[#849396] pt-2 border-t border-[#181e36]">
-              <span>SUPABASE RLS POLICY</span>
-              <span className="text-[#00daf3]">ENFORCED: JWT HS256/RS256</span>
+              <span>POLÍTICA DE SEGURIDAD ACTIVA</span>
+              <span className="text-[#00daf3]">CIFRADO VERIFICADO</span>
             </div>
           </div>
         )}
@@ -797,7 +797,7 @@ export const LoginModal: React.FC<
         {/* BOTTOM NAVIGATION: Hidden/Small Link to Partner Enclave */}
         {authTarget !== 'admin' && (
           <div className="pt-2 border-t border-[#181e36] flex items-center justify-between text-[11px] font-['JetBrains_Mono']">
-            <span className="text-[#849396] text-[10px]">MRCA SOLUTIONS ZERO-TRUST IAM</span>
+            <span className="text-[#849396] text-[10px]">MRCA SOLUTIONS • ACCESO CORPORATIVO</span>
             <button
               type="button"
               onClick={() => setAuthTarget('admin')}

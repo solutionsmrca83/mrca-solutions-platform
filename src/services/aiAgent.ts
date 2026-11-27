@@ -44,78 +44,78 @@ export const queryNeuralNetwork = async (prompt: string): Promise<string> => {
     lower.includes('pentest') ||
     lower.includes('nmap')
   ) {
-    return `[🟢 MOTOR NEURONAL // ESCANEO DE VULNERABILIDADES]
-• Objetivo: Clúster Perimetral B2B & Endpoints API mTLS
-• Motores: Nmap Scripting Engine (NSE), OWASP ZAP & Cilium eBPF Inspector
+    return `[🟢 ASISTENTE MRCA // ESCANEO DE VULNERABILIDADES]
+• Objetivo: Infraestructura Perimetral B2B y Servicios Cifrados
+• Motores: Análisis Perimetral, OWASP ZAP e Inspección de Red
 • Resultados de telemetría:
-  - Puertos abiertos verificados: 443 (HTTPS/TLS 1.3), 6443 (k8s API - mTLS Only)
-  - Políticas RLS en PostgreSQL: 100% de tablas protegidas
-  - Superficie de ataque expuesta: 0.00% (Modo Enclave Silencioso)
-  - Certificados HSM YubiKey: Verificados y no revocados
-• Conclusión: Sin vectores críticos detectados. Infraestructura en cumplimiento FIPS 140-3.`;
+  - Puertos abiertos verificados: 443 (HTTPS/TLS 1.3), administración restringida con cifrado mutuo
+  - Aislamiento de bases de datos: 100% de tablas protegidas por empresa
+  - Superficie de ataque expuesta: 0.00% (Modo Protección Activa)
+  - Certificados de Seguridad: Verificados y vigentes
+• Conclusión: Sin riesgos críticos detectados. Infraestructura conforme a FIPS 140-3.`;
   }
 
-  // 2. DEPLOYMENT AUTOMATION & K8S INFRASTRUCTURE
+  // 2. DEPLOYMENT AUTOMATION & CLOUD INFRASTRUCTURE
   if (
     lower.includes('despliegue') ||
     lower.includes('desplegar') ||
     lower.includes('automatizar despliegue') ||
-    lower.includes('kubernetes') ||
+    lower.includes('nube') ||
     lower.includes('ci/cd') ||
     lower.includes('pipeline')
   ) {
-    return `[🟢 MOTOR NEURONAL // AUTOMATIZACIÓN DE DESPLIEGUE]
-• Orquestador: Kubernetes v1.31 + Cilium CNI Zero-Trust
+    return `[🟢 ASISTENTE MRCA // AUTOMATIZACIÓN DE DESPLIEGUE]
+• Plataforma: Orquestación en la Nube con Redundancia Activa
 • Etapas ejecutadas:
-  1. [VALIDADO] Hash inmutable de imágenes Docker con firma Cosign (ECDSA P-384)
-  2. [APLICADO] Secretos inyectados dinámicamente vía HashiCorp Vault
-  3. [DESPLEGADO] Rollout progresivo Canary (10% -> 50% -> 100%) sin interrupción
-  4. [ENLACE] Handshake mTLS bidireccional establecido con gateways SPEI y Stripe
-• Estado: Despliegue completado con éxito en 1.84s (0 downtime registrado).`;
+  1. [VALIDADO] Integridad inmutable de compilación con firma digital (ECDSA P-384)
+  2. [APLICADO] Credenciales inyectadas de forma segura desde Bóveda Cifrada
+  3. [DESPLEGADO] Liberación progresiva controlada (10% -> 50% -> 100%) sin interrupción
+  4. [ENLACE] Conexión cifrada verificada con pasarelas SPEI y Stripe
+• Estado: Despliegue completado con éxito en 1.84s (0 minutos de inactividad).`;
   }
 
-  // 3. ZERO-TRUST & IDENTITY POLICIES
+  // 3. SECURITY & IDENTITY POLICIES
   if (
-    lower.includes('zero-trust') ||
     lower.includes('politica') ||
     lower.includes('políticas') ||
     lower.includes('auditar') ||
     lower.includes('ciso') ||
     lower.includes('seguridad')
   ) {
-    return `[🟢 MOTOR NEURONAL // AUDITORÍA DE POLÍTICAS ZERO-TRUST]
-• Protocolo: Verificación continua sin confianza implícita
+    return `[🟢 ASISTENTE MRCA // AUDITORÍA DE POLÍTICAS DE SEGURIDAD]
+• Protocolo: Verificación continua y control de acceso estricto
 • Parámetros auditados:
-  - Cuenta Maestra CISO: Validada con Llave Raíz (solutionsmrca83@gmail.com)
-  - Aislamiento de Subdominios: Enclaves admin, client y student estrictamente aislados
-  - Cifrado en tránsito: ChaCha20-Poly1305 / AES-256-GCM activo
-  - Prevención de fugas: Egress firewall bloquea tráfico no firmado
+  - Cuenta Maestra de Seguridad: Validada (solutionsmrca83@gmail.com)
+  - Aislamiento de Portales: Consola de administración, clientes y academia aislados
+  - Cifrado en tránsito: AES-256-GCM y TLS 1.3 activos
+  - Prevención de fugas: Cortafuegos bloquea tráfico saliente no autorizado
 • Cumplimiento: Certificaciones SOC-2 Tipo II e ISO 27001 conformes.`;
   }
 
-  // 4. mTLS & TRAFFIC ENCRYPTION
+  // 4. ENCRYPTION & AVAILABILITY TELEMETRY
   if (
-    lower.includes('mtls') ||
+    lower.includes('disponibilidad') ||
+    lower.includes('redundancia') ||
     lower.includes('trafico') ||
     lower.includes('tráfico') ||
     lower.includes('cifrado') ||
     lower.includes('red')
   ) {
-    return `[🟢 MOTOR NEURONAL // TELEMETRÍA CRIPTOGRÁFICA mTLS]
+    return `[🟢 ASISTENTE MRCA // DISPONIBILIDAD Y CIFRADO]
 • Canal seguro: TLS 1.3 con autenticación mutua de certificados cliente-servidor
 • Tasa de transferencias cifradas: 100.0%
-• Latencia de inspección eBPF en tiempo real: 0.38 ms
-• Criptografía poscuántica (PQC): Pruebas Kyber-768 en fase de telemetría activa
+• Latencia de inspección de red en tiempo real: 0.38 ms
+• Redundancia activa multirregión: Operativa y sincronizada
 • Alertas de anomalías: 0 paquetes no autorizados.`;
   }
 
   // 5. GENERAL INFRASTRUCTURE AUTOMATION RESPONSE
-  return `[🟢 MOTOR NEURONAL // MRCA QUANTUM ENGINE]
+  return `[🟢 ASISTENTE MRCA // MOTOR DE INFRAESTRUCTURA]
 • Instrucción procesada: "${trimmed}"
-• Diagnóstico cuántico: Parámetros analizados en red neuronal de infraestructura.
+• Diagnóstico: Parámetros analizados en el panel de infraestructura.
 • Protocolos ejecutados:
-  - Mapeo de dependencias de microservicios: Nominal
-  - Enclave de aislamiento B2B: Seguro
+  - Mapeo de dependencias de servicios: Óptimo
+  - Entorno de aislamiento B2B: Seguro
   - Monitoreo continuo de salud: 99.98% de disponibilidad sostenida
 • Listo para la siguiente orden de automatización o auditoría.`;
 };

@@ -37,7 +37,7 @@ const INITIAL_PROPOSALS: ClientProjectProposal[] = [
     representativeName: 'Lic. Mariana Ortiz (Directora Ops)',
     email: 'mortiz@aduanaexpress.mx',
     category: 'custom_scripts',
-    projectTitle: 'Automatización de Manifiestos con Parsers Kali & Webhooks',
+    projectTitle: 'Automatización de Manifiestos con Procesadores y Webhooks',
     description:
       'Buscamos scripts robustos en Python/Go para procesar pedimentos aduanales, validar firmas digitales SHA-256 y despachar a SAT.',
     budgetTier: 'Adaptable a Presupuesto / Viabilidad',
@@ -59,7 +59,7 @@ const INITIAL_PROPOSALS: ClientProjectProposal[] = [
         id: 'm3',
         sender: 'admin',
         senderName: 'Socio (CTO)',
-        text: 'Proyecto aceptado, Lic. Mariana. Hemos asignado un contenedor aislado en Kubernetes para las pruebas de los parsers.',
+        text: 'Proyecto aceptado, Lic. Mariana. Hemos asignado un entorno aislado en la nube para las pruebas de integración.',
         timestamp: 'Ayer, 17:10 PM',
         isEncrypted: true,
         cipherHash: '0x7e29...a910',
@@ -72,7 +72,7 @@ const INITIAL_PROPOSALS: ClientProjectProposal[] = [
     representativeName: 'Dr. Alejandro Méndez (CISO Médico)',
     email: 'amendez@saluddigital.org',
     category: 'security',
-    projectTitle: 'Pentesting Red Team Kali & Hardening de Microservicios',
+    projectTitle: 'Auditoría Integral de Ciberseguridad y Blindaje en la Nube',
     description:
       'Auditoría ofensiva completa de expedientes clínicos electrónicos bajo estándar HIPAA y mitigación de fugas de memoria.',
     budgetTier: '$350,000+ MXN',
@@ -396,7 +396,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
                       {selectedProposal.id}
                     </span>
                     <span className="px-2 py-0.5 rounded bg-[#00fe66]/10 text-[#00fe66] font-['JetBrains_Mono'] text-[9px] border border-[#00fe66]/20 font-semibold">
-                      COMPLIANCE OK
+                      CUMPLIMIENTO VERIFICADO
                     </span>
                   </div>
                   <h3 className="font-['Space_Grotesk'] text-[18px] font-bold text-[#dce1ff]">
@@ -469,7 +469,7 @@ export const AdminProjectApprovals: React.FC<AdminProjectApprovalsProps> = ({ on
                 <div className="flex items-center justify-between text-[11px] font-['JetBrains_Mono']">
                   <div className="flex items-center gap-1.5 text-[#00e5ff]">
                     <span translate="no" className="notranslate material-symbols-outlined text-[15px]">lock</span>
-                    <span className="font-bold">CANAL DE RESPUESTA OFICIAL (ADMIN CHAT)</span>
+                    <span className="font-bold">CANAL DE RESPUESTA OFICIAL (ADMINISTRACIÓN)</span>
                   </div>
                   <span className="text-[#849396]">FIRMA: {adminSender}</span>
                 </div>

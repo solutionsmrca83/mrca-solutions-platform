@@ -197,7 +197,7 @@ export const MrcaAcademy: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
             <button
               onClick={scrollToCalculator}
-              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#00e5ff] to-[#00fe66] hover:from-[#5affff] hover:to-[#5aff96] text-[#00363d] font-['Space_Grotesk'] text-[14px] font-bold uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(0,229,255,0.4)] flex items-center gap-2"
+              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#00e5ff] to-[#00fe66] hover:from-[#5affff] hover:to-[#5aff96] text-[#00363d] font-['Space_Grotesk'] text-[14px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 cursor-pointer flex items-center gap-2"
             >
               <span>Calcular Presupuesto en Vivo</span>
               <ArrowRight className="w-4 h-4" />
@@ -484,7 +484,7 @@ export const MrcaAcademy: React.FC = () => {
       {/* ====================================================================== */}
       {/* ACADEMY DEDICATED FOOTER                                               */}
       {/* ====================================================================== */}
-      <footer className="w-full bg-[#040814] border-t border-[#182346] py-8 text-center text-[#849396] font-['JetBrains_Mono'] text-[11px] mt-12 relative z-10">
+      <footer className="w-full bg-[#040814]/80 backdrop-blur-md border-t border-[#182346] py-8 text-center text-[#849396] font-['JetBrains_Mono'] text-[11px] mt-12 relative z-10">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <GraduationCap className="w-4 h-4 text-[#00e5ff]" />
@@ -495,7 +495,7 @@ export const MrcaAcademy: React.FC = () => {
             Pagos protegidos vía Stripe Escrow • Soporte en español para México y LATAM
           </div>
           <div>
-            © 2025-2026 MRCA Solutions Inc. All rights reserved.
+            © 2025-2026 MRCA Solutions Inc. Todos los derechos reservados.
           </div>
         </div>
       </footer>

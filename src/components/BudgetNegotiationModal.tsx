@@ -163,7 +163,7 @@ export const BudgetNegotiationModal: React.FC<BudgetNegotiationModalProps> = ({
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#0c1633] via-[#091129] to-[#060c20] border-2 border-[#00e5ff]/50 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,229,255,0.25)] flex flex-col gap-6 my-auto"
+        className="relative w-full max-w-2xl rounded-3xl bg-gradient-to-b from-[#0c1633] via-[#091129] to-[#060c20] border-2 border-[#00e5ff]/50 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,229,255,0.25)] flex flex-col gap-6 my-auto animate-border-pulse"
       >
         {/* Glow Effects */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-bl from-[#00e5ff]/10 via-transparent to-transparent pointer-events-none rounded-tr-3xl" />
@@ -307,7 +307,7 @@ export const BudgetNegotiationModal: React.FC<BudgetNegotiationModalProps> = ({
                   }`}
                 >
                   <Building className="w-4 h-4" />
-                  <span>División Enterprise / B2B</span>
+                  <span>División Empresarial / B2B</span>
                 </button>
               </div>
 
@@ -449,7 +449,7 @@ export const BudgetNegotiationModal: React.FC<BudgetNegotiationModalProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:brightness-110 text-[#00363d] font-['Space_Grotesk'] text-[13px] font-extrabold uppercase tracking-wider flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98]"
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:brightness-110 text-[#00363d] font-['Space_Grotesk'] text-[13px] font-extrabold uppercase tracking-wider flex items-center gap-2 transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] disabled:opacity-50 hover:scale-105 active:scale-[0.98] cursor-pointer"
                 >
                   {isSubmitting ? (
                     <span>Transmitiendo a Dirección...</span>

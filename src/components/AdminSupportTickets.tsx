@@ -73,7 +73,7 @@ const DEFAULT_GLOBAL_TICKETS: SupportTicket[] = [
     priority: 'medium',
     status: 'resolved',
     admin_reply:
-      'Políticas auditadas y selladas con zero data leakage bajo estándar SOC-2.',
+      'Políticas auditadas y selladas con cero fugas de datos bajo estándar SOC-2.',
     created_at: '04 Oct 2026',
   },
 ];
@@ -154,7 +154,8 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
     }
 
     if (showToast) {
-      showToast(`Ticket ${ticketId} movido a "${newStatus.toUpperCase()}".`);
+      const statusLabel = newStatus === 'resolved' ? 'RESUELTO' : newStatus === 'in_progress' ? 'EN DIAGNÓSTICO' : 'ABIERTO';
+      showToast(`Ticket ${ticketId} movido a "${statusLabel}".`);
     }
   };
 
@@ -232,7 +233,7 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-[#00E5FF]/15 border border-[#00E5FF]/30 text-[#00E5FF] font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider uppercase flex items-center gap-1.5">
                 <LifeBuoy className="w-3.5 h-3.5" />
-                ADMIN ENCLAVE // TABLERO KANBAN DE SOPORTE TÉCNICO
+                CONSOLA DE ADMINISTRACIÓN // TABLERO DE SOPORTE TÉCNICO
               </span>
               {criticalCount > 0 && (
                 <span className="px-2.5 py-0.5 rounded-full bg-[#ff3333]/20 border border-[#ff3333]/50 text-[#ff4444] font-['JetBrains_Mono'] text-[10px] font-bold animate-pulse">
@@ -303,7 +304,7 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
                         : 'bg-[#00FF66]/20 text-[#00FF66]'
                     }`}
                   >
-                    {t.priority}
+                    {t.priority === 'critical' ? 'Crítica' : t.priority === 'medium' ? 'Media' : 'Baja'}
                   </span>
                 </div>
 
@@ -363,7 +364,7 @@ export const AdminSupportTickets: React.FC<AdminSupportTicketsProps> = ({ showTo
                         : 'bg-[#00FF66]/20 text-[#00FF66]'
                     }`}
                   >
-                    {t.priority}
+                    {t.priority === 'critical' ? 'Crítica' : t.priority === 'medium' ? 'Media' : 'Baja'}
                   </span>
                 </div>
 

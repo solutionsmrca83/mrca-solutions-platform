@@ -36,7 +36,7 @@ const INITIAL_LOGS: SystemAuditLog[] = [
     severity: 'success',
     actor: 'jefe@mrcasolutions.com',
     ip_address: '10.0.4.1 (CDMX Enclave)',
-    description: 'Hardware Security Module YubiHSM2 sincronizado con certificado TLS 1.3 ECDSA P-384.',
+    description: 'Módulo de seguridad de hardware sincronizado con certificado TLS 1.3 ECDSA P-384.',
     metadata: { hsm_id: 'YUBI-MX-01', status: 'LOCKED' },
   },
   {
@@ -66,8 +66,8 @@ const INITIAL_LOGS: SystemAuditLog[] = [
     severity: 'warning',
     actor: 'probe_recon_daemon',
     ip_address: '45.134.140.12 (Extranjero)',
-    description: 'Intento de enumeración en puerto de administración repelido por Cilium eBPF y Fail2ban.',
-    metadata: { port: 22, policy: 'ZERO_TRUST_DROP' },
+    description: 'Intento de acceso en puerto administrativo bloqueado automáticamente por la protección perimetral.',
+    metadata: { port: 22, policy: 'BLOQUEO_AUTOMATICO' },
   },
   {
     id: 'LOG-9917',
@@ -76,7 +76,7 @@ const INITIAL_LOGS: SystemAuditLog[] = [
     severity: 'success',
     actor: 'cliente@enterprise.corp',
     ip_address: '187.190.22.41 (Monterrey, MX)',
-    description: 'Desbloqueo de clave AES-256 para entregable schema_postgresql_zero_trust_with_rls.sql.',
+    description: 'Desbloqueo de clave AES-256 para entregable esquema_postgresql_aislamiento_empresarial.sql.',
     metadata: { file_id: 'VF-02', sha256_match: true },
   },
   {
@@ -112,7 +112,7 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
         event_type: 'FIDO2_TOKEN_VALIDATED',
         severity: 'success',
         actor: 'socio@mrcasolutions.com',
-        ip_address: '10.0.4.2 (Cluster Alpha)',
+        ip_address: '10.0.4.2 (Nodo Alfa)',
         description: 'Autenticación biométrica WebAuthn FIDO2 validada para sesión de superadministrador.',
       },
       {
@@ -171,7 +171,7 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
     downloadAnchor.remove();
 
     if (showToast) {
-      showToast('Registro de auditoría Zero-Trust exportado con firma criptográfica.');
+      showToast('Registro de auditoría de seguridad exportado con firma criptográfica.');
     }
   };
 
@@ -191,7 +191,7 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
         return (
           <span className="px-2 py-0.5 rounded bg-[#00FF66]/15 text-[#00FF66] border border-[#00FF66]/30 font-['JetBrains_Mono'] text-[10px] font-bold flex items-center gap-1">
             <ShieldCheck className="w-3 h-3" />
-            SUCCESS
+            EXITOSO
           </span>
         );
       case 'info':
@@ -205,14 +205,14 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
         return (
           <span className="px-2 py-0.5 rounded bg-[#FFAA00]/15 text-[#FFAA00] border border-[#FFAA00]/30 font-['JetBrains_Mono'] text-[10px] font-bold flex items-center gap-1">
             <AlertCircle className="w-3 h-3" />
-            WARNING
+            ALERTA
           </span>
         );
       case 'critical':
         return (
           <span className="px-2 py-0.5 rounded bg-[#FF3366]/20 text-[#FF5555] border border-[#FF3366]/40 font-['JetBrains_Mono'] text-[10px] font-bold flex items-center gap-1 animate-pulse">
             <ShieldAlert className="w-3 h-3" />
-            CRITICAL
+            CRÍTICO
           </span>
         );
     }
@@ -227,7 +227,7 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
             <div className="flex items-center gap-2 mb-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-pulse shadow-[0_0_8px_rgba(0,255,102,0.8)]" />
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#00E5FF] tracking-wider uppercase font-semibold">
-                AUDITORÍA CONTINUA ZERO-TRUST // KERNEL LOGS
+                AUDITORÍA CONTINUA DE SEGURIDAD // REGISTROS DEL SISTEMA
               </span>
             </div>
             <h2 className="font-['Space_Grotesk'] text-2xl sm:text-3xl font-bold text-[#DCE1FF]">
@@ -248,7 +248,7 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
               }`}
             >
               {isLiveStream ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-              <span>{isLiveStream ? 'STREAM ACTIVO (PAUSAR)' : 'REANUDAR STREAM'}</span>
+              <span>{isLiveStream ? 'MONITOREO ACTIVO (PAUSAR)' : 'REANUDAR MONITOREO'}</span>
             </button>
 
             <button
@@ -285,7 +285,15 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
                     : 'bg-[#181E36] text-[#BAC9CC] hover:text-[#00E5FF]'
                 }`}
               >
-                {sev === 'all' ? 'TODOS' : sev}
+                {sev === 'all'
+                  ? 'TODOS'
+                  : sev === 'success'
+                  ? 'EXITOSO'
+                  : sev === 'warning'
+                  ? 'ALERTA'
+                  : sev === 'critical'
+                  ? 'CRÍTICO'
+                  : 'INFO'}
               </button>
             ))}
           </div>
@@ -302,7 +310,7 @@ export const AdminAuditLogs: React.FC<AdminAuditLogsProps> = ({ showToast }) => 
                 <th className="py-3 px-4">SEVERIDAD</th>
                 <th className="py-3 px-4">TIPO DE EVENTO</th>
                 <th className="py-3 px-4">ACTOR / IP ORIGEN</th>
-                <th className="py-3 px-4">DESCRIPCIÓN DEL EVENTO ZERO-TRUST</th>
+                <th className="py-3 px-4">DESCRIPCIÓN DEL EVENTO DE SEGURIDAD</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#181E36] font-['JetBrains_Mono'] text-[11px]">

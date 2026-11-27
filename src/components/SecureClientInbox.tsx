@@ -139,11 +139,11 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#00fe66] uppercase tracking-wider font-semibold">
-                END-TO-END AES-256-CBC // SUPABASE RLS
+                CIFRADO EXTREMO A EXTREMO AES-256 // AISLAMIENTO DE DATOS
               </span>
             </div>
             <h2 className="font-['Space_Grotesk'] text-[22px] font-bold text-[#dce1ff]">
-              Bandeja Segura B2B (Secure Client Inbox)
+              Bandeja Segura Corporativa B2B
             </h2>
           </div>
         </div>
@@ -152,7 +152,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#060d24] border border-[#222941] font-['JetBrains_Mono'] text-[11px] text-[#bac9cc]">
           <span translate="no" className="notranslate material-symbols-outlined text-[16px] text-[#00e5ff]">verified_user</span>
           <span className="truncate max-w-[180px]">{clientEmail}</span>
-          <span className="px-1.5 py-0.5 rounded bg-[#00e5ff]/15 text-[#00e5ff] text-[9px] font-bold">CLIENT</span>
+          <span className="px-1.5 py-0.5 rounded bg-[#00e5ff]/15 text-[#00e5ff] text-[9px] font-bold">CLIENTE</span>
         </div>
       </div>
 
@@ -167,7 +167,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
           }`}
         >
           <span translate="no" className="notranslate material-symbols-outlined text-[16px]">edit_square</span>
-          <span>Transmitir Payload Cifrado</span>
+          <span>Transmitir Mensaje Cifrado</span>
         </button>
 
         <button
@@ -209,10 +209,10 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
                 onChange={(e) => setCategory(e.target.value as any)}
                 className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-lg px-3 py-2 text-[12px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
               >
-                <option value="critical">🔴 Tier-1 Crítico (Respuesta Inmediata CISO)</option>
+                <option value="critical">🔴 Nivel 1 Crítico (Respuesta Inmediata CISO)</option>
                 <option value="high">🟡 Alta Prioridad (Infraestructura / Claves)</option>
                 <option value="normal">🟢 Estándar (Requerimiento B2B)</option>
-                <option value="audit">🔵 Auditoría Pentest & Conformidad</option>
+                <option value="audit">🔵 Auditoría de Seguridad y Conformidad</option>
               </select>
             </div>
           </div>
@@ -225,7 +225,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="Ej: IPs de Producción AWS VPC o Credencial Stripe Escrow"
+              placeholder="Ej: Accesos de Producción en la Nube o Credenciales Corporativas"
               required
               className="w-full bg-[#060d24] border border-[#3b494c] focus:border-[#00e5ff] rounded-lg px-3 py-2 text-[13px] text-[#dce1ff] focus:outline-none font-['JetBrains_Mono']"
             />
@@ -234,10 +234,10 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-[11px] font-['JetBrains_Mono'] uppercase text-[#bac9cc]">
-                Payload Confidencial (Texto / IPs / Tokens / Certificados)
+                Contenido Confidencial (Texto / Accesos / Claves / Certificados)
               </label>
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3]">
-                Cifrado con clave simétrica AES-256 en Server Action
+                Cifrado con clave simétrica AES-256 en el servidor seguro
               </span>
             </div>
             <textarea
@@ -254,7 +254,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
           <div className="p-3 rounded-xl bg-[#060d24] border border-[#222941] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[11px] font-['JetBrains_Mono'] text-[#bac9cc]">
             <div className="flex items-center gap-2 text-[#00fe66]">
               <span translate="no" className="notranslate material-symbols-outlined text-[16px]">lock</span>
-              <span>Protección RLS: El payload cifrado es inaccesible para otros clientes</span>
+              <span>Protección Aislada: El mensaje cifrado es inaccesible para otros clientes</span>
             </div>
             <span className="text-[#849396]">IV aleatorio de 16 bytes por transmisión</span>
           </div>
@@ -270,15 +270,15 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-[#00e5ff] hover:bg-[#c3f5ff] text-[#00363d] font-['JetBrains_Mono'] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <span translate="no" className="notranslate material-symbols-outlined text-[20px]">
               {loading ? 'sync' : 'lock_clock'}
             </span>
             <span>
               {loading
-                ? 'Ejecutando Cifrado AES-256 en Server Action...'
-                : 'Transmitir con Cifrado AES-256 a Supabase'}
+                ? 'Ejecutando Cifrado AES-256 en el servidor...'
+                : 'Transmitir con Cifrado AES-256'}
             </span>
           </button>
         </form>
@@ -301,7 +301,7 @@ export const SecureClientInbox: React.FC<SecureClientInboxProps> = ({
           </div>
           <div className="flex flex-col gap-1 text-[11px] pt-1">
             <div className="flex justify-between">
-              <span className="text-[#849396]">MESSAGE ID:</span>
+              <span className="text-[#849396]">ID DE MENSAJE:</span>
               <span className="text-[#00e5ff] font-semibold">{receipt.id}</span>
             </div>
             <div className="flex flex-col">

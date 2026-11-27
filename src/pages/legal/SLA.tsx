@@ -21,8 +21,8 @@ export const SLA: React.FC<SLAProps> = ({ onBack, onNavigate }) => {
         </h2>
         <p>
           <strong>MRCA Solutions</strong> asume frente a EL CLIENTE el compromiso contractual de suministrar una disponibilidad mensual 
-          mínima del <strong>99.9% (noventa y nueve punto nueve por ciento)</strong> sobre la infraestructura de producción, compuertas de enlace API, 
-          servicios de autenticación Zero-Trust y nodos de cómputo dedicados.
+          mínima del <strong>99.9% (noventa y nueve punto nueve por ciento)</strong> sobre la infraestructura de producción, pasarelas de enlace API, 
+          servicios de autenticación corporativa y nodos de cómputo dedicados.
         </p>
         <p>
           El porcentaje de disponibilidad mensual se computará con base en la siguiente fórmula matemática:
@@ -38,7 +38,7 @@ export const SLA: React.FC<SLAProps> = ({ onBack, onNavigate }) => {
           2. Exclusiones de la Métrica de Indisponibilidad
         </h2>
         <p>
-          No se considerará tiempo de inactividad (Downtime) y quedará expresamente exento del cómputo de SLA cualquier interrupción originada por:
+          No se considerará tiempo de inactividad y quedará expresamente exento del cómputo de SLA cualquier interrupción originada por:
         </p>
         <ul className="list-disc pl-5 space-y-2 text-slate-300">
           <li>
@@ -65,12 +65,12 @@ export const SLA: React.FC<SLAProps> = ({ onBack, onNavigate }) => {
         <div className="flex items-center gap-2 text-cyan-400">
           <span translate="no" className="notranslate material-symbols-outlined text-[22px]">payments</span>
           <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400">
-            3. Compensaciones Exclusivas: Créditos de Servicio (Service Credits)
+            3. Compensaciones Exclusivas: Créditos de Servicio
           </h2>
         </div>
         <div className="p-4 rounded-xl bg-red-950/20 border border-red-500/30 text-[13px] text-red-200">
           <strong>CLÁUSULA RESTRICTIVA DE COMPENSACIÓN:</strong> Si la disponibilidad mensual efectiva cae por debajo del 99.9%, la 
-          única y exclusiva compensación a favor de EL CLIENTE consistirá en el otorgamiento de <strong>Créditos de Servicio (Service Credits)</strong> aplicables 
+          única y exclusiva compensación a favor de EL CLIENTE consistirá en el otorgamiento de <strong>Créditos de Servicio</strong> aplicables 
           al ciclo de facturación subsecuente. <strong>Bajo ningún concepto se realizarán reembolsos en dinero en efectivo, transferencias bancarias 
           ni cheques de caja.</strong>
         </div>

@@ -33,25 +33,25 @@ export const PrivacyPolicy: React.FC<PrivacyProps> = ({ onBack, onNavigate }) =>
         <div className="flex items-center gap-2 text-cyan-400">
           <span translate="no" className="notranslate material-symbols-outlined text-[22px]">shield_lock</span>
           <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400">
-            2. Principios de Seguridad y Arquitectura Zero-Trust
+            2. Principios de Seguridad y Protección Perimetral
           </h2>
         </div>
         <p>
-          EL RESPONSABLE opera bajo el paradigma estricto de <strong>Seguridad Zero-Trust ("Nunca Confiar, Siempre Verificar")</strong>. 
+          EL RESPONSABLE opera bajo el paradigma estricto de <strong>Verificación Continua ("Nunca Confiar, Siempre Verificar")</strong>. 
           Todos los flujos de información procesados por la infraestructura están sujetos a los más altos estándares criptográficos de la industria:
         </p>
         <ul className="list-disc pl-5 space-y-2 text-slate-300">
           <li>
-            <strong>Cifrado en Tránsito y en Reposo:</strong> Canales cifrados mediante protocolo TLS 1.3 con Perfect Forward Secrecy y almacenamiento 
-            bajo cifrado de grado militar AES-256 o ChaCha20-Poly1305.
+            <strong>Cifrado en Tránsito y en Reposo:</strong> Canales cifrados mediante protocolo TLS 1.3 con secreto perfecto hacia adelante y almacenamiento 
+            bajo cifrado de grado bancario AES-256 o ChaCha20-Poly1305.
           </li>
           <li>
             <strong>Telemetría Criptográfica Anónima:</strong> Los registros operacionales, métricas de rendimiento y firmas de integridad se procesan 
             como identificadores criptográficos irreversibles (hashes SHA-256) disociados de la identidad del usuario final, empleándose únicamente 
-            para la resiliencia del cluster y mitigación de ataques distribuidos.
+            para la continuidad del servicio y mitigación de ataques distribuidos.
           </li>
           <li>
-            <strong>Aislamiento de Entornos (Hardware Enclaves):</strong> Los secretos, llaves de firma digital y certificados operan dentro de 
+            <strong>Aislamiento de Entornos (Módulos Aislados de Seguridad):</strong> Los secretos, llaves de firma digital y certificados operan dentro de 
             módulos de seguridad de hardware (HSM) sin exposición a operadores humanos.
           </li>
         </ul>
@@ -60,11 +60,11 @@ export const PrivacyPolicy: React.FC<PrivacyProps> = ({ onBack, onNavigate }) =>
       {/* ZERO COOKIES POLICY */}
       <section className="space-y-4">
         <h2 className="text-xl font-bold font-['Space_Grotesk'] text-cyan-400 border-b border-cyan-900/40 pb-2">
-          3. Política de Cero Rastreadores (Zero Third-Party Cookies)
+          3. Política de Cero Rastreadores de Terceros
         </h2>
         <p>
-          EL RESPONSABLE mantiene una política inquebrantable de privacidad digital: <strong>no utilizamos cookies de rastreo de terceros, ni balizas web 
-          (web beacons), ni píxeles de retargeting publicitario</strong>.
+          EL RESPONSABLE mantiene una política inquebrantable de privacidad digital: <strong>no utilizamos cookies de rastreo de terceros, balizas web 
+          ni píxeles de seguimiento publicitario</strong>.
         </p>
         <p>
           Las únicas cookies o elementos de almacenamiento local (`sessionStorage` / `localStorage`) empleados por la plataforma son estrictamente 

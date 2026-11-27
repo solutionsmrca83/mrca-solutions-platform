@@ -70,7 +70,7 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-[#bac9cc] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
-                  API Gateway & mTLS
+                  Pasarela de Servicios y Cifrado
                 </span>
                 <span className="text-[#00fe66] font-bold">100.0%</span>
               </div>
@@ -78,7 +78,7 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-[#bac9cc] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
-                  Auth Enclave Zero-Trust
+                  Control de Acceso Corporativo
                 </span>
                 <span className="text-[#00fe66] font-bold">99.99%</span>
               </div>
@@ -86,7 +86,7 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-[#bac9cc] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
-                  PostgreSQL RLS Cluster
+                  Base de Datos Redundante
                 </span>
                 <span className="text-[#00fe66] font-bold">100.0%</span>
               </div>
@@ -94,7 +94,7 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
               <div className="flex items-center justify-between">
                 <span className="text-[#bac9cc] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66]"></span>
-                  Red Global Edge CDN
+                  Red Global de Entrega (CDN)
                 </span>
                 <span className="text-[#00fe66] font-bold">14ms latencia</span>
               </div>
@@ -102,7 +102,7 @@ export const SystemStatusBadge: React.FC<SystemStatusBadgeProps> = ({
 
             <div className="pt-2 border-t border-[#181e36] text-[10px] font-['JetBrains_Mono'] text-[#849396] flex items-center justify-between">
               <span>SLA CONTRACTUAL: 99.9% DISPONIBILIDAD</span>
-              <span className="text-[#00daf3]">BANXICO & AWS MX</span>
+              <span className="text-[#00daf3]">REDUNDANCIA MX Y NUBE</span>
             </div>
           </motion.div>
         )}

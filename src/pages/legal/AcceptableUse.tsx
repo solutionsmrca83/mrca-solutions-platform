@@ -54,25 +54,25 @@ export const AcceptableUse: React.FC<AUPProps> = ({ onBack, onNavigate }) => {
               B. Alojamiento o Distribución de Malware y Código Malicioso
             </h3>
             <p className="text-[13px] text-slate-300">
-              Transmitir, almacenar, distribuir o ejecutar virus, ransomware, troyanos, gusanos, keyloggers, scripts de explotación ("exploits") 
-              o cualquier código diseñado para vulnerar, alterar o destruir sistemas de información propios o de terceros.
+              Transmitir, almacenar, distribuir o ejecutar virus, ransomware, troyanos, gusanos, registradores de teclas, código de explotación 
+              o cualquier software diseñado para vulnerar, alterar o destruir sistemas de información propios o de terceros.
             </p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#060d24] border border-red-900/40">
             <h3 className="font-bold text-cyan-300 font-['Space_Grotesk'] text-[15px] mb-1">
-              C. Pruebas de Penetración (Pentesting) y Escaneos No Autorizados
+              C. Pruebas de Intrusión y Escaneos No Autorizados
             </h3>
             <p className="text-[13px] text-slate-300">
-              Efectuar pruebas de estrés volumétrico (DDoS/DoS), inyecciones de código, escaneos de puertos (port scanning), fuzzing 
-              o análisis de vulnerabilidades sobre los dominios, servidores y compuertas de MRCA Solutions sin un acuerdo formal y expreso de 
-              auditoría firmado por el Director de Seguridad (CISO) de LA COMPAÑÍA.
+              Efectuar pruebas de estrés volumétrico (DDoS/DoS), inyecciones de código, escaneos de puertos, pruebas automatizadas de intrusión 
+              o análisis de vulnerabilidades sobre los dominios, servidores y pasarelas de MRCA Solutions sin un acuerdo formal y expreso de 
+              auditoría firmado por la Dirección de Seguridad de LA COMPAÑÍA.
             </p>
           </div>
 
           <div className="p-3.5 rounded-xl bg-[#060d24] border border-red-900/40">
             <h3 className="font-bold text-cyan-300 font-['Space_Grotesk'] text-[15px] mb-1">
-              D. Minería de Criptomonedas (Crypto-Mining) y Abuso de Cómputo
+              D. Minería de Criptomonedas y Abuso de Cómputo
             </h3>
             <p className="text-[13px] text-slate-300">
               Utilizar los procesadores, clusters de GPUs o contenedores en la nube provistos para ejecutar algoritmos de minería de 
@@ -113,7 +113,7 @@ export const AcceptableUse: React.FC<AUPProps> = ({ onBack, onNavigate }) => {
           4. Reporte de Incidentes de Seguridad
         </h2>
         <p>
-          Cualquier indicio de actividad sospechosa o hallazgo de vulnerabilidad en modo de divulgación responsable (Responsible Disclosure) 
+          Cualquier indicio de actividad sospechosa o hallazgo de vulnerabilidad bajo divulgación responsable 
           deberá comunicarse de inmediato a nuestra guardia de seguridad 24/7 vía: <code className="text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded">security@mrcasolutions.com</code>.
         </p>
       </section>

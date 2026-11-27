@@ -35,8 +35,8 @@ interface NeuralCopilotProps {
 const PRESET_PROMPTS = [
   'Ejecutar escaneo de vulnerabilidades',
   'Automatizar despliegue',
-  'Auditar políticas Zero-Trust',
-  'Inspeccionar telemetría mTLS',
+  'Auditar políticas de seguridad',
+  'Inspeccionar disponibilidad y redundancia',
 ];
 
 export const NeuralCopilot: React.FC<NeuralCopilotProps> = ({
@@ -55,8 +55,8 @@ export const NeuralCopilot: React.FC<NeuralCopilotProps> = ({
       sender: 'agent',
       content:
         scope === 'admin'
-          ? 'MRCA Quantum Engine inicializado con nivel Root CISO. Motor de inferencia y automatización de infraestructura en espera de directivas operativas.'
-          : 'Asistente de Ingeniería Neural activo. Listo para responder consultas de arquitectura B2B, estado de despliegues y telemetría de sus contratos.',
+          ? 'Asistente MRCA IA inicializado con privilegios de administración. Motor de asistencia y automatización en espera de directivas operativas.'
+          : 'Asistente Corporativo MRCA activo. Listo para responder consultas de infraestructura B2B, estado de entregas y seguimiento de sus contratos.',
       timestamp: 'Ahora',
     },
   ]);
@@ -142,7 +142,7 @@ export const NeuralCopilot: React.FC<NeuralCopilotProps> = ({
             <div className="flex flex-col text-left">
               <div className="flex items-center gap-1.5">
                 <span className="font-['Space_Grotesk'] text-[13px] font-bold text-white group-hover:text-cyan-300 transition-colors">
-                  MRCA Quantum Engine
+                  Asistente MRCA IA
                 </span>
                 <span className="px-1.5 py-0.2 rounded text-[9px] font-['JetBrains_Mono'] bg-cyan-950/80 border border-cyan-500/30 text-cyan-400">
                   IA v3.2
@@ -185,10 +185,10 @@ export const NeuralCopilot: React.FC<NeuralCopilotProps> = ({
                 <div className="flex flex-col min-w-0">
                   <div className="flex items-center gap-1.5 truncate">
                     <span className="font-['Space_Grotesk'] text-[14px] font-bold text-white truncate">
-                      Neural Copilot
+                      Copiloto MRCA
                     </span>
                     <span className="font-['JetBrains_Mono'] text-[9px] px-1.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 uppercase tracking-widest shrink-0">
-                      {scope === 'admin' ? 'ROOT ENCLAVE' : 'CLIENT B2B'}
+                      {scope === 'admin' ? 'ADMINISTRACIÓN' : 'CLIENTE B2B'}
                     </span>
                   </div>
                   {/* Pulsing indicator required */}
@@ -239,7 +239,7 @@ export const NeuralCopilot: React.FC<NeuralCopilotProps> = ({
                   <div className="flex items-center gap-2">
                     <span className="flex items-center gap-1 text-cyan-400">
                       <Cpu className="w-3 h-3" />
-                      <span>Cluster-CDMX-AI</span>
+                      <span>Nodo CDMX IA</span>
                     </span>
                     <span>•</span>
                     <span className="text-emerald-400">0.42ms Latencia</span>
@@ -263,7 +263,7 @@ export const NeuralCopilot: React.FC<NeuralCopilotProps> = ({
                     >
                       <div className="flex items-center gap-1.5 mb-1 px-1">
                         <span className="text-[10px] font-['JetBrains_Mono'] text-slate-400">
-                          {msg.sender === 'user' ? 'Operador CISO' : 'MRCA Quantum Core'}
+                          {msg.sender === 'user' ? 'Operador' : 'Núcleo MRCA IA'}
                         </span>
                         <span className="text-[9px] text-slate-500">{msg.timestamp}</span>
                       </div>

@@ -146,18 +146,18 @@ const ACADEMY_TEMPLATES: AcademyTemplate[] = [
   },
   {
     id: 'TMPL-06',
-    title: 'Parser Kali Linux & Generador Reportes Pentest',
+    title: 'Analizador de Seguridad y Generador de Reportes',
     category: 'Ciberseguridad',
     price: 750,
     originalPrice: 1500,
-    deliveryTime: 'Descarga Inmediata (Python Kali)',
+    deliveryTime: 'Descarga Inmediata (Python)',
     complexity: 'Avanzado',
-    techStack: ['Python 3', 'Kali Linux', 'Nmap XML Parser', 'ReportLab PDF'],
-    tags: ['Entrega Inmediata', 'Código Comentado', 'Reporte PDF Ejecutivo', 'Kali Compatible'],
+    techStack: ['Python 3', 'Linux / Ubuntu', 'Analizador XML', 'ReportLab PDF'],
+    tags: ['Entrega Inmediata', 'Código Comentado', 'Reporte PDF Ejecutivo', 'Linux Compatible'],
     description:
-      'Herramienta automatizada para laboratorios de hacking ético. Procesa escaneos de Nmap, detecta servicios inseguros, los correlaciona con la base de datos de vulnerabilidades y crea un reporte PDF ejecutivo.',
+      'Herramienta automatizada para laboratorios de seguridad informática. Procesa escaneos de red, detecta servicios inseguros, los correlaciona con la base de datos de vulnerabilidades y crea un reporte PDF ejecutivo.',
     deliverables: [
-      'Script .py listo para correr en terminal Kali Linux o Ubuntu',
+      'Script .py listo para correr en terminal Linux o Ubuntu',
       'Plantilla de informe ejecutivo de auditoría en PDF editable',
       'Guía con preguntas frecuentes del sínodo y fundamentos de mitigación',
     ],
@@ -368,7 +368,7 @@ export const AcademyTemplatesCatalog: React.FC<AcademyTemplatesCatalogProps> = (
                 </div>
 
                 <span className="px-2 py-0.5 rounded bg-[#00fe66]/15 border border-[#00fe66]/30 text-[#00fe66] font-['JetBrains_Mono'] text-[10px] font-bold uppercase">
-                  50% OFF BASE
+                  50% DESCUENTO BASE
                 </span>
               </div>
 
@@ -377,7 +377,7 @@ export const AcademyTemplatesCatalog: React.FC<AcademyTemplatesCatalogProps> = (
                   type="button"
                   id={`btn-comprar-${template.id.toLowerCase()}`}
                   onClick={() => handleOpenBuyModal(template)}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:brightness-110 text-[#00363d] font-['Space_Grotesk'] text-[13px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:brightness-110 text-[#00363d] font-['Space_Grotesk'] text-[13px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] cursor-pointer"
                 >
                   <Download className="w-4 h-4 text-[#00363d]" />
                   <span>Comprar Plantilla (${template.price} MXN)</span>
@@ -408,7 +408,7 @@ export const AcademyTemplatesCatalog: React.FC<AcademyTemplatesCatalogProps> = (
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative w-full max-w-xl rounded-3xl bg-gradient-to-b from-[#0c1633] via-[#091129] to-[#060c20] border-2 border-[#00e5ff]/50 p-6 sm:p-7 shadow-[0_0_50px_rgba(0,229,255,0.3)] flex flex-col gap-5 my-auto"
+              className="relative w-full max-w-xl rounded-3xl bg-gradient-to-b from-[#0c1633] via-[#091129] to-[#060c20] border-2 border-[#00e5ff]/50 p-6 sm:p-7 shadow-[0_0_50px_rgba(0,229,255,0.3)] flex flex-col gap-5 my-auto animate-border-pulse"
             >
               {/* Modal Header */}
               <div className="flex items-start justify-between gap-4 pb-3 border-b border-[#1b2b52]">
@@ -443,7 +443,7 @@ export const AcademyTemplatesCatalog: React.FC<AcademyTemplatesCatalogProps> = (
                   </span>
                   {appliedCouponResult?.isValid && (
                     <span className="px-2 py-0.5 rounded-full bg-[#00fe66]/20 border border-[#00fe66]/40 text-[#00fe66] font-['JetBrains_Mono'] text-[10px] font-bold animate-pulse">
-                      -{appliedCouponResult.discountPercentage}% OFF ({appliedCouponResult.coupon?.code})
+                      -{appliedCouponResult.discountPercentage}% DESC. ({appliedCouponResult.coupon?.code})
                     </span>
                   )}
                 </div>
@@ -560,7 +560,7 @@ export const AcademyTemplatesCatalog: React.FC<AcademyTemplatesCatalogProps> = (
                       setDownloadInitiated(true);
                       if (showToast) showToast('Orden registrada. Preparando entrega inmediata...');
                     }}
-                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:brightness-110 text-[#00363d] font-['Space_Grotesk'] text-[14px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,229,255,0.4)]"
+                    className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[#00e5ff] via-[#38ef7d] to-[#00fe66] hover:brightness-110 text-[#00363d] font-['Space_Grotesk'] text-[14px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
                   >
                     <Download className="w-4 h-4 text-[#00363d]" />
                     <span>Confirmar Compra ($${finalPrice.toLocaleString()} MXN)</span>

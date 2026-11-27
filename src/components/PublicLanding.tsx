@@ -48,15 +48,15 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
       subtitle: 'Aceleramos tu negocio con software ágil',
       desc: 'Construimos plataformas web y sistemas de alta concurrencia adaptados exactamente al modelo operativo de tu empresa, eliminando fricción y automatizando procesos clave.',
       icon: 'code_blocks',
-      features: ['Arquitectura Integral Frontend & Backend', 'Velocidad de carga sub-segundo FCP < 0.5s', 'Integración fluida con bases de datos RLS'],
+      features: ['Desarrollo integral de plataformas web y servidores', 'Velocidad de carga instantánea (< 0.5 seg)', 'Bases de datos seguras y aisladas por empresa'],
       tag: 'CRECIMIENTO EMPRESARIAL',
     },
     {
       title: 'Seguridad Grado Militar',
       subtitle: 'Protección inquebrantable de activos',
-      desc: 'Blindamos tus sistemas y datos financieros contra ciberataques avanzados, ransomware y accesos no autorizados mediante protocolos de microsegmentación Zero-Trust.',
+      desc: 'Blindamos tus sistemas y datos financieros contra ciberataques avanzados, ransomware y accesos no autorizados mediante arquitectura de defensa en profundidad y control estricto de accesos.',
       icon: 'shield_lock',
-      features: ['Aislamiento perimetral y llaves FIPS 140-3', 'Auditoría continua de vulnerabilidades', 'Defensa activa y detección proactiva de intrusiones'],
+      features: ['Aislamiento perimetral y cifrado certificado FIPS 140-3', 'Auditoría continua de vulnerabilidades', 'Defensa activa y detección proactiva de intrusiones'],
       tag: 'BLINDAJE PERIMETRAL',
     },
     {
@@ -106,15 +106,15 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
     },
     {
       title: 'Políticas de Privacidad',
-      version: 'ZERO-RETENTION',
-      ref: '#MRCA-PRIV-SEC (ISO-27001 Aligned)',
+      version: 'CERO RETENCIÓN',
+      ref: '#MRCA-PRIV-SEC (Alineado a ISO-27001)',
       hash: 'd13e54b8109312bcfe830209419abce742910fa7281048bceee2084920401830',
       description: 'Garantía matemática de privacidad estricta y protección de datos corporativos confidenciales.',
     },
     {
       title: 'Acuerdo SLA & Disponibilidad',
       version: 'SLA 99.999%',
-      ref: '#MRCA-SLA-MISSION-CRITICAL',
+      ref: '#MRCA-SLA-MISION-CRITICA',
       hash: '33a01fb910408dcaee8091bc24810287114efcba81048201840291ba09183419',
       description: 'Garantía de servicio con penalizaciones automáticas liquidadas bajo el régimen mercantil mexicano.',
     },
@@ -138,12 +138,12 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-slate-950/80 border border-emerald-500/30">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]"></span>
                 <span className="font-['JetBrains_Mono'] text-[11px] text-emerald-400 font-semibold tracking-wider uppercase">
-                  Sistemas Operacionales • 99.999% SLA Activo
+                  Sistemas Operativos en Línea • 99.999% Disponibilidad
                 </span>
               </div>
               <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-slate-950/60 border border-white/5 font-['JetBrains_Mono'] text-[11px] text-slate-300">
-                <span className="text-cyan-400 font-semibold">INFRAESTRUCTURA:</span>
-                <span>CDMX &amp; US-EAST</span>
+                <span className="text-cyan-400 font-semibold">REDUNDANCIA:</span>
+                <span>CDMX &amp; Nube Internacional</span>
               </div>
             </div>
 
@@ -168,7 +168,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               </a>
               <button
                 onClick={onNavigateToAdmin}
-                className="ml-2 px-4 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-400 hover:text-slate-950 text-cyan-300 border border-cyan-500/40 hover:border-transparent transition-all duration-300 flex items-center gap-1.5 font-bold cursor-pointer shadow-[0_0_12px_rgba(6,182,212,0.15)]"
+                className="ml-2 px-4 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-400 hover:text-slate-950 text-cyan-300 border border-cyan-500/40 hover:border-transparent transition-all duration-300 flex items-center gap-1.5 font-bold cursor-pointer shadow-[0_0_12px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.75)] hover:scale-105"
               >
                 <KeyRound className="w-3.5 h-3.5" />
                 <span>Acceso Ejecutivo</span>
@@ -206,7 +206,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
                 <button
                   onClick={() => setIsAuditModalOpen(true)}
-                  className="min-h-[52px] px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[16px] font-bold tracking-wide flex items-center justify-center gap-2.5 shadow-[0_0_25px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 cursor-pointer"
+                  className="min-h-[52px] px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[16px] font-bold tracking-wide flex items-center justify-center gap-2.5 shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 cursor-pointer"
                 >
                   <Sparkles className="w-5 h-5 text-slate-950" />
                   <span>Comenzar Proyecto</span>
@@ -249,7 +249,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             {/* Right 3D Visualizer Hologram Core */}
             <div className="lg:col-span-5 relative flex items-center justify-center">
               <div className="absolute inset-0 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none"></div>
-              <div className="w-full h-84 sm:h-[420px] rounded-2xl bg-slate-900/80 border border-white/10 shadow-[0_15px_50px_rgba(0,0,0,0.7)] relative overflow-hidden p-2 flex flex-col backdrop-blur-xl">
+              <div className="w-full h-84 sm:h-[420px] rounded-2xl bg-slate-900/80 border border-cyan-500/30 shadow-[0_15px_50px_rgba(0,0,0,0.7)] relative overflow-hidden p-2 flex flex-col backdrop-blur-xl animate-border-pulse">
                 <HologramCanvas className="flex-1" />
               </div>
             </div>
@@ -318,7 +318,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
 
                 <button
                   onClick={() => setIsAuditModalOpen(true)}
-                  className="w-full py-2.5 rounded-lg bg-slate-800 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/5 hover:border-cyan-500/40 font-['Space_Grotesk'] text-[13px] font-semibold flex items-center justify-center gap-1.5 transition-all"
+                  className="w-full py-2.5 rounded-lg bg-slate-800 hover:bg-cyan-500/20 text-slate-300 hover:text-cyan-300 border border-white/5 hover:border-cyan-500/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] hover:scale-[1.03] font-['Space_Grotesk'] text-[13px] font-semibold flex items-center justify-center gap-1.5 transition-all duration-300 cursor-pointer"
                 >
                   <span>Solicitar Propuesta</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -343,7 +343,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-slate-900 border border-emerald-500/30 w-fit">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               <span className="font-['JetBrains_Mono'] text-[10px] uppercase text-emerald-400 font-bold tracking-wider">
-                CONFIDENCIALIDAD &amp; CIFRADO ZERO-KNOWLEDGE
+                CONFIDENCIALIDAD Y CIFRADO DE CONOCIMIENTO CERO
               </span>
             </div>
             <h2 className="font-['Space_Grotesk'] text-[28px] sm:text-[34px] text-white font-bold">
@@ -371,7 +371,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
                     </span>
                   </div>
                   <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-['JetBrains_Mono'] text-[10px] font-bold">
-                    CFDI 4.0 SAT OK
+                    CFDI 4.0 SAT VIGENTE
                   </span>
                 </div>
 
@@ -425,7 +425,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
         {/* BOTTOM CALL TO ACTION: EXECUTIVE DIALOGUE                           */}
         {/* =================================================================== */}
         <section className="w-full">
-          <div className="relative rounded-2xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 border border-cyan-500/30 p-8 sm:p-12 shadow-[0_15px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden">
+          <div className="relative rounded-2xl bg-gradient-to-r from-slate-900/90 via-slate-850/90 to-slate-900/90 border border-cyan-500/40 p-8 sm:p-12 shadow-[0_15px_50px_rgba(0,0,0,0.6)] backdrop-blur-2xl flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden animate-border-pulse">
             <div className="absolute top-0 right-0 w-96 h-full bg-cyan-500/5 blur-[90px] pointer-events-none"></div>
             
             <div className="flex flex-col gap-2 max-w-2xl relative z-10">
@@ -443,7 +443,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({
             <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 relative z-10 w-full sm:w-auto">
               <button
                 onClick={() => setIsAuditModalOpen(true)}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[15px] font-bold uppercase tracking-wider shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['Space_Grotesk'] text-[15px] font-bold uppercase tracking-wider shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Comenzar Proyecto</span>
                 <ArrowRight className="w-4 h-4" />

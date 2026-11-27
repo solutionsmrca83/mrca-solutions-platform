@@ -50,7 +50,7 @@
 }
 
 @layer base {
-  html, body, #root {
+  html {
     margin: 0;
     padding: 0;
     background-color: #060d24;
@@ -59,25 +59,55 @@
   }
 
   body {
+    margin: 0;
+    padding: 0;
     position: relative;
     min-height: 100vh;
+    background-color: transparent;
+    color: #dce1ff;
+    font-family: "Inter", sans-serif;
+    isolation: isolate;
+    overflow-x: hidden;
+  }
+
+  #root {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    background-color: transparent;
   }
 
   /* Subtle, slow-moving gradient mesh background breaking flat dark blue */
   body::before {
     content: "";
     position: fixed;
-    inset: 0;
-    z-index: -1;
+    inset: -15%;
+    z-index: -2;
     pointer-events: none;
     background-color: #060d24;
     background-image:
-      radial-gradient(ellipse 65% 55% at 15% 15%, rgba(6, 182, 212, 0.16) 0%, transparent 70%),
-      radial-gradient(ellipse 70% 60% at 85% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 70%),
-      radial-gradient(ellipse 55% 45% at 50% 35%, rgba(99, 102, 241, 0.10) 0%, transparent 70%),
-      radial-gradient(ellipse 75% 65% at 80% 15%, rgba(14, 165, 233, 0.12) 0%, transparent 70%);
-    background-size: 180% 180%;
-    animation: cyber-mesh-shift 26s ease-in-out infinite;
+      radial-gradient(ellipse 58% 48% at 18% 18%, rgba(6, 182, 212, 0.22) 0%, transparent 68%),
+      radial-gradient(ellipse 62% 52% at 84% 82%, rgba(16, 185, 129, 0.15) 0%, transparent 68%),
+      radial-gradient(ellipse 50% 44% at 52% 38%, rgba(79, 70, 229, 0.14) 0%, transparent 70%),
+      radial-gradient(ellipse 65% 55% at 82% 16%, rgba(14, 165, 233, 0.16) 0%, transparent 68%);
+    background-size: 190% 190%;
+    animation: cyber-mesh-shift 24s ease-in-out infinite;
+    will-change: background-position, transform;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: -20%;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle 420px at 25% 75%, rgba(0, 229, 255, 0.10) 0%, transparent 72%),
+      radial-gradient(circle 380px at 78% 28%, rgba(0, 254, 102, 0.08) 0%, transparent 72%);
+    animation: cyber-mesh-drift 32s ease-in-out infinite alternate;
+    will-change: transform, opacity;
   }
   
   /* Cyber WebKit Scrollbar: Thin (5px), Midnight Blue Track, Tech Cyan Thumb */
@@ -109,34 +139,54 @@
 @keyframes cyber-mesh-shift {
   0% {
     background-position: 0% 0%, 100% 100%, 20% 80%, 80% 20%;
+    transform: translate3d(0, 0, 0) scale(1);
   }
   25% {
-    background-position: 30% 60%, 70% 40%, 80% 20%, 20% 80%;
+    background-position: 35% 65%, 65% 35%, 80% 20%, 20% 80%;
+    transform: translate3d(1.5%, -1%, 0) scale(1.03);
   }
   50% {
     background-position: 100% 100%, 0% 0%, 40% 60%, 60% 40%;
+    transform: translate3d(-1.5%, 1.5%, 0) scale(1.01);
   }
   75% {
-    background-position: 70% 40%, 30% 60%, 10% 90%, 90% 10%;
+    background-position: 65% 35%, 35% 65%, 10% 90%, 90% 10%;
+    transform: translate3d(1%, 1%, 0) scale(1.04);
   }
   100% {
     background-position: 0% 0%, 100% 100%, 20% 80%, 80% 20%;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes cyber-mesh-drift {
+  0% {
+    transform: translate3d(-3%, 2%, 0) scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(3%, -2%, 0) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(-2%, -3%, 0) scale(0.98);
+    opacity: 0.8;
   }
 }
 
 @keyframes border-glow-pulse {
   0%, 100% {
-    border-color: rgba(6, 182, 212, 0.35);
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
+    border-color: rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 14px rgba(6, 182, 212, 0.14);
   }
   50% {
-    border-color: rgba(6, 182, 212, 0.85);
-    box-shadow: 0 0 30px rgba(6, 182, 212, 0.45);
+    border-color: rgba(34, 211, 238, 0.85);
+    box-shadow: 0 0 28px rgba(6, 182, 212, 0.42), inset 0 0 12px rgba(6, 182, 212, 0.08);
   }
 }
 
 .animate-border-pulse {
-  animation: border-glow-pulse 4s ease-in-out infinite;
+  animation: border-glow-pulse 4.5s ease-in-out infinite;
 }
 
 /* ========================================================================== */
@@ -302,6 +352,15 @@ svg {
   body {
     background: #ffffff !important;
     color: #0f172a !important;
+  }
+
+  body::before,
+  body::after {
+    display: none !important;
+  }
+
+  .animate-border-pulse {
+    animation: none !important;
   }
 
   body * {

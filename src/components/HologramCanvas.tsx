@@ -231,7 +231,7 @@ export const HologramCanvas: React.FC<HologramCanvasProps> = ({ className = '' }
       <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#222941]/90 border border-[#00e5ff]/20 backdrop-blur-md">
         <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[14px]">stream</span>
         <span className="font-['JetBrains_Mono'] text-[10px] text-[#00e5ff] font-semibold tracking-wider">
-          CORE_QUANTUM::ONLINE
+          NÚCLEO ACTIVO :: EN LÍNEA
         </span>
       </div>
       <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1 px-2.5 py-1 rounded bg-[#222941]/90 border border-[#00e5ff]/20 backdrop-blur-md">

@@ -69,7 +69,7 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: -10 }}
         transition={{ duration: 0.35, ease: 'easeOut' }}
-        className="relative w-full max-w-2xl bg-slate-900/90 backdrop-blur-2xl border-2 border-cyan-500/40 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_rgba(6,182,212,0.35)] flex flex-col gap-5 text-[#dce1ff] overflow-hidden"
+        className="relative w-full max-w-2xl bg-slate-900/90 backdrop-blur-2xl border-2 border-cyan-500/40 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_rgba(6,182,212,0.35)] flex flex-col gap-5 text-[#dce1ff] overflow-hidden animate-border-pulse"
       >
         {/* Top High-Tech Security Header */}
         <div className="flex items-start justify-between gap-4 pb-4 border-b border-cyan-500/20">
@@ -105,24 +105,24 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
         <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-2.5 text-[11px] font-['JetBrains_Mono'] text-amber-300">
           <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
           <span>
-            <strong>ACCESO BLOQUEADO:</strong> Se requiere consentimiento explícito para habilitar los portales corporativos (/client, /student, /admin).
+            <strong>ACCESO BLOQUEADO:</strong> Se requiere consentimiento explícito para habilitar los portales corporativos (Clientes, Academia y Administración).
           </span>
         </div>
 
         {/* Main Content Body */}
         <div className="flex flex-col gap-3 font-['Inter'] text-[13px] text-slate-300 leading-relaxed">
           <p>
-            MRCA Solutions S.A.P.I. de C.V. implementa políticas de seguridad <strong className="text-white">Zero-Trust</strong> de grado bancario. Empleamos almacenamiento local y cookies técnicas estrictamente necesarias para garantizar:
+            MRCA Solutions S.A.P.I. de C.V. implementa políticas de <strong className="text-white">seguridad corporativa</strong> de grado bancario. Empleamos almacenamiento local y cookies técnicas estrictamente necesarias para garantizar:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
             <div className="p-3 rounded-xl bg-slate-950/70 border border-cyan-500/20 flex flex-col gap-1">
               <div className="flex items-center gap-1.5 text-cyan-300 font-['Space_Grotesk'] font-bold text-[12px]">
                 <KeyRound className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Sesión mTLS</span>
+                <span>Sesión Cifrada</span>
               </div>
               <p className="text-[11px] text-slate-400 leading-tight">
-                Handshakes cifrados y tokens FIDO2/WebAuthn contra ataques CSRF.
+                Conexiones cifradas de extremo a extremo y protección avanzada contra accesos no autorizados.
               </p>
             </div>
 
@@ -208,7 +208,7 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
             <button
               type="button"
               onClick={handleAcceptCookies}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:scale-[1.02] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-[#00daf3] to-teal-400 hover:from-cyan-400 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[12px] font-bold uppercase tracking-wider transition-all duration-300 shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
               <span>Aceptar Cookies</span>

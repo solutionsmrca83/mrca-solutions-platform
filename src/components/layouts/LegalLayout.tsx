@@ -37,7 +37,7 @@ export const LegalLayout: React.FC<LegalLayoutProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#0A1128] text-slate-300 font-['Inter'] flex flex-col justify-between selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">
+    <div className="min-h-screen bg-transparent text-slate-300 font-['Inter'] flex flex-col justify-between selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">
       {/* Background Cyber Grid Accent */}
       <div
         className="fixed inset-0 pointer-events-none opacity-15 z-0"
@@ -73,7 +73,7 @@ export const LegalLayout: React.FC<LegalLayoutProps> = ({
               <span className="font-['Space_Grotesk'] text-[15px] font-bold text-white tracking-tight">
                 MRCA SOLUTIONS
               </span>
-              <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-400">LEGAL COMPLIANCE</span>
+              <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-400">CUMPLIMIENTO LEGAL</span>
             </div>
           </div>
 

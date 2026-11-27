@@ -32,17 +32,17 @@ export const SecurityScannerLeadGen: React.FC<SecurityScannerLeadGenProps> = ({ 
   const [riskScore, setRiskScore] = useState(87);
 
   const scanSteps = [
-    'Iniciando handshake TLS 1.3 y certificados X.509...',
-    'Auditando puertos perimetrales y cabeceras HSTS/CSP...',
-    'Evaluando superficies OWASP API Top 10 e inyección...',
-    'Heurísticas de Zero-Trust y fuga de credenciales cloud...',
-    'Generando matriz de riesgos y vector CVE-2026...',
+    'Verificando cifrado de conexión y certificados digitales vigentes...',
+    'Auditando accesos perimetrales y políticas de protección web...',
+    'Evaluando riesgos de exposición en interfaces de negocio y APIs...',
+    'Comprobando controles de acceso corporativo y resguardo en la nube...',
+    'Generando informe ejecutivo de riesgos y plan de remediación...',
   ];
 
   const simulatedVulnerabilities = [
-    'Exposición de cabeceras de servidor sensibles (CORS Wildcard)',
-    'Protocolo TLS 1.0/1.1 habilitado en subdominio secundario',
-    'Fuga potencial de claves API en assets front-end estáticos',
+    'Configuración permisiva en cabeceras de acceso externo en el servidor',
+    'Protocolos de cifrado obsoletos habilitados en un subdominio secundario',
+    'Posible exposición de credenciales de integración en recursos públicos',
   ];
 
   const handleStartScan = (e: React.FormEvent) => {
@@ -114,7 +114,7 @@ export const SecurityScannerLeadGen: React.FC<SecurityScannerLeadGenProps> = ({ 
   };
 
   return (
-    <section className="relative w-full rounded-2xl bg-gradient-to-b from-[#141A32]/95 to-[#0A1128]/95 border border-[#00E5FF]/30 p-6 sm:p-8 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.6)] overflow-hidden my-8">
+    <section className="relative w-full rounded-2xl bg-gradient-to-b from-[#141A32]/95 to-[#0A1128]/95 border border-[#00E5FF]/30 p-6 sm:p-8 backdrop-blur-xl shadow-[0_15px_40px_rgba(0,0,0,0.6)] overflow-hidden my-8 animate-border-pulse">
       {/* Background Cyber Glowing Accents */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-[#00E5FF]/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#00FF66]/10 rounded-full blur-3xl pointer-events-none" />
@@ -128,7 +128,7 @@ export const SecurityScannerLeadGen: React.FC<SecurityScannerLeadGenProps> = ({ 
               HERRAMIENTA GRATUITA DE DIAGNÓSTICO B2B
             </span>
             <span className="px-2 py-0.5 rounded bg-[#00FF66]/10 border border-[#00FF66]/30 font-['JetBrains_Mono'] text-[10px] text-[#00FF66] font-semibold">
-              CVE-2026 ENGINE
+              MOTOR DE ANÁLISIS 2026
             </span>
           </div>
           <h2 className="font-['Space_Grotesk'] text-2xl sm:text-3xl font-bold text-[#DCE1FF]">
@@ -169,7 +169,7 @@ export const SecurityScannerLeadGen: React.FC<SecurityScannerLeadGenProps> = ({ 
             <button
               type="submit"
               disabled={isScanning || !url.trim()}
-              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-slate-950 font-['JetBrains_Mono'] text-[13px] font-bold tracking-wider uppercase transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shrink-0 cursor-pointer"
             >
               <Search className="w-4 h-4" />
               <span>{isScanning ? 'ESCANEANDO...' : 'INICIAR ESCANEO'}</span>
@@ -262,17 +262,17 @@ export const SecurityScannerLeadGen: React.FC<SecurityScannerLeadGenProps> = ({ 
           </div>
 
           {/* Right Column: Email Unlock Gate */}
-          <div className="lg:col-span-5 flex flex-col justify-between bg-gradient-to-br from-[#141A32] to-[#0A1128] p-5 rounded-xl border border-[#00FF66]/30 shadow-[0_0_20px_rgba(0,255,102,0.1)]">
+          <div className="lg:col-span-5 flex flex-col justify-between bg-gradient-to-br from-[#141A32] to-[#0A1128] p-5 rounded-xl border border-[#00FF66]/30 shadow-[0_0_20px_rgba(0,255,102,0.1)] animate-border-pulse">
             <div>
               <div className="flex items-center gap-2 text-[#00FF66] mb-2 font-['JetBrains_Mono'] text-[11px] font-bold uppercase">
                 <Lock className="w-4 h-4" />
-                <span>DESBLOQUEAR REPORTE CISO COMPLETO</span>
+                <span>DESBLOQUEAR REPORTE EJECUTIVO COMPLETO</span>
               </div>
               <h3 className="font-['Space_Grotesk'] text-lg font-bold text-[#DCE1FF]">
                 Reciba el PDF Ejecutivo con Planes de Mitigación
               </h3>
               <p className="font-['Inter'] text-xs text-[#BAC9CC] mt-1.5 leading-relaxed">
-                Incluye análisis detallado de puertos, vectores de inyección SQL, configuración de cifrado y recomendaciones tácticas por arquitectos de MRCA Solutions.
+                Incluye análisis detallado de accesos externos, riesgos críticos en bases de datos, configuración de cifrado y recomendaciones estratégicas por arquitectos de MRCA Solutions.
               </p>
             </div>
 
@@ -324,7 +324,7 @@ export const SecurityScannerLeadGen: React.FC<SecurityScannerLeadGenProps> = ({ 
             </button>
             <a
               href="#servicios"
-              className="px-4 py-2 rounded-lg bg-[#00E5FF] hover:bg-[#c3f5ff] text-[#00363D] font-['JetBrains_Mono'] text-[11px] font-bold transition-all shadow-[0_0_10px_rgba(0,229,255,0.3)] flex items-center gap-1.5"
+              className="px-4 py-2 rounded-lg bg-[#00E5FF] hover:bg-[#c3f5ff] text-[#00363D] font-['JetBrains_Mono'] text-[11px] font-bold transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 flex items-center gap-1.5"
             >
               <span>Ver Servicios de Remediación</span>
               <ArrowRight className="w-3.5 h-3.5" />

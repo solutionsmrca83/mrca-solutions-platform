@@ -60,17 +60,17 @@ interface NavItem {
 }
 
 const ADMIN_NAV_ITEMS: NavItem[] = [
-  { id: 'principal', label: 'Dashboard Principal', icon: <Grid className="w-4 h-4" /> },
+  { id: 'principal', label: 'Panel Principal', icon: <Grid className="w-4 h-4" /> },
   { id: 'usuarios', label: 'Gestión Usuarios RBAC', icon: <Users className="w-4 h-4" />, badge: 'Superadmin', badgeColor: 'text-amber-400 bg-amber-500/10 border-amber-500/30', superadminOnly: true },
-  { id: 'aprobaciones', label: 'Aprobaciones Leads', icon: <CheckCircle2 className="w-4 h-4" />, badge: '3 Pendientes', badgeColor: 'text-[#00fe66] bg-[#00fe66]/10 border-[#00fe66]/30' },
+  { id: 'aprobaciones', label: 'Aprobación de Solicitudes', icon: <CheckCircle2 className="w-4 h-4" />, badge: '3 Pendientes', badgeColor: 'text-[#00fe66] bg-[#00fe66]/10 border-[#00fe66]/30' },
   { id: 'finanzas', label: 'Finanzas & SPEI', icon: <DollarSign className="w-4 h-4" />, badge: 'Banxico T+0', badgeColor: 'text-[#00e5ff] bg-[#00e5ff]/10 border-[#00e5ff]/30' },
-  { id: 'kali', label: 'Terminal Kali Linux', icon: <Terminal className="w-4 h-4" />, badge: 'NIDS Activo', badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/30' },
-  { id: 'proyectos', label: 'Kanban Proyectos', icon: <Layers className="w-4 h-4" /> },
+  { id: 'kali', label: 'Consola de Seguridad', icon: <Terminal className="w-4 h-4" />, badge: 'Monitoreo Activo', badgeColor: 'text-purple-400 bg-purple-500/10 border-purple-500/30' },
+  { id: 'proyectos', label: 'Gestión de Proyectos', icon: <Layers className="w-4 h-4" /> },
   { id: 'contratos', label: 'Generador Contratos', icon: <FileText className="w-4 h-4" />, badge: 'SAT 4.0 / SLA', badgeColor: 'text-cyan-400 bg-cyan-950/40 border-cyan-500/30', privilegedOnly: true },
-  { id: 'presupuestos', label: 'Negociaciones B2B', icon: <Cpu className="w-4 h-4" />, badge: 'B2B SOW', badgeColor: 'text-[#00fe66] bg-[#00fe66]/10 border-[#00fe66]/30', privilegedOnly: true },
+  { id: 'presupuestos', label: 'Negociaciones B2B', icon: <Cpu className="w-4 h-4" />, badge: 'PROPUESTAS', badgeColor: 'text-[#00fe66] bg-[#00fe66]/10 border-[#00fe66]/30', privilegedOnly: true },
   { id: 'soporte', label: 'Soporte Clientes VIP', icon: <LifeBuoy className="w-4 h-4" /> },
   { id: 'boveda', label: 'Bóveda Criptográfica', icon: <Archive className="w-4 h-4" /> },
-  { id: 'auditoria', label: 'Logs Auditoría SOC-2', icon: <Lock className="w-4 h-4" /> },
+  { id: 'auditoria', label: 'Registros de Auditoría', icon: <Lock className="w-4 h-4" /> },
 ];
 
 
@@ -103,7 +103,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
 
 
   return (
-    <div className="min-h-screen bg-[#070D22] text-[#dce1ff] flex flex-col font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">
+    <div className="min-h-screen bg-transparent text-[#dce1ff] flex flex-col font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">
       {/* Background Cybernetic Texture */}
       <div
         className="fixed inset-0 pointer-events-none opacity-15 z-0"
@@ -138,7 +138,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                     MRCA ENCLAVE
                   </span>
                   <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[9px] font-['JetBrains_Mono'] font-bold bg-cyan-950/80 border border-cyan-500/40 text-[#00e5ff] uppercase tracking-wider">
-                    ROOT CISO
+                    ADMINISTRACIÓN
                   </span>
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[9px] text-[#00fe66] uppercase tracking-widest mt-1 flex items-center gap-1">
@@ -153,12 +153,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           <div className="hidden xl:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-[#0e1633] border border-cyan-500/20 text-[11px] font-['JetBrains_Mono']">
             <div className="flex items-center gap-1.5 text-cyan-400">
               <span translate="no" className="notranslate material-symbols-outlined text-[15px]">encrypted</span>
-              <span>HSM YUBI-V4: LOCKED</span>
+              <span>MÓDULO DE SEGURIDAD: ACTIVO</span>
             </div>
             <span className="text-slate-600">•</span>
             <div className="flex items-center gap-1.5 text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span>CLUSTER-CDMX-ALPHA</span>
+              <span>NODO CDMX ALFA</span>
             </div>
             <span className="text-slate-600">•</span>
             <span className="text-slate-400">TLS 1.3 / ECDSA P-384</span>
@@ -194,7 +194,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 title="Re-autenticar sesión administrativa"
               >
                 <span translate="no" className="notranslate material-symbols-outlined text-[15px]">lock_reset</span>
-                <span className="hidden lg:inline">RE-AUTH</span>
+                <span className="hidden lg:inline">REVALIDAR</span>
               </button>
             )}
 
@@ -219,7 +219,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         <aside className="hidden lg:flex flex-col w-64 xl:w-72 bg-[#060D24]/80 border-r border-cyan-900/30 p-4 shrink-0 justify-between">
           <div className="flex flex-col gap-1.5">
             <div className="px-3 py-2 text-[10px] font-['JetBrains_Mono'] uppercase tracking-widest text-slate-400 font-bold border-b border-slate-800/60 mb-1">
-              CONSOLA DE CONTROL ROOT
+              CONSOLA DE ADMINISTRACIÓN
             </div>
 
             {ADMIN_NAV_ITEMS.map((item) => {
@@ -258,7 +258,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                         isLocked ? 'text-amber-500/60 bg-amber-950/20 border-amber-900/40' : item.badgeColor
                       }`}
                     >
-                      {isLocked ? '🔒 ROOT' : item.badge}
+                      {isLocked ? '🔒 RESTRINGIDO' : item.badge}
                     </span>
                   )}
                 </button>
@@ -322,7 +322,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                   {/* Master Account Pill */}
                   <div className="p-3 rounded-xl bg-[#141a32] border border-cyan-500/30 flex flex-col gap-1">
                     <span className="text-[10px] font-['JetBrains_Mono'] text-slate-400 uppercase">
-                      Cuenta Root CISO
+                      Cuenta Principal de Seguridad
                     </span>
                     <span className="text-xs font-['JetBrains_Mono'] font-bold text-cyan-300 truncate">
                       {email}
@@ -366,7 +366,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                           </div>
                           {isLocked ? (
                             <span className="text-[9px] px-1 py-0.5 rounded bg-amber-950/30 text-amber-500/80 border border-amber-900/40">
-                              ROOT
+                              RESTRINGIDO
                             </span>
                           ) : (
                             <ChevronRight className="w-3.5 h-3.5 text-slate-600" />

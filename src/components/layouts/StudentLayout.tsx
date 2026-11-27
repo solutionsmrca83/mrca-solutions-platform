@@ -58,7 +58,7 @@ export const StudentLayout: React.FC<StudentLayoutProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#070D22] text-[#dce1ff] flex flex-col font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">
+    <div className="min-h-screen bg-transparent text-[#dce1ff] flex flex-col font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">
       {/* Background Cyber Texture */}
       <div
         className="fixed inset-0 pointer-events-none opacity-15 z-0"
@@ -133,7 +133,7 @@ export const StudentLayout: React.FC<StudentLayoutProps> = ({
             {onScrollToCalculator && (
               <button
                 onClick={onScrollToCalculator}
-                className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-[#00363d] text-[12px] font-['Space_Grotesk'] font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(0,254,102,0.3)] cursor-pointer"
+                className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-[#00363d] text-[12px] font-['Space_Grotesk'] font-bold uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(6,182,212,0.4)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 cursor-pointer"
               >
                 <Calculator className="w-3.5 h-3.5" />
                 <span>Cotizar en Vivo</span>

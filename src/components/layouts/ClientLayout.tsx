@@ -41,14 +41,14 @@ interface ClientNavItem {
 
 const CLIENT_NAV_ITEMS: ClientNavItem[] = [
   { id: 'capacidades', label: 'Capacidades de Ingeniería', icon: <Code className="w-4 h-4" /> },
-  { id: 'roadmap', label: 'Roadmap de Entregas', icon: <span translate="no" className="notranslate material-symbols-outlined text-[16px]">timeline</span>, badge: 'Sprints', badgeColor: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30' },
-  { id: 'api-keys', label: 'Claves API & SDK', icon: <Key className="w-4 h-4" /> },
+  { id: 'roadmap', label: 'Plan de Entregas', icon: <span translate="no" className="notranslate material-symbols-outlined text-[16px]">timeline</span>, badge: 'Fases', badgeColor: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30' },
+  { id: 'api-keys', label: 'Claves de Integración (API)', icon: <Key className="w-4 h-4" /> },
   { id: 'finanzas', label: 'Finanzas & Pagos SPEI', icon: <DollarSign className="w-4 h-4" />, badge: 'SPEI Activo', badgeColor: 'text-[#00fe66] bg-emerald-950/60 border-emerald-500/30' },
   { id: 'soporte', label: 'Soporte Técnico VIP', icon: <LifeBuoy className="w-4 h-4" /> },
   { id: 'boveda', label: 'Bóveda de Archivos', icon: <Archive className="w-4 h-4" /> },
   { id: 'chat', label: 'Canal Cifrado Directo', icon: <MessageSquare className="w-4 h-4" /> },
   { id: 'inbox', label: 'Bandeja Segura B2B', icon: <Inbox className="w-4 h-4" /> },
-  { id: 'auditoria', label: 'Auditoría Zero-Trust', icon: <ShieldCheck className="w-4 h-4" /> },
+  { id: 'auditoria', label: 'Auditoría de Seguridad', icon: <ShieldCheck className="w-4 h-4" /> },
   { id: 'facturas', label: 'Bóveda de Facturas CFDI', icon: <Receipt className="w-4 h-4" /> },
 ];
 
@@ -70,7 +70,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#070D22] text-[#dce1ff] flex flex-col font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">
+    <div className="min-h-screen bg-transparent text-[#dce1ff] flex flex-col font-['Inter'] selection:bg-[#00e5ff] selection:text-[#00363d] relative overflow-x-hidden">
       {/* Background Cyber Texture */}
       <div
         className="fixed inset-0 pointer-events-none opacity-15 z-0"
@@ -110,7 +110,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
                 </div>
                 <span className="font-['JetBrains_Mono'] text-[9px] text-[#00fe66] uppercase tracking-widest mt-1 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00fe66] animate-pulse"></span>
-                  RLS Cifrado Activo
+                  Aislamiento Cifrado Activo
                 </span>
               </div>
             </div>
@@ -120,7 +120,7 @@ export const ClientLayout: React.FC<ClientLayoutProps> = ({
           <div className="hidden md:flex items-center gap-3 px-3.5 py-1.5 rounded-xl bg-[#0e1633] border border-cyan-500/20 text-[11px] font-['JetBrains_Mono']">
             <div className="flex items-center gap-1.5 text-cyan-400">
               <Building className="w-3.5 h-3.5" />
-              <span>ORG: {clientCompany}</span>
+              <span>EMPRESA: {clientCompany}</span>
             </div>
             <span className="text-slate-600">•</span>
             <span className="text-emerald-400 font-semibold">SOC-2 VERIFICADO</span>

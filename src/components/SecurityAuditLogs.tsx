@@ -83,7 +83,7 @@ const MOCK_AUDIT_LOGS: AuditLogEntry[] = [
   },
   {
     id: 'LOG-89417',
-    event: 'Handshake mTLS de Microservicio Mutual TLS',
+    event: 'Conexión Cifrada de Servicio Corporativo',
     eventType: 'mtls_handshake',
     ipAddress: '54.218.99.14',
     ipLocation: 'AWS US-West (Oregon VPC Gateway)',
@@ -143,7 +143,7 @@ export const SecurityAuditLogs: React.FC<{
     setIsRefreshing(true);
     setTimeout(() => {
       setIsRefreshing(false);
-      showToast('Registro de auditoría sincronizado con los nodos Zero-Trust.');
+      showToast('Registro de auditoría sincronizado con los nodos de seguridad.');
     }, 700);
   };
 
@@ -170,7 +170,7 @@ export const SecurityAuditLogs: React.FC<{
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2 h-2 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]" />
               <span className="font-['JetBrains_Mono'] text-[10px] text-[#00daf3] uppercase font-bold tracking-wider">
-                BITÁCORA EN TIEMPO REAL // ZERO-TRUST AUDIT
+                BITÁCORA EN TIEMPO REAL // AUDITORÍA DE SEGURIDAD
               </span>
             </div>
             <h2 className="font-['Space_Grotesk'] text-[22px] font-bold text-[#dce1ff]">
@@ -227,7 +227,7 @@ export const SecurityAuditLogs: React.FC<{
             <option value="vault_access">Descargas de Bóveda</option>
             <option value="token_rotation">Rotación de Claves</option>
             <option value="contract_sign">Firmas de Contrato</option>
-            <option value="mtls_handshake">Handshakes mTLS</option>
+            <option value="mtls_handshake">Conexiones Cifradas</option>
             <option value="blocked_attempt">Intentos Bloqueados</option>
           </select>
         </div>
@@ -239,10 +239,10 @@ export const SecurityAuditLogs: React.FC<{
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-[#222941] bg-[#060d24]/90 font-['JetBrains_Mono'] text-[11px] uppercase tracking-wider text-[#849396]">
-                <th className="py-3.5 px-4 sm:px-6">Evento Zero-Trust</th>
+                <th className="py-3.5 px-4 sm:px-6">Evento de Seguridad</th>
                 <th className="py-3.5 px-4">Dirección IP & Origen</th>
                 <th className="py-3.5 px-4">Dispositivo / Navegador</th>
-                <th className="py-3.5 px-4">Timestamp (UTC)</th>
+                <th className="py-3.5 px-4">Fecha y Hora (UTC)</th>
                 <th className="py-3.5 px-4 sm:px-6 text-right">Firma SHA-256</th>
               </tr>
             </thead>

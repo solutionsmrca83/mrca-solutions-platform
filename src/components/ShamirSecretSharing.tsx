@@ -38,7 +38,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
         <div className="flex items-center gap-2">
           <span translate="no" className="notranslate material-symbols-outlined text-[#00e5ff] text-[20px]">hub</span>
           <span className="font-['Space_Grotesk'] text-[18px] text-[#dce1ff] font-semibold">
-            Shamir's Secret Sharing (k=3, n=5)
+            Resguardo Distribuido de Claves (3 de 5 nodos)
           </span>
         </div>
         <span
@@ -48,7 +48,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
               : 'bg-[#ffb4ab]/15 text-[#ffb4ab] border border-[#ffb4ab]/30'
           }`}
         >
-          {isQuorumReached ? 'MULTI-REGION QUORUM: LOCKED & SIGNED' : 'QUORUM STANDBY'}
+          {isQuorumReached ? 'QUÓRUM MULTIRREGIÓN: VERIFICADO Y ACTIVO' : 'QUÓRUM EN ESPERA'}
         </span>
       </div>
 
@@ -60,9 +60,9 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
       <div className="w-full bg-[#060d24]/90 border border-[#222941] rounded-xl p-3 md:p-5 flex flex-col items-center justify-center relative select-none">
         {/* Top Monospace indicators */}
         <div className="w-full flex items-center justify-between text-[11px] font-['JetBrains_Mono'] text-[#849396] mb-2 px-1">
-          <span>TOPOLOGY MESH GRAPH</span>
+          <span>MAPA DE RED DISTRIBUIDA</span>
           <span className={isQuorumReached ? 'text-[#00fe66]' : 'text-[#ffb4ab]'}>
-            CONSENSUS: {isQuorumReached ? '3/3 QUORUM' : `${activeCount}/3 SIGNATURES`}
+            CONSENSO: {isQuorumReached ? 'QUÓRUM 3/3' : `${activeCount}/3 FIRMAS`}
           </span>
         </div>
 
@@ -109,7 +109,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
                 fontWeight="700"
                 textAnchor="middle"
               >
-                SECRET
+                CLAVE
               </text>
             </g>
 
@@ -149,7 +149,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
                   fontSize="8"
                   textAnchor="middle"
                 >
-                  {s.active ? '(ACTIVO ✓)' : '(STANDBY)'}
+                  {s.active ? '(ACTIVO ✓)' : '(EN ESPERA)'}
                 </text>
               </g>
             ))}
@@ -169,7 +169,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
             />
             <circle cx="150" cy="30" r="14" fill="#00e5ff" fillOpacity={isQuorumReached ? '0.3' : '0.1'} />
             <text x="150" y="34" fill="#00e5ff" fontFamily="JetBrains Mono" fontSize="9" fontWeight="bold" textAnchor="middle">
-              SECRET
+              CLAVE
             </text>
 
             {/* Connectors */}
@@ -227,7 +227,7 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
               ? `QUÓRUM ${activeCount}/5 ALCANZADO // DESENCRIPTADO AUTORIZADO`
               : `QUÓRUM ${activeCount}/5 INSUFICIENTE // SE REQUIEREN AL MENOS 3 NODOS`}
           </span>
-          <span className="text-[#849396]">POLYNOMIAL DEGREE: d=2 (k=3)</span>
+          <span className="text-[#849396]">RESPALDO CRIPTOGRÁFICO: NIVEL 3/5</span>
         </div>
       </div>
 
@@ -240,27 +240,27 @@ export const ShamirSecretSharing: React.FC<{ isDesktop?: boolean }> = ({ isDeskt
           onClick={() => setShards(INITIAL_SHARDS)}
           className="text-[#00e5ff] hover:underline uppercase text-[10px]"
         >
-          Resetear Nodos
+          Restablecer Nodos
         </button>
       </div>
 
       {/* Badges Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
         <div className="px-2 py-2 rounded bg-[#181e36] text-center border border-[#222941]">
-          <span className="block font-['JetBrains_Mono'] text-[10px] text-[#c3f5ff] font-bold">Supabase Auth</span>
-          <span className="font-['JetBrains_Mono'] text-[9px] text-[#bac9cc]">Enterprise RLS</span>
+          <span className="block font-['JetBrains_Mono'] text-[10px] text-[#c3f5ff] font-bold">Acceso Corporativo</span>
+          <span className="font-['JetBrains_Mono'] text-[9px] text-[#bac9cc]">Aislamiento de Datos</span>
         </div>
         <div className="px-2 py-2 rounded bg-[#181e36] text-center border border-[#222941]">
           <span className="block font-['JetBrains_Mono'] text-[10px] text-[#6bff83] font-bold">AES-256-GCM</span>
-          <span className="font-['JetBrains_Mono'] text-[9px] text-[#bac9cc]">Military Grade</span>
+          <span className="font-['JetBrains_Mono'] text-[9px] text-[#bac9cc]">Grado Bancario</span>
         </div>
         <div className="px-2 py-2 rounded bg-[#181e36] text-center border border-[#222941]">
           <span className="block font-['JetBrains_Mono'] text-[10px] text-[#e1e0ff] font-bold">SOC-2 Tipo II</span>
-          <span className="font-['JetBrains_Mono'] text-[9px] text-[#bac9cc]">Audit Certified</span>
+          <span className="font-['JetBrains_Mono'] text-[9px] text-[#bac9cc]">Auditoría Certificada</span>
         </div>
         <div className="px-2 py-2 rounded bg-[#181e36] text-center border border-[#222941]">
           <span className="block font-['JetBrains_Mono'] text-[10px] text-[#9cf0ff] font-bold">FIPS 140-3</span>
-          <span className="font-['JetBrains_Mono'] text-[9px] text-[#bac9cc]">Nivel 4 Enclave</span>
+          <span className="font-['JetBrains_Mono'] text-[9px] text-[#bac9cc]">Seguridad Nivel 4</span>
         </div>
       </div>
     </div>

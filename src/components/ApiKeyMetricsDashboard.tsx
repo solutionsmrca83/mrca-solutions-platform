@@ -76,7 +76,7 @@ export const ApiKeyMetricsDashboard: React.FC<ApiKeyMetricsDashboardProps> = ({
   // Active Key State
   const [apiKey, setApiKey] = useState<ApiKeyData>({
     id: 'key_prod_9f41b',
-    name: 'Production Zero-Trust Key (Cluster Alpha)',
+    name: 'Clave Corporativa de Producción (Nodo Alfa)',
     keyPrefix: 'mrca_live_sec_',
     fullKey: 'mrca_live_sec_9f41b8a72e90c8a1b490f840139b8192e021',
     environment: 'production',
@@ -155,7 +155,7 @@ client = MrcaEnclave(
     env="${environment}"
 )
 
-# Handshake Zero-Trust
+# Verificación de sesión segura
 handshake = client.verify_session()
 print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
   };
@@ -173,7 +173,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-[#00e5ff]/15 border border-[#00e5ff]/30 text-[#00e5ff] font-['JetBrains_Mono'] text-[10px] font-bold tracking-wider uppercase flex items-center gap-1.5">
                 <Terminal className="w-3.5 h-3.5" />
-                DEVELOPER PORTAL // API CREDENTIALS
+                PORTAL DE INTEGRACIÓN // CREDENCIALES API
               </span>
               <span className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66] font-semibold">
                 • RUTA OFICIAL: /portal/client/api-keys
@@ -184,7 +184,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
               Consola de Integración API &amp; Métricas en Tiempo Real
             </h2>
             <p className="font-['Inter'] text-[13px] text-[#bac9cc] max-w-3xl">
-              Gestione su clave de autenticación mTLS de alta concurrencia, supervise el volumen de solicitudes de los últimos 30 días y valide la latencia de respuesta bajo políticas RLS.
+              Gestione su clave de autenticación cifrada de alta disponibilidad, supervise el volumen de solicitudes de los últimos 30 días y valide los tiempos de respuesta de su plataforma.
             </p>
           </div>
 
@@ -199,7 +199,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
               }`}
             >
               <Zap className="w-3.5 h-3.5" />
-              <span>Producción (Cluster Alpha)</span>
+              <span>Producción (Nodo Alfa)</span>
             </button>
             <button
               onClick={() => setEnvironment('staging')}
@@ -210,7 +210,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
               }`}
             >
               <Server className="w-3.5 h-3.5" />
-              <span>Sandbox / Testnet</span>
+              <span>Entorno de Pruebas</span>
             </button>
           </div>
         </div>
@@ -219,7 +219,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
       {/* ================================================================== */}
       {/* 2. GLOWING MASKED API KEY MODULE                                  */}
       {/* ================================================================== */}
-      <div className="relative rounded-2xl bg-[#0b132e] border-2 border-[#00e5ff]/50 p-5 sm:p-6 shadow-[0_0_35px_rgba(0,229,255,0.2)] backdrop-blur-xl flex flex-col gap-4 overflow-hidden">
+      <div className="relative rounded-2xl bg-[#0b132e] border-2 border-[#00e5ff]/50 p-5 sm:p-6 shadow-[0_0_35px_rgba(0,229,255,0.2)] backdrop-blur-xl flex flex-col gap-4 overflow-hidden animate-border-pulse">
         <div className="absolute top-0 right-0 w-72 h-32 bg-gradient-to-b from-[#00e5ff]/10 to-transparent pointer-events-none"></div>
 
         <div className="flex flex-wrap items-center justify-between gap-3 relative z-10 pb-3 border-b border-[#1b2b52]">
@@ -229,10 +229,10 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
             </div>
             <div>
               <h3 className="font-['Space_Grotesk'] text-[16px] font-bold text-[#dce1ff]">
-                Clave de API Activa (Zero-Trust mTLS Bearer)
+                Clave de API Activa (Acceso Cifrado Corporativo)
               </h3>
               <p className="font-['JetBrains_Mono'] text-[11px] text-[#849396]">
-                ORGANIZACIÓN: <span className="text-[#00daf3]">{clientCompany}</span> • PERMISOS: FULL INGESTION &amp; AUDIT
+                ORGANIZACIÓN: <span className="text-[#00daf3]">{clientCompany}</span> • PERMISOS: INTEGRACIÓN Y AUDITORÍA COMPLETA
               </p>
             </div>
           </div>
@@ -240,7 +240,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00fe66] animate-pulse shadow-[0_0_8px_#00fe66]"></span>
             <span className="font-['JetBrains_Mono'] text-[11px] text-[#00fe66] font-semibold">
-              STATUS: ACTIVA &amp; VÁLIDA
+              ESTADO: ACTIVA Y VÁLIDA
             </span>
           </div>
         </div>
@@ -356,7 +356,7 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
             </span>
           </div>
           <div className="text-[11px] font-['JetBrains_Mono'] text-[#849396]">
-            <span>P99: 18.2 ms • Red eBPF Cilium</span>
+            <span>P99: 18.2 ms • Red de Alta Redundancia</span>
           </div>
         </div>
 
@@ -524,10 +524,10 @@ print(f"Status: {handshake.status} - Cluster: {handshake.cluster_id}")`,
             <div className="flex items-center gap-2">
               <Globe className="w-4 h-4 text-[#00fe66]" />
               <h4 className="font-['Space_Grotesk'] text-[15px] font-bold text-[#dce1ff]">
-                Rutas de API Habilitadas en su Tenant
+                Rutas de API Habilitadas para su Empresa
               </h4>
             </div>
-            <span className="font-['JetBrains_Mono'] text-[10px] text-[#849396]">4 ENDPOINTS</span>
+            <span className="font-['JetBrains_Mono'] text-[10px] text-[#849396]">4 SERVICIOS</span>
           </div>
 
           <div className="flex flex-col gap-2 font-['JetBrains_Mono'] text-[11px]">
