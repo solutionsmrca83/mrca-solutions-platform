@@ -2,9 +2,19 @@
   command = "npm run build"
   publish = "dist"
   [build.environment]
+    NPM_FLAGS = "--legacy-peer-deps"
     SECRETS_SCAN_OMIT_KEYS = "SUPABASE_SERVICE_ROLE_KEY,ENCRYPTION_KEY,DATABASE_URL,STEALTH_PARTNER_KEY,STEALTH_PARTNER_EMAIL"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"

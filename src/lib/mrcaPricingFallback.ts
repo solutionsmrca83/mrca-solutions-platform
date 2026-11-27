@@ -238,8 +238,8 @@ export const FALLBACK_SOFTWARE_CATALOG: SoftwareCatalogProduct[] = [
     system_requirements:
       'Windows 10/11 (64-bit) o Linux Ubuntu 22.04+, 4 GB RAM mínimo (8 GB recomendado), 500 MB libres, impresora térmica opcional.',
     price_mxn: 14900,
-    zip_download_url: 'https://releases.mrcasolutions.com/pos/mrca-pos-pro-v3.2.0.zip',
-    manual_download_url: 'https://releases.mrcasolutions.com/pos/manual-usuario-mrca-pos-pro-v3.2.pdf',
+    zip_file_path: 'packages/mrca-pos-pro-v3.2.0.zip',
+    manual_file_path: 'manuals/manual-usuario-mrca-pos-pro-v3.2.pdf',
     installation_guide_md:
       '# Manual de Instalación y Uso — Punto de Venta MRCA Pro (v3.2.0)\n\n' +
       '## 1. Requisitos Previos\n' +
@@ -275,8 +275,8 @@ export const FALLBACK_SOFTWARE_CATALOG: SoftwareCatalogProduct[] = [
     ],
     system_requirements: 'Windows 10/11 o macOS 13+, 4 GB RAM, 350 MB libres en disco.',
     price_mxn: 18500,
-    zip_download_url: 'https://releases.mrcasolutions.com/inventario/mrca-inventario-v2.5.1.zip',
-    manual_download_url: 'https://releases.mrcasolutions.com/inventario/manual-mrca-inventario-v2.5.pdf',
+    zip_file_path: 'packages/mrca-inventario-v2.5.1.zip',
+    manual_file_path: 'manuals/manual-mrca-inventario-v2.5.pdf',
     installation_guide_md:
       '# Guía Rápida — MRCA Control de Inventario (v2.5.1)\n\n' +
       '## 1. Instalación\n' +
@@ -305,8 +305,8 @@ export const FALLBACK_SOFTWARE_CATALOG: SoftwareCatalogProduct[] = [
     ],
     system_requirements: 'Windows 10/11 o Linux, 4 GB RAM, 300 MB libres en disco.',
     price_mxn: 22000,
-    zip_download_url: 'https://releases.mrcasolutions.com/automatizacion/mrca-conciliador-v1.8.0.zip',
-    manual_download_url: null,
+    zip_file_path: 'packages/mrca-conciliador-v1.8.0.zip',
+    manual_file_path: null,
     installation_guide_md:
       '# Manual de Instalación — MRCA Automatizador de Reportes (v1.8.0)\n\n' +
       '## 1. Despliegue Local\n' +

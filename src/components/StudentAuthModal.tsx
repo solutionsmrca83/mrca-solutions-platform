@@ -27,7 +27,7 @@ interface StudentAuthModuleProps {
 export const StudentAuthModule: React.FC<StudentAuthModuleProps> = ({
   onSuccess,
   onExploreTemplates,
-  showToast = (msg) => console.log(msg),
+  showToast = () => {},
 }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   

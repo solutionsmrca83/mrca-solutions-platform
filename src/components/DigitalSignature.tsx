@@ -12,6 +12,44 @@ interface DigitalSignatureProps {
   className?: string;
 }
 
+/**
+ * Exporta el lienzo recortado de la firma a una imagen compacta (ancho máximo 600px)
+ * con codificación WebP (o respaldo PNG limpio) para evitar inflar el almacenamiento en Supabase.
+ */
+export function exportCompactSignatureDataUrl(
+  trimmedCanvas: HTMLCanvasElement,
+  maxWidth = 600
+): string {
+  const srcWidth = trimmedCanvas.width || 1;
+  const srcHeight = trimmedCanvas.height || 1;
+  const scale = srcWidth > maxWidth ? maxWidth / srcWidth : 1;
+  const targetWidth = Math.max(1, Math.round(srcWidth * scale));
+  const targetHeight = Math.max(1, Math.round(srcHeight * scale));
+
+  const outputCanvas = document.createElement('canvas');
+  outputCanvas.width = targetWidth;
+  outputCanvas.height = targetHeight;
+
+  const ctx = outputCanvas.getContext('2d');
+  if (!ctx) {
+    return trimmedCanvas.toDataURL('image/png');
+  }
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(trimmedCanvas, 0, 0, targetWidth, targetHeight);
+
+  try {
+    const webp = outputCanvas.toDataURL('image/webp', 0.85);
+    if (webp.startsWith('data:image/webp')) {
+      return webp;
+    }
+  } catch {
+    // Fallback a PNG si el navegador no soporta codificación WebP en canvas
+  }
+  return outputCanvas.toDataURL('image/png');
+}
+
 export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
   onSaveSignature,
   readOnly = false,
@@ -65,15 +103,15 @@ export const DigitalSignature: React.FC<DigitalSignatureProps> = ({
 
     setTimeout(() => {
       try {
-        const dataUrl = sigCanvasRef.current?.getTrimmedCanvas().toDataURL('image/png') || '';
+        const trimmed = sigCanvasRef.current?.getTrimmedCanvas();
+        const dataUrl = trimmed ? exportCompactSignatureDataUrl(trimmed, 600) : '';
         const generatedHash = calculateSha256(dataUrl + signerEmail + Date.now().toString());
 
         setComputedHash(generatedHash);
         setSignatureSaved(true);
         setIsProcessing(false);
         onSaveSignature(dataUrl, generatedHash);
-      } catch (err) {
-        console.error('Error al capturar vector de firma:', err);
+      } catch {
         setIsProcessing(false);
       }
     }, 600);

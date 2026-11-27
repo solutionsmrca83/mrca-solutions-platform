@@ -100,22 +100,44 @@ function triggerLocalGuideDownload(product: SoftwareCatalogProduct) {
   }
 }
 
-async function resolveDownloadUrl(rawUrl: string): Promise<string> {
-  if (rawUrl.startsWith('storage://software-releases/')) {
-    const storagePath = rawUrl.replace('storage://software-releases/', '');
-    try {
-      const { data, error } = await supabase.storage
-        .from('software-releases')
-        .createSignedUrl(storagePath, 300);
-      if (!error && data?.signedUrl) {
-        return data.signedUrl;
-      }
-    } catch {
-      // fallback below
-    }
-    return `https://releases.mrcasolutions.com/${storagePath}`;
+async function resolveDownloadUrl(
+  rawUrl: string
+): Promise<{ url: string | null; isSigned: boolean; error?: string }> {
+  const trimmed = (rawUrl || '').trim();
+  if (!trimmed) {
+    return { url: null, isSigned: false, error: 'Ruta de descarga no configurada.' };
   }
-  return rawUrl;
+
+  // Enlaces externos HTTPS/HTTP se abren directamente
+  if (/^https?:\/\//i.test(trimmed)) {
+    return { url: trimmed, isSigned: false };
+  }
+
+  // Ruta interna en bucket privado `software-releases` -> URL firmada de 60 segundos
+  const cleanPath = trimmed
+    .replace(/^storage:\/\/software-releases\//i, '')
+    .replace(/^\/+/, '');
+
+  try {
+    const { data, error } = await supabase.storage
+      .from('software-releases')
+      .createSignedUrl(cleanPath, 60);
+
+    if (!error && data?.signedUrl) {
+      return { url: data.signedUrl, isSigned: true };
+    }
+    return {
+      url: null,
+      isSigned: false,
+      error: 'No fue posible firmar el enlace seguro en este momento. Verifica tu sesión corporativa.',
+    };
+  } catch {
+    return {
+      url: null,
+      isSigned: false,
+      error: 'Servicio de descargas privadas temporalmente no disponible.',
+    };
+  }
 }
 
 export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
@@ -131,14 +153,21 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [manualModalProduct, setManualModalProduct] = useState<SoftwareCatalogProduct | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [downloadingManualId, setDownloadingManualId] = useState<string | null>(null);
 
   const loadLocalActiveCatalog = (): SoftwareCatalogProduct[] => {
     try {
       const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
       if (raw) {
-        const parsed: SoftwareCatalogProduct[] = JSON.parse(raw);
+        const parsed: any[] = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.filter((p) => p.is_active);
+          return parsed
+            .filter((p) => p.is_active)
+            .map((row) => ({
+              ...row,
+              zip_file_path: row.zip_file_path || row.zip_download_url || '',
+              manual_file_path: row.manual_file_path ?? row.manual_download_url ?? null,
+            }));
         }
       }
     } catch {
@@ -167,8 +196,8 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
           features: Array.isArray(row.features) ? row.features : [],
           system_requirements: row.system_requirements || '',
           price_mxn: Number(row.price_mxn) || 0,
-          zip_download_url: row.zip_download_url || '',
-          manual_download_url: row.manual_download_url || null,
+          zip_file_path: row.zip_file_path || row.zip_download_url || '',
+          manual_file_path: row.manual_file_path ?? row.manual_download_url ?? null,
           installation_guide_md: row.installation_guide_md || '',
           is_active: Boolean(row.is_active),
           created_at: row.created_at || new Date().toISOString(),
@@ -201,22 +230,29 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
   const handleDownloadPackage = async (product: SoftwareCatalogProduct) => {
     setDownloadingId(product.id);
     try {
-      const zipHref = await resolveDownloadUrl(product.zip_download_url);
-      if (zipHref) {
-        window.open(zipHref, '_blank', 'noopener,noreferrer');
+      const zipResult = await resolveDownloadUrl(product.zip_file_path);
+      if (!zipResult.url) {
+        showToast?.(zipResult.error || 'No fue posible generar el enlace seguro de descarga.');
+        return;
       }
 
-      if (product.manual_download_url) {
-        const manualHref = await resolveDownloadUrl(product.manual_download_url);
-        setTimeout(() => {
-          window.open(manualHref, '_blank', 'noopener,noreferrer');
-        }, 450);
+      window.open(zipResult.url, '_blank', 'noopener,noreferrer');
+
+      if (product.manual_file_path) {
+        const manualResult = await resolveDownloadUrl(product.manual_file_path);
+        if (manualResult.url) {
+          setTimeout(() => {
+            window.open(manualResult.url!, '_blank', 'noopener,noreferrer');
+          }, 450);
+        }
       } else if (product.installation_guide_md) {
         triggerLocalGuideDownload(product);
       }
 
       showToast?.(
-        `Descarga iniciada: ${product.title} (${product.version}) — Paquete .ZIP + Manual de Instalación.`
+        zipResult.isSigned
+          ? `Enlace seguro temporal (60s) generado para ${product.title} (${product.version}).`
+          : `Descarga iniciada: ${product.title} (${product.version}) — Paquete .ZIP + Manual.`
       );
     } finally {
       setDownloadingId(null);
@@ -224,13 +260,27 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
   };
 
   const handleDownloadManualOnly = async (product: SoftwareCatalogProduct) => {
-    if (product.manual_download_url) {
-      const manualHref = await resolveDownloadUrl(product.manual_download_url);
-      window.open(manualHref, '_blank', 'noopener,noreferrer');
-      showToast?.(`Abriendo manual oficial PDF de ${product.title}.`);
-    } else {
+    if (!product.manual_file_path) {
       triggerLocalGuideDownload(product);
       showToast?.(`Manual de instalación descargado para ${product.title}.`);
+      return;
+    }
+
+    setDownloadingManualId(product.id);
+    try {
+      const manualResult = await resolveDownloadUrl(product.manual_file_path);
+      if (!manualResult.url) {
+        showToast?.(manualResult.error || 'No fue posible generar el enlace seguro del manual.');
+        return;
+      }
+      window.open(manualResult.url, '_blank', 'noopener,noreferrer');
+      showToast?.(
+        manualResult.isSigned
+          ? `Enlace seguro temporal (60s) generado para el Manual PDF de ${product.title}.`
+          : `Abriendo manual oficial PDF de ${product.title}.`
+      );
+    } finally {
+      setDownloadingManualId(null);
     }
   };
 
@@ -406,7 +456,7 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
                   <Download className="w-4 h-4" />
                   <span>
                     {downloadingId === product.id
-                      ? 'Preparando descarga segura...'
+                      ? 'Generando enlace seguro...'
                       : 'Descargar Paquete (.ZIP + Manual)'}
                   </span>
                 </button>
@@ -464,12 +514,15 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
             <div className="px-5 py-3.5 bg-slate-950/90 border-t border-white/10 flex flex-wrap items-center justify-between gap-2.5">
               <button
                 type="button"
+                disabled={downloadingManualId === manualModalProduct.id}
                 onClick={() => void handleDownloadManualOnly(manualModalProduct)}
-                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/15 text-slate-100 font-['JetBrains_Mono'] text-[11px] font-bold flex items-center gap-1.5 cursor-pointer"
+                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-white/15 text-slate-100 font-['JetBrains_Mono'] text-[11px] font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
               >
                 <FileText className="w-3.5 h-3.5 text-emerald-400" />
                 <span>
-                  {manualModalProduct.manual_download_url
+                  {downloadingManualId === manualModalProduct.id
+                    ? 'Generando enlace seguro...'
+                    : manualModalProduct.manual_file_path
                     ? 'Descargar Manual PDF'
                     : 'Descargar Guía (.MD)'}
                 </span>
@@ -477,11 +530,16 @@ export const ClientSoftwareCatalog: React.FC<ClientSoftwareCatalogProps> = ({
 
               <button
                 type="button"
+                disabled={downloadingId === manualModalProduct.id}
                 onClick={() => void handleDownloadPackage(manualModalProduct)}
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 font-['Space_Grotesk'] text-[12px] font-bold flex items-center gap-1.5 hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 font-['Space_Grotesk'] text-[12px] font-bold flex items-center gap-1.5 hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer disabled:opacity-60"
               >
                 <FileArchive className="w-4 h-4" />
-                <span>Descargar Paquete (.ZIP + Manual)</span>
+                <span>
+                  {downloadingId === manualModalProduct.id
+                    ? 'Generando enlace seguro...'
+                    : 'Descargar Paquete (.ZIP + Manual)'}
+                </span>
               </button>
             </div>
           </div>

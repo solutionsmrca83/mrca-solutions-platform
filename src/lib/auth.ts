@@ -76,8 +76,8 @@ export async function isUserAdmin(user: any): Promise<boolean> {
         return true;
       }
     }
-  } catch (err) {
-    console.warn('[AUTH] Error querying user_profiles for admin role:', err);
+  } catch {
+    // Fallback silencioso para no exponer respuestas internas de Supabase
   }
 
   try {
@@ -95,8 +95,8 @@ export async function isUserAdmin(user: any): Promise<boolean> {
         }
       }
     }
-  } catch (err) {
-    console.warn('[AUTH] Error querying profiles for admin role:', err);
+  } catch {
+    // Fallback silencioso
   }
 
   try {
@@ -114,8 +114,8 @@ export async function isUserAdmin(user: any): Promise<boolean> {
         return true;
       }
     }
-  } catch (err) {
-    console.warn('[AUTH] Error querying users table for admin role:', err);
+  } catch {
+    // Fallback silencioso
   }
 
   return false;
@@ -399,9 +399,7 @@ export async function elevateUserToSuperadmin(
         },
       });
 
-      if (authUpdateError) {
-        console.warn('[AUTH BOOTSTRAP] Supabase updateUser warning:', authUpdateError);
-      } else if (authUpdateData?.user) {
+      if (!authUpdateError && authUpdateData?.user) {
         updatedAuthUser = authUpdateData.user;
       }
     }
@@ -418,9 +416,7 @@ export async function elevateUserToSuperadmin(
         });
 
         if (profileError) {
-          // If PostgreSQL enum restricts 'superadmin' prior to migration execution,
-          // fall back to 'owner' (valid enum in existing schema)
-          console.warn('[AUTH BOOTSTRAP] Trying owner fallback for legacy enum:', profileError.message);
+          // Fallback to 'owner' for legacy enum compatibility
           await supabase.from('user_profiles').upsert({
             id: currentUser.id,
             role: 'owner',
@@ -429,8 +425,8 @@ export async function elevateUserToSuperadmin(
             updated_at: new Date().toISOString(),
           });
         }
-      } catch (dbErr) {
-        console.warn('[AUTH BOOTSTRAP] Profile update non-fatal note:', dbErr);
+      } catch {
+        // Non-fatal fallback
       }
     }
 
@@ -542,9 +538,9 @@ export async function provisionUserAccount({
           updated_at: new Date().toISOString(),
         });
       }
-    } catch (dbErr) {
-      console.warn('[USER PROVISION] user_profiles non-fatal sync notice:', dbErr);
-    }
+      } catch {
+        // Non-fatal sync fallback
+      }
 
     const newUser: ManagedUser = {
       id: createdUserId,
@@ -628,7 +624,7 @@ export function saveManagedUserLocally(user: ManagedUser): void {
     const filtered = current.filter((u) => u.email.toLowerCase() !== user.email.toLowerCase());
     const updated = [user, ...filtered];
     localStorage.setItem(MANAGED_USERS_KEY, JSON.stringify(updated));
-  } catch (err) {
-    console.warn('Failed to save managed user to localStorage:', err);
+  } catch {
+    // Ignore storage quota errors
   }
 }

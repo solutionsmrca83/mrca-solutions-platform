@@ -122,7 +122,7 @@ const MOCK_AUDIT_LOGS: AuditLogEntry[] = [
 export const SecurityAuditLogs: React.FC<{
   clientCompany?: string;
   showToast?: (msg: string) => void;
-}> = ({ clientCompany = 'FinTech Global B2B', showToast = (msg) => console.log(msg) }) => {
+}> = ({ clientCompany = 'FinTech Global B2B', showToast = () => {} }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [isRefreshing, setIsRefreshing] = useState(false);

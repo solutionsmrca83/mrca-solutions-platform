@@ -435,8 +435,8 @@ export interface SoftwareCatalogProduct {
   features: string[];
   system_requirements: string;
   price_mxn: number;
-  zip_download_url: string;
-  manual_download_url?: string | null;
+  zip_file_path: string;
+  manual_file_path?: string | null;
   installation_guide_md: string;
   is_active: boolean;
   created_at: string;

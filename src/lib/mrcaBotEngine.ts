@@ -1,5 +1,5 @@
 import { supabase } from './supabase/client';
-import { sendSupportEscalationEmailNotification } from './emailNotification';
+import { sendAdminAlert, sendClientConfirmationEmail } from './emailService';
 import {
   MRCA_SERVICES,
   SCOPE_TIER_META,
@@ -1166,6 +1166,23 @@ export async function processBotTurn(
       sessionId: nextState.sessionId,
     });
 
+    // Disparar alerta EmailJS administrativa ("NUEVO CLIENTE ACEPTADO EN CRM") + confirmación opcional al cliente
+    void sendAdminAlert({
+      event_type: 'NUEVO CLIENTE ACEPTADO EN CRM',
+      client_name: record.client_name,
+      company_name: record.company_name,
+      client_email: record.email,
+      message: `Servicio: ${record.service_type} (${record.project_scope || activeEstimate.projectScope}). Estimado referencial: ${record.estimated_budget || activeEstimate.formattedRange}. Anticipo sugerido: ${record.advance_percentage || activeEstimate.advancePercentage}% SPEI. Estado CRM: ${record.status}.`,
+    });
+
+    void sendClientConfirmationEmail({
+      client_name: record.client_name,
+      company_name: record.company_name,
+      client_email: record.email,
+      service_type: record.service_type,
+      estimated_budget: record.estimated_budget || activeEstimate.formattedRange,
+    });
+
     nextState.step = 'idle';
 
     if (autoAccepted) {
@@ -1306,14 +1323,12 @@ export async function processBotTurn(
       sessionId: nextState.sessionId,
     });
 
-    await sendSupportEscalationEmailNotification({
-      ticketId: record.id,
-      clientEmail: record.client_email,
-      category: record.category,
-      subject: record.subject,
-      description: record.description,
-      priority: String(record.priority),
-      sessionId: nextState.sessionId,
+    await sendAdminAlert({
+      event_type: 'TICKET ESCALADO POR BOT',
+      client_name: record.client_email.split('@')[0] || 'Cliente Portal',
+      company_name: record.category,
+      client_email: record.client_email,
+      message: `Folio ${record.id} (Prioridad ${record.priority}). ${record.subject} — Detalle del usuario: ${record.description}`,
     });
 
     nextState.step = 'idle';

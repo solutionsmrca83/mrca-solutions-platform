@@ -87,7 +87,7 @@ const MOCK_INVOICES: InvoiceItem[] = [
 export const InvoiceVault: React.FC<{
   clientCompany?: string;
   showToast?: (msg: string) => void;
-}> = ({ clientCompany = 'FinTech Global B2B', showToast = (msg) => console.log(msg) }) => {
+}> = ({ clientCompany = 'FinTech Global B2B', showToast = () => {} }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
 

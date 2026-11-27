@@ -27,7 +27,7 @@ interface LoginProps {
 export const Login: React.FC<LoginProps> = ({
   onLoginSuccess,
   onBack,
-  showToast = (msg) => console.log(msg),
+  showToast = () => {},
   initialRole = 'client',
 }) => {
   const [authRole, setAuthRole] = useState<'client' | 'student' | 'admin'>(() => {

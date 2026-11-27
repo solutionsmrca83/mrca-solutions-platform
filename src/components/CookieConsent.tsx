@@ -13,7 +13,9 @@ import {
   KeyRound,
   Shield,
   FileText,
+  Scale,
 } from 'lucide-react';
+import { LegalModals, type LegalModalView } from './LegalModals';
 
 interface CookieConsentProps {
   onAccept: () => void;
@@ -22,7 +24,7 @@ interface CookieConsentProps {
 
 export const CookieConsent: React.FC<CookieConsentProps> = ({
   onAccept,
-  onNavigateToPrivacy,
+  onNavigateToPrivacy: _onNavigateToPrivacy,
 }) => {
   const [isAccepted, setIsAccepted] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
@@ -34,6 +36,7 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
   });
 
   const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [legalModalView, setLegalModalView] = useState<LegalModalView | null>(null);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -184,26 +187,24 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-cyan-900/40">
-          {onNavigateToPrivacy ? (
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2">
             <button
               type="button"
-              onClick={onNavigateToPrivacy}
-              className="text-[12px] font-['JetBrains_Mono'] text-slate-400 hover:text-cyan-300 flex items-center gap-1 transition-colors cursor-pointer"
+              onClick={() => setLegalModalView('privacidad')}
+              className="text-[12px] font-['JetBrains_Mono'] text-cyan-300 hover:text-cyan-200 underline underline-offset-4 flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5" />
-              <span>Consultar Aviso de Privacidad</span>
+              <span>Aviso de Privacidad Integral</span>
             </button>
-          ) : (
-            <a
-              href="#legal-privacidad"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[12px] font-['JetBrains_Mono'] text-slate-400 hover:text-cyan-300 flex items-center gap-1 transition-colors cursor-pointer"
+            <button
+              type="button"
+              onClick={() => setLegalModalView('terminos')}
+              className="text-[12px] font-['JetBrains_Mono'] text-slate-300 hover:text-cyan-200 underline underline-offset-4 flex items-center gap-1.5 transition-colors cursor-pointer"
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Consultar Aviso de Privacidad</span>
-            </a>
-          )}
+              <Scale className="w-3.5 h-3.5" />
+              <span>Términos y Condiciones</span>
+            </button>
+          </div>
 
           <div className="w-full sm:w-auto flex items-center justify-end">
             <button
@@ -217,6 +218,13 @@ export const CookieConsent: React.FC<CookieConsentProps> = ({
           </div>
         </div>
       </motion.div>
+
+      {/* Modales Legales (z-[100000] superior al Cookie Gate para lectura previa al consentimiento) */}
+      <LegalModals
+        isOpen={legalModalView !== null}
+        initialView={legalModalView || 'privacidad'}
+        onClose={() => setLegalModalView(null)}
+      />
     </div>
   );
 };

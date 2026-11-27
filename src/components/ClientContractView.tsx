@@ -28,6 +28,7 @@ import {
 import { ClientContract } from '../types';
 import { supabase } from '../lib/supabase/client';
 import { sendContractSignedEmailNotification } from '../lib/emailNotification';
+import { exportCompactSignatureDataUrl } from './DigitalSignature';
 
 export interface ClientContractViewProps {
   contract?: ClientContract;
@@ -195,7 +196,8 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
     setIsProcessingSignature(true);
 
     try {
-      const dataUrl = sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png');
+      const trimmedCanvas = sigCanvasRef.current.getTrimmedCanvas();
+      const dataUrl = exportCompactSignatureDataUrl(trimmedCanvas, 600);
       const hash = calculateSha256(dataUrl + effectiveEmail + Date.now().toString());
       const nowIso = new Date().toISOString();
 
@@ -244,8 +246,7 @@ export const ClientContractView: React.FC<ClientContractViewProps> = ({
           `¡Contrato "${activeContract.id}" firmado y sellado criptográficamente con éxito!`
         );
       }
-    } catch (err) {
-      console.error('Error al sellar firma digital:', err);
+    } catch {
       setIsProcessingSignature(false);
     }
   };

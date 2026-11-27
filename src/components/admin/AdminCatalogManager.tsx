@@ -50,8 +50,8 @@ interface ProductFormState {
   short_description: string;
   features_text: string;
   system_requirements: string;
-  zip_download_url: string;
-  manual_download_url: string;
+  zip_file_path: string;
+  manual_file_path: string;
   installation_guide_md: string;
   is_active: boolean;
 }
@@ -65,8 +65,8 @@ const EMPTY_FORM: ProductFormState = {
   features_text:
     'Instalación rápida paso a paso\nInterfaz intuitiva lista para operar\nRespaldos seguros locales',
   system_requirements: 'Windows 10/11 (64-bit) o Linux, 4 GB RAM, 500 MB libres en disco.',
-  zip_download_url: '',
-  manual_download_url: '',
+  zip_file_path: '',
+  manual_file_path: '',
   installation_guide_md:
     '# Manual de Instalación y Uso\n\n## 1. Descompresión\n1. Descarga el archivo `.ZIP`.\n2. Descomprime el contenido en una carpeta dedicada.\n\n## 2. Instalación\n1. Ejecuta el instalador principal.\n2. Sigue los pasos del asistente y registra los datos de tu empresa.',
   is_active: true,
@@ -91,7 +91,13 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
       const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((row: any) => ({
+            ...row,
+            zip_file_path: row.zip_file_path || row.zip_download_url || '',
+            manual_file_path: row.manual_file_path ?? row.manual_download_url ?? null,
+          }));
+        }
       }
     } catch {
       // fallback
@@ -126,8 +132,8 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
           features: Array.isArray(row.features) ? row.features : [],
           system_requirements: row.system_requirements || '',
           price_mxn: Number(row.price_mxn) || 0,
-          zip_download_url: row.zip_download_url || '',
-          manual_download_url: row.manual_download_url || null,
+          zip_file_path: row.zip_file_path || row.zip_download_url || '',
+          manual_file_path: row.manual_file_path ?? row.manual_download_url ?? null,
           installation_guide_md: row.installation_guide_md || '',
           is_active: Boolean(row.is_active),
           created_at: row.created_at || new Date().toISOString(),
@@ -171,8 +177,8 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
       short_description: product.short_description,
       features_text: (product.features || []).join('\n'),
       system_requirements: product.system_requirements,
-      zip_download_url: product.zip_download_url,
-      manual_download_url: product.manual_download_url || '',
+      zip_file_path: product.zip_file_path,
+      manual_file_path: product.manual_file_path || '',
       installation_guide_md: product.installation_guide_md,
       is_active: product.is_active,
     });
@@ -211,33 +217,34 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
         });
 
       if (!error) {
-        const storageUri = `storage://software-releases/${storagePath}`;
+        // Guardar únicamente la ruta interna privada del bucket `software-releases`
+        // (las descargas generan enlaces firmados temporales de 60 segundos)
         if (kind === 'zip') {
-          setForm((prev) => ({ ...prev, zip_download_url: storageUri }));
+          setForm((prev) => ({ ...prev, zip_file_path: storagePath }));
         } else {
-          setForm((prev) => ({ ...prev, manual_download_url: storageUri }));
-        }
-        showToast?.(`Archivo "${file.name}" cargado con éxito en Supabase Storage (software-releases).`);
-      } else {
-        // Respaldo seguro para entornos locales sin bucket desplegado aún
-        const fallbackUrl = `https://releases.mrcasolutions.com/${storagePath}`;
-        if (kind === 'zip') {
-          setForm((prev) => ({ ...prev, zip_download_url: fallbackUrl }));
-        } else {
-          setForm((prev) => ({ ...prev, manual_download_url: fallbackUrl }));
+          setForm((prev) => ({ ...prev, manual_file_path: storagePath }));
         }
         showToast?.(
-          `Bucket remoto no disponible en este entorno (${error.message}). Ruta preparada: ${safeFileName}`
+          `Archivo "${file.name}" cargado en bucket privado software-releases (ruta interna guardada).`
+        );
+      } else {
+        // Respaldo seguro para entornos sin bucket aprovisionado aún: conservar ruta interna limpia
+        if (kind === 'zip') {
+          setForm((prev) => ({ ...prev, zip_file_path: storagePath }));
+        } else {
+          setForm((prev) => ({ ...prev, manual_file_path: storagePath }));
+        }
+        showToast?.(
+          `Ruta interna privada preparada para "${file.name}". Ejecuta production_master_schema.sql para activar el bucket.`
         );
       }
     } catch {
-      const fallbackUrl = `https://releases.mrcasolutions.com/${storagePath}`;
       if (kind === 'zip') {
-        setForm((prev) => ({ ...prev, zip_download_url: fallbackUrl }));
+        setForm((prev) => ({ ...prev, zip_file_path: storagePath }));
       } else {
-        setForm((prev) => ({ ...prev, manual_download_url: fallbackUrl }));
+        setForm((prev) => ({ ...prev, manual_file_path: storagePath }));
       }
-      showToast?.(`Ruta de paquete registrada para "${file.name}".`);
+      showToast?.(`Ruta privada registrada para "${file.name}".`);
     } finally {
       if (kind === 'zip') setIsUploadingZip(false);
       else setIsUploadingManual(false);
@@ -250,7 +257,7 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
       showToast?.('Acceso denegado: Solo Superadmin puede guardar productos del catálogo.');
       return;
     }
-    if (!form.title.trim() || !form.zip_download_url.trim()) {
+    if (!form.title.trim() || !form.zip_file_path.trim()) {
       showToast?.('Completa al menos el Nombre del sistema y el archivo o enlace .ZIP.');
       return;
     }
@@ -269,8 +276,8 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
       features: featuresArray,
       system_requirements: form.system_requirements.trim(),
       price_mxn: Math.max(0, Number(form.price_mxn) || 0),
-      zip_download_url: form.zip_download_url.trim(),
-      manual_download_url: form.manual_download_url.trim() || null,
+      zip_file_path: form.zip_file_path.trim(),
+      manual_file_path: form.manual_file_path.trim() || null,
       installation_guide_md: form.installation_guide_md.trim(),
       is_active: form.is_active,
     };
@@ -478,12 +485,12 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
               <div className="p-3 rounded-xl bg-slate-950/70 border border-white/10 flex flex-col gap-1.5 text-[11px] font-['JetBrains_Mono']">
                 <div className="flex items-center gap-1.5 text-cyan-300 truncate">
                   <FileArchive className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">{product.zip_download_url}</span>
+                  <span className="truncate">{product.zip_file_path}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-400 truncate">
                   <BookOpen className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                   <span>
-                    {product.manual_download_url
+                    {product.manual_file_path
                       ? 'Manual PDF + Guía paso a paso'
                       : 'Guía paso a paso integrada'}
                   </span>
@@ -720,9 +727,9 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
                     <input
                       type="text"
                       required
-                      value={form.zip_download_url}
-                      onChange={(e) => setForm({ ...form, zip_download_url: e.target.value })}
-                      placeholder="https://... (o sube tu .ZIP arriba; usa URL externa si supera 50 MB)"
+                      value={form.zip_file_path}
+                      onChange={(e) => setForm({ ...form, zip_file_path: e.target.value })}
+                      placeholder="Ruta interna (ej. packages/pos-pro-v1.zip) o URL externa https:// si supera 50 MB"
                       className="w-full bg-slate-900 border border-cyan-500/30 focus:border-cyan-400 rounded-xl pl-9 pr-3.5 py-2 text-[12px] text-cyan-200 font-['JetBrains_Mono'] focus:outline-none"
                     />
                   </div>
@@ -751,9 +758,9 @@ export const AdminCatalogManager: React.FC<AdminCatalogManagerProps> = ({
                   </div>
                   <input
                     type="text"
-                    value={form.manual_download_url}
-                    onChange={(e) => setForm({ ...form, manual_download_url: e.target.value })}
-                    placeholder="Opcional: URL del manual PDF o sube el archivo arriba"
+                    value={form.manual_file_path}
+                    onChange={(e) => setForm({ ...form, manual_file_path: e.target.value })}
+                    placeholder="Opcional: ruta privada (ej. manuals/guia.pdf) o URL externa https://"
                     className="w-full bg-slate-900 border border-white/15 focus:border-cyan-400 rounded-xl px-3.5 py-2 text-[12px] text-slate-200 font-['JetBrains_Mono'] focus:outline-none"
                   />
                 </div>
