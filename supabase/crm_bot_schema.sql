@@ -1,11 +1,12 @@
 -- ==============================================================================
--- MRCA SOLUTIONS — AUTOMATED CRM & LEVEL-1 SUPPORT BOT SCHEMA (ZERO API COST)
+-- MRCA SOLUTIONS — AUTOMATED CRM, QUOTE ESTIMATOR & SUPPORT BOT SCHEMA ($0 API)
 -- Archivo: supabase/crm_bot_schema.sql
 -- Descripción:
 --   1. Tablas: crm_leads, support_tickets, bot_chat_logs, bot_settings
---   2. Seguridad estricta Row Level Security (RLS)
---   3. Protección a nivel de fila y columna (trigger) para campos críticos
---      (client_name, company_name, contract_terms) exclusivos de superadmin
+--   2. Incluye project_scope y advance_percentage (25 o 40) para cotizaciones
+--   3. Row Level Security (RLS) estricto
+--   4. Protección de UPDATE para client_name, company_name, estimated_budget y
+--      contract_terms restringida exclusivamente a superadmin
 -- ==============================================================================
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -70,31 +71,54 @@ AS $$
 $$;
 
 -- ==============================================================================
--- 1. TABLA: crm_leads (Onboarding Automático y Prospectos B2B)
+-- 1. TABLA: crm_leads (Cotizador Estimado + Auto-Aceptación de Clientes B2B)
 -- ==============================================================================
 
 CREATE TABLE IF NOT EXISTS public.crm_leads (
-  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  client_name       TEXT NOT NULL,
-  company_name      TEXT NOT NULL,
-  email             TEXT NOT NULL,
-  service_type      TEXT NOT NULL,
-  estimated_budget  TEXT DEFAULT 'Por definir en consultoría',
-  status            TEXT NOT NULL DEFAULT 'Nuevo'
-                    CHECK (status IN ('Nuevo', 'Aceptado Automáticamente', 'En Contrato', 'Rechazado')),
-  bot_notes         TEXT,
-  contract_terms    TEXT,
-  auto_accepted     BOOLEAN NOT NULL DEFAULT FALSE,
-  session_id        TEXT,
-  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  client_name         TEXT NOT NULL,
+  company_name        TEXT NOT NULL,
+  email               TEXT NOT NULL,
+  service_type        TEXT NOT NULL,
+  project_scope       TEXT NOT NULL DEFAULT 'Profesional / Empresarial',
+  estimated_budget    TEXT DEFAULT 'Por definir en consultoría',
+  advance_percentage  INTEGER NOT NULL DEFAULT 25 CHECK (advance_percentage IN (25, 40)),
+  status              TEXT NOT NULL DEFAULT 'Nuevo'
+                      CHECK (status IN ('Nuevo', 'Aceptado Automáticamente', 'En Contrato', 'Rechazado')),
+  bot_notes           TEXT,
+  contract_terms      TEXT,
+  auto_accepted       BOOLEAN NOT NULL DEFAULT FALSE,
+  session_id          TEXT,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Bloque idempotente por si crm_leads ya existía de una versión previa
+DO $$
+BEGIN
+  ALTER TABLE public.crm_leads ADD COLUMN IF NOT EXISTS project_scope TEXT NOT NULL DEFAULT 'Profesional / Empresarial';
+  ALTER TABLE public.crm_leads ADD COLUMN IF NOT EXISTS advance_percentage INTEGER NOT NULL DEFAULT 25;
+  ALTER TABLE public.crm_leads ADD COLUMN IF NOT EXISTS contract_terms TEXT;
+  ALTER TABLE public.crm_leads ADD COLUMN IF NOT EXISTS session_id TEXT;
+  ALTER TABLE public.crm_leads ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conrelid = 'public.crm_leads'::regclass
+      AND conname = 'crm_leads_advance_percentage_check'
+  ) THEN
+    ALTER TABLE public.crm_leads
+      ADD CONSTRAINT crm_leads_advance_percentage_check
+      CHECK (advance_percentage IN (25, 40));
+  END IF;
+END $$;
+
 COMMENT ON TABLE public.crm_leads IS
-  'Registro de prospectos y clientes aceptados automáticamente por el Asistente Ejecutivo MRCA (Costo $0 MXN).';
+  'Prospectos cotizados y aceptados automáticamente por el Asistente Ejecutivo MRCA (Costo $0 MXN).';
 
 CREATE INDEX IF NOT EXISTS idx_crm_leads_email      ON public.crm_leads (LOWER(email));
 CREATE INDEX IF NOT EXISTS idx_crm_leads_status     ON public.crm_leads (status);
+CREATE INDEX IF NOT EXISTS idx_crm_leads_scope      ON public.crm_leads (project_scope);
 CREATE INDEX IF NOT EXISTS idx_crm_leads_auto       ON public.crm_leads (auto_accepted);
 CREATE INDEX IF NOT EXISTS idx_crm_leads_session    ON public.crm_leads (session_id);
 CREATE INDEX IF NOT EXISTS idx_crm_leads_created    ON public.crm_leads (created_at DESC);
@@ -104,8 +128,9 @@ CREATE TRIGGER trg_crm_leads_updated_at
   BEFORE UPDATE ON public.crm_leads
   FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
--- Trigger de protección de columnas críticas:
--- Solo SUPERADMIN puede modificar client_name, company_name o contract_terms
+-- Trigger estricto de protección de columnas financieras y titulares:
+-- SOLO SUPERADMIN puede modificar client_name, company_name, estimated_budget,
+-- advance_percentage o contract_terms
 CREATE OR REPLACE FUNCTION public.enforce_crm_leads_superadmin_fields()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -116,9 +141,11 @@ BEGIN
   IF (
     NEW.client_name IS DISTINCT FROM OLD.client_name
     OR NEW.company_name IS DISTINCT FROM OLD.company_name
+    OR NEW.estimated_budget IS DISTINCT FROM OLD.estimated_budget
+    OR NEW.advance_percentage IS DISTINCT FROM OLD.advance_percentage
     OR NEW.contract_terms IS DISTINCT FROM OLD.contract_terms
   ) AND NOT public.is_superadmin() THEN
-    RAISE EXCEPTION 'Permiso denegado: Solo el rol superadmin puede modificar client_name, company_name o contract_terms.';
+    RAISE EXCEPTION 'Permiso denegado: Solo superadmin puede modificar client_name, company_name, estimated_budget o términos contractuales.';
   END IF;
   RETURN NEW;
 END;
@@ -193,7 +220,6 @@ BEGIN
   ALTER TABLE public.support_tickets ADD COLUMN IF NOT EXISTS session_id TEXT;
   ALTER TABLE public.support_tickets ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
-  -- Si existe columna heredada client_id con NOT NULL, relajarla para permitir tickets públicos del bot
   IF EXISTS (
     SELECT 1 FROM information_schema.columns
     WHERE table_schema = 'public'
@@ -204,7 +230,6 @@ BEGIN
     ALTER TABLE public.support_tickets ALTER COLUMN client_id DROP NOT NULL;
   END IF;
 
-  -- Actualizar restricciones CHECK de priority y status para soportar valores corporativos en español y legacy
   FOR constraint_rec IN
     SELECT conname
     FROM pg_constraint
@@ -243,7 +268,7 @@ CREATE TRIGGER trg_support_tickets_updated_at
   FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
 -- ==============================================================================
--- 3. TABLA: bot_chat_logs (Historial Conversacional y Trazabilidad del Bot)
+-- 3. TABLA: bot_chat_logs (Historial Conversacional y Conteo de Cotizaciones)
 -- ==============================================================================
 
 CREATE TABLE IF NOT EXISTS public.bot_chat_logs (
@@ -257,7 +282,7 @@ CREATE TABLE IF NOT EXISTS public.bot_chat_logs (
 );
 
 COMMENT ON TABLE public.bot_chat_logs IS
-  'Bitácora de interacciones del Asistente CRM & Soporte MRCA para auditoría y contexto ejecutivo.';
+  'Bitácora de conversaciones, cotizaciones estimadas y soporte del Asistente MRCA.';
 
 CREATE INDEX IF NOT EXISTS idx_bot_chat_logs_session ON public.bot_chat_logs (session_id);
 CREATE INDEX IF NOT EXISTS idx_bot_chat_logs_email   ON public.bot_chat_logs (LOWER(user_email));
@@ -295,10 +320,11 @@ ALTER TABLE public.bot_settings    ENABLE ROW LEVEL SECURITY;
 
 -- ------------------------------------------------------------------------------
 -- RLS: crm_leads
--- • INSERT público/cliente para onboarding automatizado
+-- • INSERT público/cliente para cotización y onboarding automatizado
 -- • SELECT propio para clientes autenticados; lectura completa para is_admin()
--- • UPDATE general solo para is_admin() (y trigger bloquea client_name,
---   company_name y contract_terms para cualquier rol distinto a superadmin)
+-- • UPDATE administrativo para is_admin(), pero el trigger bloquea cambios en
+--   client_name, company_name, estimated_budget, advance_percentage y contract_terms
+--   para cualquier rol distinto a superadmin
 -- • DELETE exclusivo de superadmin
 -- ------------------------------------------------------------------------------
 DROP POLICY IF EXISTS "crm_leads__public_insert" ON public.crm_leads;
@@ -331,10 +357,6 @@ CREATE POLICY "crm_leads__superadmin_delete"
 
 -- ------------------------------------------------------------------------------
 -- RLS: support_tickets
--- • INSERT público/cliente para resolución Nivel 1 y escalación
--- • SELECT propio para clientes autenticados (user_id o client_email);
---   lectura completa para is_admin()
--- • UPDATE para is_admin() o propietario autenticado; DELETE para is_admin()
 -- ------------------------------------------------------------------------------
 DROP POLICY IF EXISTS "tickets__client_read_own" ON public.support_tickets;
 DROP POLICY IF EXISTS "tickets__client_insert_own" ON public.support_tickets;
@@ -380,9 +402,6 @@ CREATE POLICY "support_tickets__admin_delete"
 
 -- ------------------------------------------------------------------------------
 -- RLS: bot_chat_logs
--- • INSERT público/cliente para registrar el diálogo del bot
--- • SELECT propio para autenticados y completo para is_admin()
--- • DELETE exclusivo de superadmin
 -- ------------------------------------------------------------------------------
 DROP POLICY IF EXISTS "bot_chat_logs__public_insert" ON public.bot_chat_logs;
 CREATE POLICY "bot_chat_logs__public_insert"
@@ -407,8 +426,6 @@ CREATE POLICY "bot_chat_logs__superadmin_delete"
 
 -- ------------------------------------------------------------------------------
 -- RLS: bot_settings
--- • SELECT público para que el widget consulte si Auto-Aceptación está activa
--- • INSERT/UPDATE/DELETE estrictamente restringido a superadmin
 -- ------------------------------------------------------------------------------
 DROP POLICY IF EXISTS "bot_settings__public_read" ON public.bot_settings;
 CREATE POLICY "bot_settings__public_read"

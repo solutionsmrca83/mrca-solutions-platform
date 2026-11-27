@@ -287,6 +287,7 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
   }, [initialMode]);
 
   // Pre-fill automático desde Consola CRM (1-clic "Enviar al Generador de Contratos")
+  // Preserva intactos los bloqueos de edición exclusivos de Superadmin en la UI
   useEffect(() => {
     if (!prefillLead) return;
     setCompanyName(prefillLead.companyName);
@@ -296,13 +297,22 @@ export const ContractGenerator: React.FC<ContractGeneratorProps> = ({
     if (prefillLead.estimatedBudget && !prefillLead.estimatedBudget.toLowerCase().includes('por definir')) {
       setTotalCost(prefillLead.estimatedBudget);
     }
+    if (prefillLead.advancePercentage === 40 || (prefillLead.projectScope || '').toLowerCase().includes('alto alcance')) {
+      setAdvancePercentage('40%');
+    } else if (prefillLead.advancePercentage === 25 || prefillLead.projectScope) {
+      setAdvancePercentage('25%');
+    }
     setCustomScopeNotes(
-      `Servicio solicitado vía Asistente CRM MRCA: ${prefillLead.serviceType}.${
-        prefillLead.botNotes ? ` ${prefillLead.botNotes}` : ''
-      }`
+      `Servicio cotizado vía Asistente MRCA: ${prefillLead.serviceType}${
+        prefillLead.projectScope ? ` (${prefillLead.projectScope})` : ''
+      }.${prefillLead.botNotes ? ` ${prefillLead.botNotes}` : ''}`
     );
     setActiveTab('generator');
-    showToast(`Datos de ${prefillLead.companyName} pre-cargados en el Generador de Contratos.`);
+    showToast(
+      `Datos y anticipo (${
+        prefillLead.advancePercentage === 40 ? '40%' : '25%'
+      }) de ${prefillLead.companyName} pre-cargados en el Generador de Contratos.`
+    );
     onPrefillConsumed?.();
   }, [prefillLead, onPrefillConsumed, showToast]);
 

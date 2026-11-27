@@ -389,7 +389,9 @@ export interface CrmLeadRecord {
   company_name: string;
   email: string;
   service_type: string;
+  project_scope?: string | null;
   estimated_budget?: string | null;
+  advance_percentage?: 25 | 40 | number;
   status: CrmLeadStatus;
   bot_notes?: string | null;
   contract_terms?: string | null;
@@ -433,7 +435,9 @@ export interface ContractPrefillLead {
   companyName: string;
   email: string;
   serviceType: string;
+  projectScope?: string | null;
   estimatedBudget?: string | null;
+  advancePercentage?: 25 | 40 | number;
   botNotes?: string | null;
 }
 

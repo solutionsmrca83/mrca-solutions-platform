@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   Bot,
   CheckCircle2,
-  ShieldAlert,
+  Calculator,
   DollarSign,
   Search,
   RefreshCw,
@@ -12,8 +12,6 @@ import {
   Unlock,
   X,
   Building,
-  Mail,
-  User,
   Sparkles,
   LifeBuoy,
   Clock,
@@ -52,10 +50,12 @@ const DEMO_CRM_LEADS: CrmLeadRecord[] = [
     company_name: 'Banco NeoPay LatAm S.A. de C.V.',
     email: 'rsalinas@neopay.lat',
     service_type: 'Infraestructura y Nube',
-    estimated_budget: '$160,000 - $340,000 MXN',
+    project_scope: 'Alto Alcance / A la Medida',
+    estimated_budget: '$150,000 - $320,000 MXN',
+    advance_percentage: 40,
     status: 'Aceptado Automáticamente',
     bot_notes:
-      'Cliente validado y aceptado automáticamente por Asistente Ejecutivo MRCA (Costo $0 MXN). Interesado en alta disponibilidad y cumplimiento regulatorio.',
+      'Cliente aceptó estimado referencial ($150,000 - $320,000 MXN, anticipo 40%, entrega 6 a 12 semanas) y fue aceptado automáticamente en CRM.',
     auto_accepted: true,
     session_id: 'demo_sess_neopay',
     created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
@@ -66,10 +66,12 @@ const DEMO_CRM_LEADS: CrmLeadRecord[] = [
     company_name: 'Aduana Express Cloud S.A.P.I. de C.V.',
     email: 'mortiz@aduanaexpress.mx',
     service_type: 'Desarrollo Web & SaaS',
-    estimated_budget: '$140,000 - $280,000 MXN',
+    project_scope: 'Profesional / Empresarial',
+    estimated_budget: '$65,000 - $145,000 MXN',
+    advance_percentage: 25,
     status: 'En Contrato',
     bot_notes:
-      'Onboarding completado vía chat. Datos enviados al Generador de Contratos para emisión con CFDI 4.0 y Obra por Encargo.',
+      'Cotización estimada aceptada vía chat. Datos enviados al Generador de Contratos con esquema de 25% de anticipo SPEI.',
     auto_accepted: true,
     session_id: 'demo_sess_aduana',
     created_at: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
@@ -80,10 +82,12 @@ const DEMO_CRM_LEADS: CrmLeadRecord[] = [
     company_name: 'Salud Digital Corporativa',
     email: 'amendez@saluddigital.org',
     service_type: 'Auditoría de Ciberseguridad',
-    estimated_budget: '$120,000 - $260,000 MXN',
+    project_scope: 'Profesional / Empresarial',
+    estimated_budget: '$55,000 - $120,000 MXN',
+    advance_percentage: 25,
     status: 'Aceptado Automáticamente',
     bot_notes:
-      'Solicitud de evaluación de seguridad empresarial registrada y aprobada de forma inmediata por el bot CRM.',
+      'Estimado de auditoría aceptado y dado de alta de forma automática por el Asistente MRCA.',
     auto_accepted: true,
     session_id: 'demo_sess_salud',
     created_at: new Date(Date.now() - 1000 * 60 * 420).toISOString(),
@@ -97,11 +101,11 @@ const DEMO_SUPPORT_TICKETS: BotSupportTicketRecord[] = [
     category: 'Pagos y Facturación',
     subject: 'Consulta sobre CFDI 4.0, Obra por Encargo y reglas de anticipo SPEI',
     description:
-      'Consulta atendida en autoservicio Nivel 1 (Pagos y Facturación). El usuario confirmó resolución inmediata.',
+      'Consulta atendida en autoservicio Nivel 1 (Pagos y Facturación). El cliente confirmó solución inmediata.',
     priority: 'Baja',
     status: 'Resuelto por Bot',
     bot_resolution:
-      'Se detallaron lineamientos de facturación CFDI 4.0 (SAT), propiedad intelectual Obra por Encargo (LFDA) y reglas de anticipo SPEI 25%/40% sin exponer datos bancarios.',
+      'Se detallaron CFDI 4.0 SAT, Obra por Encargo LFDA y reglas de anticipo SPEI 25%/40% protegiendo confidencialidad bancaria.',
     session_id: 'demo_sess_retail',
     created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
   },
@@ -115,7 +119,7 @@ const DEMO_SUPPORT_TICKETS: BotSupportTicketRecord[] = [
     priority: 'Baja',
     status: 'Resuelto por Bot',
     bot_resolution:
-      'Se explicó el uso del Lienzo de Firma Digital y la pestaña de Descargar/Subir PDF firmado.',
+      'Se explicó el flujo de Firma Digital en lienzo interactivo y la modalidad alternativa de Descargar/Subir PDF firmado.',
     session_id: 'demo_sess_aduana',
     created_at: new Date(Date.now() - 1000 * 60 * 110).toISOString(),
   },
@@ -129,7 +133,7 @@ const DEMO_SUPPORT_TICKETS: BotSupportTicketRecord[] = [
     priority: 'Alta',
     status: 'Escalado a Humano',
     bot_resolution:
-      'Escalado a especialista humano con alerta de correo corporativo enviada a solutionsmrca83@gmail.com.',
+      'Escalado a especialista humano con alerta enviada a solutionsmrca83@gmail.com.',
     session_id: 'demo_sess_neopay',
     created_at: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
   },
@@ -142,8 +146,8 @@ const DEMO_CHAT_LOGS: Record<string, BotChatLogRecord[]> = {
       session_id: 'demo_sess_neopay',
       user_email: 'rsalinas@neopay.lat',
       sender: 'user',
-      message: '🚀 Iniciar un Proyecto',
-      action_triggered: 'start_onboarding_flow',
+      message: '💰 Cotizar Proyecto (Estimado)',
+      action_triggered: 'start_quote_flow',
       created_at: new Date(Date.now() - 1000 * 60 * 48).toISOString(),
     },
     {
@@ -152,8 +156,8 @@ const DEMO_CHAT_LOGS: Record<string, BotChatLogRecord[]> = {
       user_email: 'rsalinas@neopay.lat',
       sender: 'bot',
       message:
-        '¡Excelente decisión! Activaremos tu registro automático de proyecto en 4 breves pasos. Paso 1 de 4: ¿Cuál es tu nombre completo?',
-      action_triggered: 'onboarding_name',
+        'Aquí tienes tu cotización estimada transparente para Infraestructura y Nube (Alto Alcance / A la Medida): $150,000 - $320,000 MXN • Entrega 6 a 12 semanas • 40% anticipo SPEI.',
+      action_triggered: 'quote_generated',
       created_at: new Date(Date.now() - 1000 * 60 * 47).toISOString(),
     },
     {
@@ -161,8 +165,8 @@ const DEMO_CHAT_LOGS: Record<string, BotChatLogRecord[]> = {
       session_id: 'demo_sess_neopay',
       user_email: 'rsalinas@neopay.lat',
       sender: 'user',
-      message: 'Ing. Rodrigo Salinas Valenzuela / Banco NeoPay LatAm / Infraestructura y Nube',
-      action_triggered: 'onboarding_completed',
+      message: '✅ Aceptar Estimado y Registrar mi Proyecto',
+      action_triggered: 'quote_accepted_start_onboarding',
       created_at: new Date(Date.now() - 1000 * 60 * 46).toISOString(),
     },
     {
@@ -171,7 +175,7 @@ const DEMO_CHAT_LOGS: Record<string, BotChatLogRecord[]> = {
       user_email: 'rsalinas@neopay.lat',
       sender: 'bot',
       message:
-        '¡Listo! Tu solicitud para Banco NeoPay LatAm S.A. de C.V. ha sido aceptada automáticamente en nuestro CRM corporativo.',
+        '¡Listo! Tu proyecto para Banco NeoPay LatAm S.A. de C.V. ha sido aceptado automáticamente en nuestro CRM con tu estimado referencial guardado.',
       action_triggered: 'crm_lead_auto_accepted',
       created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
     },
@@ -216,6 +220,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
   const [activeSection, setActiveSection] = useState<'leads' | 'tickets'>(defaultSection);
   const [leads, setLeads] = useState<CrmLeadRecord[]>([]);
   const [tickets, setTickets] = useState<BotSupportTicketRecord[]>([]);
+  const [quotesGeneratedCount, setQuotesGeneratedCount] = useState<number>(DEMO_CRM_LEADS.length);
   const [autoAcceptEnabled, setAutoAcceptEnabled] = useState<boolean>(() => getAutoAcceptSettingSync());
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isTogglingAutoAccept, setIsTogglingAutoAccept] = useState<boolean>(false);
@@ -227,8 +232,8 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     'Todos' | 'Resuelto por Bot' | 'Escalado a Humano' | 'Abierto'
   >('Todos');
 
-  // Modal "Ver Historial"
-  const [historyModal, setHistoryModal] = useState<{
+  // Modal "Ver Conversación"
+  const [conversationModal, setConversationModal] = useState<{
     isOpen: boolean;
     title: string;
     subtitle: string;
@@ -244,10 +249,11 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     loading: false,
   });
 
-  // Modal de edición de identidad de Lead (solo Superadmin)
+  // Modal de edición de datos protegidos (client_name, company_name, estimated_budget) — SOLO Superadmin
   const [editingLead, setEditingLead] = useState<CrmLeadRecord | null>(null);
   const [editClientName, setEditClientName] = useState('');
   const [editCompanyName, setEditCompanyName] = useState('');
+  const [editEstimatedBudget, setEditEstimatedBudget] = useState('');
 
   useEffect(() => {
     setActiveSection(defaultSection);
@@ -271,12 +277,26 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     }
   };
 
+  const loadLocalQuoteLogsCount = (): number => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.LOGS);
+      const parsed: BotChatLogRecord[] = raw ? JSON.parse(raw) : [];
+      return parsed.filter((l) => l.action_triggered === 'quote_generated').length;
+    } catch {
+      return 0;
+    }
+  };
+
   const fetchConsoleData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [leadsRes, ticketsRes, autoAcceptVal] = await Promise.all([
+      const [leadsRes, ticketsRes, quoteLogsRes, autoAcceptVal] = await Promise.all([
         supabase.from('crm_leads').select('*').order('created_at', { ascending: false }),
         supabase.from('support_tickets').select('*').order('created_at', { ascending: false }),
+        supabase
+          .from('bot_chat_logs')
+          .select('id', { count: 'exact', head: true })
+          .eq('action_triggered', 'quote_generated'),
         fetchAutoAcceptSetting(),
       ]);
 
@@ -286,7 +306,6 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       const remoteLeads: CrmLeadRecord[] =
         !leadsRes.error && Array.isArray(leadsRes.data) ? (leadsRes.data as CrmLeadRecord[]) : [];
 
-      // Combinar remotos + locales sin duplicados; si ambos están vacíos usar registros semilla de demostración
       const mergedLeadsMap = new Map<string, CrmLeadRecord>();
       [...remoteLeads, ...localLeads].forEach((item) => {
         if (!mergedLeadsMap.has(item.id)) mergedLeadsMap.set(item.id, item);
@@ -295,6 +314,13 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
         mergedLeadsMap.size > 0 ? Array.from(mergedLeadsMap.values()) : DEMO_CRM_LEADS;
       finalLeads.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       setLeads(finalLeads);
+
+      const remoteQuotes = !quoteLogsRes.error && typeof quoteLogsRes.count === 'number' ? quoteLogsRes.count : 0;
+      const localQuotes = loadLocalQuoteLogsCount();
+      const leadsWithEstimates = finalLeads.filter(
+        (l) => Boolean(l.estimated_budget) && !l.estimated_budget?.toLowerCase().includes('por definir')
+      ).length;
+      setQuotesGeneratedCount(Math.max(remoteQuotes, localQuotes, leadsWithEstimates));
 
       const localTickets = loadLocalTickets();
       const remoteTickets: BotSupportTicketRecord[] =
@@ -325,8 +351,10 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     } catch {
       const localLeads = loadLocalLeads();
       const localTickets = loadLocalTickets();
-      setLeads(localLeads.length > 0 ? localLeads : DEMO_CRM_LEADS);
+      const fallbackLeads = localLeads.length > 0 ? localLeads : DEMO_CRM_LEADS;
+      setLeads(fallbackLeads);
       setTickets(localTickets.length > 0 ? localTickets : DEMO_SUPPORT_TICKETS);
+      setQuotesGeneratedCount(Math.max(loadLocalQuoteLogsCount(), fallbackLeads.length));
     } finally {
       setIsLoading(false);
     }
@@ -380,23 +408,31 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     showToast?.(`Estado del prospecto actualizado a "${newStatus}".`);
   };
 
-  // Guardar edición de client_name / company_name (Estrictamente Superadmin)
-  const handleSaveLeadIdentity = async (e: React.FormEvent) => {
+  // Guardar edición de campos restringidos (client_name, company_name, estimated_budget) — SOLO Superadmin
+  const handleSaveLeadProtectedFields = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingLead) return;
     if (!isSuper) {
-      showToast?.('Permiso denegado: Solo Superadmin puede modificar nombre de cliente o empresa.');
+      showToast?.(
+        'Permiso denegado: Solo Superadmin puede modificar cliente, empresa o presupuesto estimado.'
+      );
       return;
     }
 
     const updatedName = editClientName.trim();
     const updatedCompany = editCompanyName.trim();
+    const updatedBudget = editEstimatedBudget.trim();
     if (!updatedName || !updatedCompany) return;
 
     setLeads((prev) =>
       prev.map((l) =>
         l.id === editingLead.id
-          ? { ...l, client_name: updatedName, company_name: updatedCompany }
+          ? {
+              ...l,
+              client_name: updatedName,
+              company_name: updatedCompany,
+              estimated_budget: updatedBudget || l.estimated_budget,
+            }
           : l
       )
     );
@@ -404,7 +440,11 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     try {
       await supabase
         .from('crm_leads')
-        .update({ client_name: updatedName, company_name: updatedCompany })
+        .update({
+          client_name: updatedName,
+          company_name: updatedCompany,
+          estimated_budget: updatedBudget || editingLead.estimated_budget,
+        })
         .eq('id', editingLead.id);
     } catch {
       // fallback
@@ -418,7 +458,12 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
           JSON.stringify(
             local.map((l) =>
               l.id === editingLead.id
-                ? { ...l, client_name: updatedName, company_name: updatedCompany }
+                ? {
+                    ...l,
+                    client_name: updatedName,
+                    company_name: updatedCompany,
+                    estimated_budget: updatedBudget || l.estimated_budget,
+                  }
                 : l
             )
           )
@@ -427,12 +472,18 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     } catch {}
 
     setEditingLead(null);
-    showToast?.('Datos titulares del prospecto actualizados con privilegios Superadmin.');
+    showToast?.('Datos protegidos del prospecto actualizados con privilegios Superadmin.');
   };
 
-  // Enviar Lead al Generador de Contratos en 1 clic
+  // Enviar Lead al Generador de Contratos en 1 clic (incluyendo anticipo 25% o 40%)
   const handleSendLeadToContract = async (lead: CrmLeadRecord) => {
     await handleUpdateLeadStatus(lead.id, 'En Contrato');
+    const suggestedAdvance: 25 | 40 =
+      lead.advance_percentage === 40 ||
+      (lead.project_scope || '').toLowerCase().includes('alto alcance')
+        ? 40
+        : 25;
+
     if (onSendToContractGenerator) {
       onSendToContractGenerator({
         leadId: lead.id,
@@ -440,7 +491,9 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
         companyName: lead.company_name,
         email: lead.email,
         serviceType: lead.service_type,
+        projectScope: lead.project_scope,
         estimatedBudget: lead.estimated_budget,
+        advancePercentage: suggestedAdvance,
         botNotes: lead.bot_notes,
       });
     } else {
@@ -487,15 +540,15 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
     showToast?.(`Ticket ${ticketId.slice(0, 10)} marcado como resuelto.`);
   };
 
-  // Abrir Modal "Ver Historial" (consulta bot_chat_logs en Supabase + respaldo local)
-  const handleOpenHistory = async (params: {
+  // Abrir Modal "Ver Conversación" (consulta bot_chat_logs en Supabase + respaldo local)
+  const handleOpenConversation = async (params: {
     title: string;
     subtitle: string;
     sessionId?: string | null;
     email?: string | null;
     notes?: string | null;
   }) => {
-    setHistoryModal({
+    setConversationModal({
       isOpen: true,
       title: params.title,
       subtitle: params.subtitle,
@@ -539,10 +592,12 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       localLogs = [];
     }
 
-    const demoLogs = params.sessionId && DEMO_CHAT_LOGS[params.sessionId] ? DEMO_CHAT_LOGS[params.sessionId] : [];
-    const combined = remoteLogs.length > 0 ? remoteLogs : localLogs.length > 0 ? localLogs : demoLogs;
+    const demoLogs =
+      params.sessionId && DEMO_CHAT_LOGS[params.sessionId] ? DEMO_CHAT_LOGS[params.sessionId] : [];
+    const combined =
+      remoteLogs.length > 0 ? remoteLogs : localLogs.length > 0 ? localLogs : demoLogs;
 
-    setHistoryModal((prev) => ({
+    setConversationModal((prev) => ({
       ...prev,
       logs: combined,
       loading: false,
@@ -574,7 +629,9 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       lead.client_name.toLowerCase().includes(normalizedSearch) ||
       lead.company_name.toLowerCase().includes(normalizedSearch) ||
       lead.email.toLowerCase().includes(normalizedSearch) ||
-      lead.service_type.toLowerCase().includes(normalizedSearch);
+      lead.service_type.toLowerCase().includes(normalizedSearch) ||
+      (lead.project_scope || '').toLowerCase().includes(normalizedSearch) ||
+      (lead.estimated_budget || '').toLowerCase().includes(normalizedSearch);
     return matchesStatus && matchesQuery;
   });
 
@@ -603,7 +660,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 font-['JetBrains_Mono'] text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
                 <Bot className="w-3.5 h-3.5" />
-                CONSOLA CRM AUTOMATIZADA Y SOPORTE NIVEL 1
+                CRM AUTOMATIZADO, COTIZADOR MXN Y SOPORTE NIVEL 1
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-['JetBrains_Mono'] text-[10px] font-bold uppercase">
                 COSTO OPERATIVO: $0 MXN
@@ -611,10 +668,10 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
             </div>
 
             <h2 className="font-['Space_Grotesk'] text-[22px] sm:text-[26px] font-bold text-white tracking-tight">
-              Centro de Control — Asistente Ejecutivo MRCA
+              Consola de Control — Asistente Ejecutivo MRCA
             </h2>
             <p className="text-[13px] text-slate-300 max-w-2xl leading-relaxed">
-              Supervisa en tiempo real los clientes aceptados automáticamente, casos resueltos sin espera y escalaciones prioritarias, con pase directo en 1 clic al Generador de Contratos.
+              Monitorea cotizaciones generadas, clientes aceptados automáticamente y tickets resueltos sin espera, con transferencia directa en 1 clic al Generador de Contratos.
             </p>
           </div>
 
@@ -644,7 +701,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
                     autoAcceptEnabled ? 'text-emerald-400' : 'text-amber-300'
                   }`}
                 >
-                  Estado: {autoAcceptEnabled ? 'ACTIVA (Alta inmediata)' : 'PAUSADA (Revisión manual)'}
+                  {autoAcceptEnabled ? 'Activa (Alta inmediata en CRM)' : 'Pausada (Revisión manual)'}
                 </span>
               </div>
 
@@ -692,7 +749,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       {/* TARJETAS KPI EN VIVO (SUPABASE)                                       */}
       {/* ===================================================================== */}
       <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {/* KPI 1 */}
+        {/* KPI 1: Clientes Aceptados por Bot */}
         <div className="rounded-xl bg-slate-900/90 border border-cyan-500/30 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-cyan-400/60 transition-all">
           <div className="flex items-center justify-between">
             <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 uppercase font-semibold">
@@ -712,47 +769,47 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
           </div>
         </div>
 
-        {/* KPI 2 */}
+        {/* KPI 2: Cotizaciones Generadas */}
+        <div className="rounded-xl bg-slate-900/90 border border-cyan-500/30 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-cyan-400/60 transition-all">
+          <div className="flex items-center justify-between">
+            <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 uppercase font-semibold">
+              Cotizaciones Generadas
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+              <Calculator className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="mt-3">
+            <div className="font-['Space_Grotesk'] text-[30px] font-bold text-cyan-300 leading-none">
+              {quotesGeneratedCount}
+            </div>
+            <p className="text-[11px] text-cyan-400/90 mt-1.5 font-['JetBrains_Mono']">
+              Estimados referenciales en MXN
+            </p>
+          </div>
+        </div>
+
+        {/* KPI 3: Problemas Resueltos sin Espera */}
         <div className="rounded-xl bg-slate-900/90 border border-cyan-500/30 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-cyan-400/60 transition-all">
           <div className="flex items-center justify-between">
             <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 uppercase font-semibold">
               Problemas Resueltos sin Espera
             </span>
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <div className="w-8 h-8 rounded-lg bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-300">
               <Sparkles className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3">
-            <div className="font-['Space_Grotesk'] text-[30px] font-bold text-cyan-300 leading-none">
+            <div className="font-['Space_Grotesk'] text-[30px] font-bold text-teal-300 leading-none">
               {kpiResolvedByBotCount}
             </div>
-            <p className="text-[11px] text-cyan-400/90 mt-1.5 font-['JetBrains_Mono']">
-              Soporte Nivel 1 automatizado
-            </p>
-          </div>
-        </div>
-
-        {/* KPI 3 */}
-        <div className="rounded-xl bg-slate-900/90 border border-amber-500/30 p-5 backdrop-blur-xl shadow-lg flex flex-col justify-between hover:border-amber-400/60 transition-all">
-          <div className="flex items-center justify-between">
-            <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 uppercase font-semibold">
-              Escalados a CISO
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
-              <ShieldAlert className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="font-['Space_Grotesk'] text-[30px] font-bold text-amber-300 leading-none">
-              {kpiEscalatedCount}
-            </div>
             <p className="text-[11px] text-amber-300/90 mt-1.5 font-['JetBrains_Mono']">
-              Alerta a solutionsmrca83@gmail.com
+              {kpiEscalatedCount} escalado(s) a especialista
             </p>
           </div>
         </div>
 
-        {/* KPI 4 */}
+        {/* KPI 4: Costo Operativo ($0 MXN) */}
         <div className="rounded-xl bg-slate-900/90 border border-emerald-500/40 p-5 backdrop-blur-xl shadow-[0_0_20px_rgba(16,185,129,0.12)] flex flex-col justify-between hover:border-emerald-400 transition-all">
           <div className="flex items-center justify-between">
             <span className="font-['JetBrains_Mono'] text-[10.5px] text-slate-400 uppercase font-semibold">
@@ -767,18 +824,17 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
               $0 MXN
             </div>
             <p className="text-[11px] text-slate-300 mt-1.5 font-['JetBrains_Mono']">
-              100% motor local • Sin APIs pagas
+              Motor determinista local • 0 APIs pagas
             </p>
           </div>
         </div>
       </section>
 
       {/* ===================================================================== */}
-      {/* SELECTOR DE VISTA + BARRA DE BÚSQUEDA Y FILTROS                       */}
+      {/* SELECTOR DE SECCIÓN + BUSCADOR Y FILTROS                              */}
       {/* ===================================================================== */}
       <section className="rounded-2xl bg-slate-900/90 border border-cyan-500/30 p-4 sm:p-5 backdrop-blur-xl shadow-xl flex flex-col gap-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-white/10">
-          {/* Sub-tabs Leads vs Tickets */}
           <div className="flex items-center gap-2 p-1 rounded-xl bg-slate-950/90 border border-white/10 w-fit">
             <button
               type="button"
@@ -806,7 +862,6 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
             </button>
           </div>
 
-          {/* Buscador */}
           <div className="relative w-full lg:w-80">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -815,15 +870,15 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={
                 activeSection === 'leads'
-                  ? 'Buscar por cliente, empresa, correo o servicio...'
-                  : 'Buscar por correo, categoría o asunto...'
+                  ? 'Buscar cliente, empresa, servicio o monto...'
+                  : 'Buscar correo, categoría o asunto...'
               }
               className="w-full pl-9 pr-3.5 py-2 rounded-xl bg-slate-950/90 border border-cyan-500/30 focus:border-cyan-400 text-[12px] text-white placeholder-slate-500 focus:outline-none"
             />
           </div>
         </div>
 
-        {/* Píldoras de filtro de estado */}
+        {/* Filtros de estado */}
         <div className="flex flex-wrap items-center gap-2 text-[11px] font-['JetBrains_Mono']">
           <span className="text-slate-400 flex items-center gap-1 mr-1">
             <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-400" />
@@ -864,17 +919,17 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
         </div>
 
         {/* =================================================================== */}
-        {/* TABLA 1: LEADS AUTOMATIZADOS (CRM)                                  */}
+        {/* TABLA 1: LEADS Y COTIZACIONES AUTOMATIZADAS (CRM)                   */}
         {/* =================================================================== */}
         {activeSection === 'leads' && (
           <div className="overflow-x-auto rounded-xl border border-white/10 bg-slate-950/60">
             <table className="w-full text-left text-[12px]">
               <thead className="bg-slate-900/95 border-b border-white/10 text-slate-400 font-['JetBrains_Mono'] text-[10px] uppercase tracking-wider">
                 <tr>
-                  <th className="py-3 px-4">Cliente / Empresa</th>
-                  <th className="py-3 px-4">Servicio &amp; Presupuesto</th>
+                  <th className="py-3 px-4">Cliente &amp; Empresa</th>
+                  <th className="py-3 px-4">Servicio &amp; Alcance</th>
+                  <th className="py-3 px-4">Presupuesto Estimado</th>
                   <th className="py-3 px-4">Estado</th>
-                  <th className="py-3 px-4">Registro</th>
                   <th className="py-3 px-4 text-right">Acciones Ejecutivas</th>
                 </tr>
               </thead>
@@ -886,105 +941,124 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
                     </td>
                   </tr>
                 ) : (
-                  filteredLeads.map((lead) => (
-                    <tr key={lead.id} className="hover:bg-slate-900/60 transition-colors">
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-['Space_Grotesk'] font-bold text-white text-[13.5px]">
-                              {lead.company_name}
+                  filteredLeads.map((lead) => {
+                    const advancePct =
+                      lead.advance_percentage === 40 ||
+                      (lead.project_scope || '').toLowerCase().includes('alto alcance')
+                        ? 40
+                        : 25;
+
+                    return (
+                      <tr key={lead.id} className="hover:bg-slate-900/60 transition-colors">
+                        <td className="py-3.5 px-4">
+                          <div className="flex flex-col">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-['Space_Grotesk'] font-bold text-white text-[13.5px]">
+                                {lead.company_name}
+                              </span>
+                              {isSuper && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingLead(lead);
+                                    setEditClientName(lead.client_name);
+                                    setEditCompanyName(lead.company_name);
+                                    setEditEstimatedBudget(lead.estimated_budget || '');
+                                  }}
+                                  title="Editar cliente, empresa o presupuesto (Solo Superadmin)"
+                                  className="text-[10px] text-cyan-400 hover:text-cyan-300 underline cursor-pointer ml-1"
+                                >
+                                  Editar
+                                </button>
+                              )}
+                            </div>
+                            <span className="text-slate-300 text-[12px]">{lead.client_name}</span>
+                            <span className="font-['JetBrains_Mono'] text-[10.5px] text-cyan-400">
+                              {lead.email}
                             </span>
-                            {isSuper && (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setEditingLead(lead);
-                                  setEditClientName(lead.client_name);
-                                  setEditCompanyName(lead.company_name);
-                                }}
-                                title="Editar titular/empresa (Solo Superadmin)"
-                                className="text-[10px] text-cyan-400 hover:text-cyan-300 underline cursor-pointer ml-1"
-                              >
-                                Editar
-                              </button>
-                            )}
                           </div>
-                          <span className="text-slate-300 text-[12px]">{lead.client_name}</span>
-                          <span className="font-['JetBrains_Mono'] text-[10.5px] text-cyan-400">
-                            {lead.email}
-                          </span>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="font-semibold text-slate-100">{lead.service_type}</span>
-                          <span className="font-['JetBrains_Mono'] text-[10.5px] text-amber-300">
-                            {lead.estimated_budget || 'Por definir'}
-                          </span>
-                        </div>
-                      </td>
+                        <td className="py-3.5 px-4">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-semibold text-slate-100">{lead.service_type}</span>
+                            <span className="w-fit px-2 py-0.5 rounded bg-slate-800/90 border border-white/10 font-['JetBrains_Mono'] text-[10px] text-slate-300">
+                              {lead.project_scope || 'Profesional / Empresarial'}
+                            </span>
+                          </div>
+                        </td>
 
-                      <td className="py-3.5 px-4">
-                        <select
-                          value={lead.status}
-                          onChange={(e) =>
-                            void handleUpdateLeadStatus(lead.id, e.target.value as CrmLeadStatus)
-                          }
-                          aria-label={`Cambiar estado de ${lead.company_name}`}
-                          className={`px-2.5 py-1 rounded-lg border text-[11px] font-['JetBrains_Mono'] font-bold focus:outline-none cursor-pointer ${
-                            lead.status === 'Aceptado Automáticamente'
-                              ? 'bg-emerald-950/70 border-emerald-500/40 text-emerald-300'
-                              : lead.status === 'En Contrato'
-                              ? 'bg-cyan-950/70 border-cyan-500/40 text-cyan-300'
-                              : lead.status === 'Rechazado'
-                              ? 'bg-red-950/70 border-red-500/40 text-red-300'
-                              : 'bg-amber-950/70 border-amber-500/40 text-amber-300'
-                          }`}
-                        >
-                          <option value="Aceptado Automáticamente">Aceptado Automáticamente</option>
-                          <option value="Nuevo">Nuevo</option>
-                          <option value="En Contrato">En Contrato</option>
-                          <option value="Rechazado">Rechazado</option>
-                        </select>
-                      </td>
+                        <td className="py-3.5 px-4">
+                          <div className="flex flex-col gap-0.5">
+                            <span className="font-['JetBrains_Mono'] font-bold text-[12px] text-emerald-400 whitespace-nowrap">
+                              {lead.estimated_budget || 'Por definir'}
+                            </span>
+                            <span className="font-['JetBrains_Mono'] text-[10px] text-cyan-300">
+                              Anticipo sugerido: {advancePct}% SPEI
+                            </span>
+                            <span className="font-['JetBrains_Mono'] text-[9.5px] text-slate-500">
+                              {formatDateTime(lead.created_at)}
+                            </span>
+                          </div>
+                        </td>
 
-                      <td className="py-3.5 px-4 font-['JetBrains_Mono'] text-[11px] text-slate-400 whitespace-nowrap">
-                        {formatDateTime(lead.created_at)}
-                      </td>
-
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-wrap items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              void handleOpenHistory({
-                                title: `Historial del Prospecto — ${lead.company_name}`,
-                                subtitle: `${lead.client_name} • ${lead.email}`,
-                                sessionId: lead.session_id,
-                                email: lead.email,
-                                notes: lead.bot_notes,
-                              })
+                        <td className="py-3.5 px-4">
+                          <select
+                            value={lead.status}
+                            onChange={(e) =>
+                              void handleUpdateLeadStatus(lead.id, e.target.value as CrmLeadStatus)
                             }
-                            className="px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-slate-200 font-['JetBrains_Mono'] text-[10.5px] font-semibold flex items-center gap-1 transition-all cursor-pointer"
+                            aria-label={`Cambiar estado de ${lead.company_name}`}
+                            className={`px-2.5 py-1 rounded-lg border text-[11px] font-['JetBrains_Mono'] font-bold focus:outline-none cursor-pointer ${
+                              lead.status === 'Aceptado Automáticamente'
+                                ? 'bg-emerald-950/70 border-emerald-500/40 text-emerald-300'
+                                : lead.status === 'En Contrato'
+                                ? 'bg-cyan-950/70 border-cyan-500/40 text-cyan-300'
+                                : lead.status === 'Rechazado'
+                                ? 'bg-red-950/70 border-red-500/40 text-red-300'
+                                : 'bg-amber-950/70 border-amber-500/40 text-amber-300'
+                            }`}
                           >
-                            <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
-                            <span>Ver Historial</span>
-                          </button>
+                            <option value="Aceptado Automáticamente">Aceptado Automáticamente</option>
+                            <option value="Nuevo">Nuevo</option>
+                            <option value="En Contrato">En Contrato</option>
+                            <option value="Rechazado">Rechazado</option>
+                          </select>
+                        </td>
 
-                          <button
-                            type="button"
-                            onClick={() => void handleSendLeadToContract(lead)}
-                            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 font-['JetBrains_Mono'] text-[10.5px] font-bold flex items-center gap-1.5 shadow-[0_0_12px_rgba(6,182,212,0.35)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
-                          >
-                            <FileText className="w-3.5 h-3.5" />
-                            <span>Enviar al Generador de Contratos</span>
-                            <ArrowRight className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                        <td className="py-3.5 px-4">
+                          <div className="flex flex-wrap items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                void handleOpenConversation({
+                                  title: `Conversación — ${lead.company_name}`,
+                                  subtitle: `${lead.client_name} • ${lead.email}`,
+                                  sessionId: lead.session_id,
+                                  email: lead.email,
+                                  notes: lead.bot_notes,
+                                })
+                              }
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-slate-200 font-['JetBrains_Mono'] text-[10.5px] font-semibold flex items-center gap-1 transition-all cursor-pointer"
+                            >
+                              <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
+                              <span>Ver Conversación</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => void handleSendLeadToContract(lead)}
+                              className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 font-['JetBrains_Mono'] text-[10.5px] font-bold flex items-center gap-1.5 shadow-[0_0_12px_rgba(6,182,212,0.35)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
+                            >
+                              <FileText className="w-3.5 h-3.5" />
+                              <span>Enviar al Generador de Contratos</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -1078,8 +1152,8 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
                             <button
                               type="button"
                               onClick={() =>
-                                void handleOpenHistory({
-                                  title: `Historial de Soporte — ${ticket.category}`,
+                                void handleOpenConversation({
+                                  title: `Conversación de Soporte — ${ticket.category}`,
                                   subtitle: `${ticket.client_email} • ${normStatus}`,
                                   sessionId: ticket.session_id,
                                   email: ticket.client_email,
@@ -1089,7 +1163,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
                               className="px-2.5 py-1.5 rounded-lg bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-slate-200 font-['JetBrains_Mono'] text-[10.5px] font-semibold flex items-center gap-1 transition-all cursor-pointer"
                             >
                               <MessageSquare className="w-3.5 h-3.5 text-cyan-400" />
-                              <span>Ver Historial</span>
+                              <span>Ver Conversación</span>
                             </button>
 
                             {normStatus !== 'Resuelto por Bot' && (
@@ -1115,12 +1189,12 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       </section>
 
       {/* ===================================================================== */}
-      {/* MODAL: VER HISTORIAL DE CONVERSACIÓN (bot_chat_logs)                  */}
+      {/* MODAL: VER CONVERSACIÓN (bot_chat_logs)                               */}
       {/* ===================================================================== */}
-      {historyModal.isOpen && (
+      {conversationModal.isOpen && (
         <div
           className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
-          onClick={() => setHistoryModal((prev) => ({ ...prev, isOpen: false }))}
+          onClick={() => setConversationModal((prev) => ({ ...prev, isOpen: false }))}
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -1129,29 +1203,29 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
             <div className="px-5 py-4 bg-slate-950/90 border-b border-cyan-500/25 flex items-center justify-between gap-3">
               <div>
                 <h3 className="font-['Space_Grotesk'] text-[17px] font-bold text-white">
-                  {historyModal.title}
+                  {conversationModal.title}
                 </h3>
                 <p className="font-['JetBrains_Mono'] text-[11px] text-cyan-400 mt-0.5">
-                  {historyModal.subtitle}
+                  {conversationModal.subtitle}
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => setHistoryModal((prev) => ({ ...prev, isOpen: false }))}
+                onClick={() => setConversationModal((prev) => ({ ...prev, isOpen: false }))}
                 className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-300 flex items-center justify-center transition-colors cursor-pointer"
-                aria-label="Cerrar historial"
+                aria-label="Cerrar conversación"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="p-5 overflow-y-auto flex-1 flex flex-col gap-4">
-              {historyModal.notes && (
+              {conversationModal.notes && (
                 <div className="p-3.5 rounded-xl bg-cyan-950/35 border border-cyan-500/30 text-[12px] text-slate-200 leading-relaxed">
                   <span className="block font-['JetBrains_Mono'] text-[10px] uppercase text-cyan-400 font-bold mb-1">
                     Resumen del Asistente MRCA:
                   </span>
-                  {historyModal.notes}
+                  {conversationModal.notes}
                 </div>
               )}
 
@@ -1161,18 +1235,18 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
                   <span>Registro de Conversación (bot_chat_logs)</span>
                 </span>
 
-                {historyModal.loading ? (
+                {conversationModal.loading ? (
                   <div className="py-8 text-center text-cyan-300 font-['JetBrains_Mono'] text-[12px] flex items-center justify-center gap-2">
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>Consultando historial...</span>
+                    <span>Consultando conversación...</span>
                   </div>
-                ) : historyModal.logs.length === 0 ? (
+                ) : conversationModal.logs.length === 0 ? (
                   <div className="p-6 rounded-xl bg-slate-950/70 border border-dashed border-white/10 text-center text-slate-400 text-[12px]">
                     No existen mensajes adicionales registrados para esta sesión. El resumen operativo se muestra arriba.
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2.5">
-                    {historyModal.logs.map((log) => (
+                    {conversationModal.logs.map((log) => (
                       <div
                         key={log.id}
                         className={`p-3 rounded-xl border text-[12px] ${
@@ -1182,7 +1256,13 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
                         }`}
                       >
                         <div className="flex items-center justify-between gap-3 text-[10px] font-['JetBrains_Mono'] text-slate-400 mb-1">
-                          <span className={log.sender === 'user' ? 'text-cyan-300 font-bold' : 'text-emerald-400 font-bold'}>
+                          <span
+                            className={
+                              log.sender === 'user'
+                                ? 'text-cyan-300 font-bold'
+                                : 'text-emerald-400 font-bold'
+                            }
+                          >
                             {log.sender === 'user' ? 'Cliente' : 'Asistente MRCA'}
                           </span>
                           <span>{formatDateTime(log.created_at)}</span>
@@ -1204,7 +1284,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
       )}
 
       {/* ===================================================================== */}
-      {/* MODAL: EDITAR TITULAR/EMPRESA DEL LEAD (SOLO SUPERADMIN)              */}
+      {/* MODAL: EDITAR CAMPOS PROTEGIDOS DEL LEAD (SOLO SUPERADMIN)            */}
       {/* ===================================================================== */}
       {editingLead && isSuper && (
         <div
@@ -1212,7 +1292,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
           onClick={() => setEditingLead(null)}
         >
           <form
-            onSubmit={(e) => void handleSaveLeadIdentity(e)}
+            onSubmit={(e) => void handleSaveLeadProtectedFields(e)}
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-md rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-amber-500/40 p-5 shadow-2xl flex flex-col gap-4"
           >
@@ -1220,7 +1300,7 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
               <div className="flex items-center gap-2">
                 <Unlock className="w-4 h-4 text-amber-400" />
                 <h3 className="font-['Space_Grotesk'] text-[16px] font-bold text-white">
-                  Editar Datos del Cliente (Superadmin)
+                  Editar Datos del Lead (Solo Superadmin)
                 </h3>
               </div>
               <button
@@ -1256,6 +1336,19 @@ export const AdminCrmConsole: React.FC<AdminCrmConsoleProps> = ({
                   value={editCompanyName}
                   onChange={(e) => setEditCompanyName(e.target.value)}
                   className="w-full bg-slate-950 border border-cyan-500/30 rounded-xl px-3.5 py-2 text-[13px] text-white focus:outline-none focus:border-cyan-400"
+                />
+              </div>
+
+              <div>
+                <label className="block font-['JetBrains_Mono'] text-[10.5px] text-slate-300 mb-1">
+                  Presupuesto Estimado (MXN)
+                </label>
+                <input
+                  type="text"
+                  value={editEstimatedBudget}
+                  onChange={(e) => setEditEstimatedBudget(e.target.value)}
+                  placeholder="Ej. $65,000 - $145,000 MXN"
+                  className="w-full bg-slate-950 border border-cyan-500/30 rounded-xl px-3.5 py-2 text-[13px] text-emerald-300 font-['JetBrains_Mono'] focus:outline-none focus:border-cyan-400"
                 />
               </div>
             </div>

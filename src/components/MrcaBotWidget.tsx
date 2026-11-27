@@ -12,6 +12,10 @@ import {
   Sparkles,
   ShieldCheck,
   MessageSquare,
+  Clock,
+  Info,
+  Calculator,
+  RotateCcw,
 } from 'lucide-react';
 import {
   createInitialBotSession,
@@ -32,14 +36,14 @@ export interface MrcaBotWidgetProps {
 }
 
 const PERSISTENT_QUICK_ACTIONS: { label: string; command: string }[] = [
-  { label: '🚀 Iniciar un Proyecto', command: '__START_PROJECT__' },
+  { label: '💰 Cotizar Proyecto (Estimado)', command: '__START_QUOTE__' },
   { label: '🛠️ Resolver un Problema', command: '__START_SUPPORT__' },
-  { label: '📄 Dudas de Contratos y Facturación', command: '__SUPPORT_PAGOS__' },
-  { label: '👤 Hablar con Soporte', command: '__START_ESCALATION__' },
+  { label: '📄 Contratos y Facturación', command: '__SUPPORT_PAGOS__' },
+  { label: '👤 Hablar con un Especialista', command: '__START_ESCALATION__' },
 ];
 
 /**
- * Renderiza negritas (**texto**) e inline code (`texto`) de manera segura sin dangerouslySetInnerHTML.
+ * Renderiza negritas (**texto**), cursivas (*texto*) e inline code (`texto`) de forma segura.
  */
 function renderFormattedText(text: string): React.ReactNode {
   const lines = text.split('\n');
@@ -112,7 +116,7 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sincronización con el Cookie Gate global
+  // Sincronización con el CookieConsent Gate global
   useEffect(() => {
     if (typeof cookieProp === 'boolean') {
       setCookieGranted(cookieProp);
@@ -134,7 +138,6 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
     };
   }, [cookieProp]);
 
-  // Mantener correo/ID actualizados si el usuario inicia sesión
   useEffect(() => {
     if (userEmail || userId) {
       setSessionState((prev) => ({
@@ -158,7 +161,7 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
     }
   }, [isOpen, isMinimized]);
 
-  // Respeto estricto al CookieConsent Gate: nunca mostrar ni superponer antes del consentimiento
+  // Respeto estricto al bloqueador CookieConsent
   if (!cookieGranted) {
     return null;
   }
@@ -184,8 +187,8 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
     setInputValue('');
     setIsTyping(true);
 
-    // Sensación conversacional fluida (400ms–700ms "escribiendo...")
-    const typingDelayMs = 430 + Math.floor(Math.random() * 240);
+    // Indicador natural "escribiendo..." entre 400ms y 650ms
+    const typingDelayMs = 415 + Math.floor(Math.random() * 225);
 
     try {
       const [turnResult] = await Promise.all([
@@ -201,14 +204,14 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
         {
           id: `err_${Date.now()}`,
           sender: 'bot',
-          text: 'Ocurrió un inconveniente temporal al procesar tu solicitud. Por favor intenta de nuevo o selecciona **"👤 Hablar con Soporte"**.',
+          text: 'Ocurrió un inconveniente temporal al procesar tu solicitud. Intenta de nuevo o selecciona **"👤 Hablar con un Especialista"**.',
           timestamp: new Date().toLocaleTimeString('es-MX', {
             hour: '2-digit',
             minute: '2-digit',
           }),
           quickReplies: [
-            { label: '🚀 Iniciar un Proyecto', value: '__START_PROJECT__', variant: 'primary' },
-            { label: '👤 Hablar con Soporte', value: '__START_ESCALATION__', variant: 'warning' },
+            { label: '💰 Cotizar Proyecto (Estimado)', value: '__START_QUOTE__', variant: 'primary' },
+            { label: '👤 Hablar con un Especialista', value: '__START_ESCALATION__', variant: 'warning' },
           ],
         },
       ]);
@@ -223,7 +226,7 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
     setInputValue('');
   };
 
-  const handleCardCta = (action?: 'open_portal' | 'new_project' | 'reset') => {
+  const handleCardCta = (action?: 'open_portal' | 'new_quote' | 'reset') => {
     if (action === 'open_portal') {
       setIsOpen(false);
       if (onOpenPortal) {
@@ -238,8 +241,8 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
       }
       return;
     }
-    if (action === 'new_project') {
-      void handleDispatchMessage('__START_PROJECT__', '🚀 Iniciar un Proyecto');
+    if (action === 'new_quote') {
+      void handleDispatchMessage('__START_QUOTE__', '💰 Cotizar Proyecto (Estimado)');
       return;
     }
     if (action === 'reset') {
@@ -249,20 +252,22 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
 
   const getInputPlaceholder = () => {
     switch (sessionState.step) {
+      case 'quote_service':
+        return 'Elige un servicio arriba o escríbelo...';
+      case 'quote_scope':
+        return 'Elige Esencial, Empresarial o Alto Alcance...';
       case 'onboarding_name':
         return 'Escribe tu nombre completo...';
       case 'onboarding_company':
         return 'Nombre de tu empresa o negocio...';
       case 'onboarding_email':
         return 'tu.correo@empresa.com';
-      case 'onboarding_service':
-        return 'Elige un servicio arriba o escríbelo...';
       case 'escalation_email':
         return 'Ingresa tu correo de contacto...';
       case 'escalation_summary':
         return 'Describe brevemente tu situación...';
       default:
-        return 'Escribe tu duda o selecciona una opción...';
+        return 'Cotiza tu proyecto o escribe tu consulta...';
     }
   };
 
@@ -279,7 +284,6 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
     return 'bg-slate-800/80 border-cyan-500/30 text-slate-200 hover:bg-cyan-950/70 hover:border-cyan-400 hover:text-white';
   };
 
-  // Posicionamiento responsivo seguro (respeta barra inferior móvil en vista pública)
   const triggerPositionClass =
     scope === 'public'
       ? 'fixed right-4 bottom-20 md:bottom-6 md:right-6 z-40'
@@ -287,8 +291,10 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
 
   const drawerPositionClass =
     scope === 'public'
-      ? 'fixed inset-x-3 bottom-20 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[430px] z-50'
-      : 'fixed inset-x-3 bottom-3 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[430px] z-50';
+      ? 'fixed inset-x-3 bottom-20 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[440px] z-50'
+      : 'fixed inset-x-3 bottom-3 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:w-[440px] z-50';
+
+  const latestMessageId = messages[messages.length - 1]?.id;
 
   return (
     <>
@@ -305,10 +311,9 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
               setIsOpen(true);
               setIsMinimized(false);
             }}
-            aria-label="Abrir Asistente Ejecutivo MRCA"
-            className="group relative flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/90 backdrop-blur-xl border border-cyan-500/40 text-slate-100 shadow-[0_0_25px_rgba(6,182,212,0.25)] hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
+            aria-label="Abrir Asistente Ejecutivo y Cotizador MRCA"
+            className="group relative flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-cyan-500/40 text-slate-100 shadow-[0_0_25px_rgba(6,182,212,0.25)] hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-105 transition-all cursor-pointer"
           >
-            {/* Indicador activo en línea */}
             <span className="relative flex h-3 w-3 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-[0_0_8px_#10b981]" />
@@ -324,7 +329,7 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
                 </span>
               </div>
               <span className="font-['Inter'] text-[10.5px] text-emerald-300/90 hidden sm:inline">
-                Proyectos y Soporte al Instante
+                Cotizador Instantáneo y Soporte
               </span>
             </div>
 
@@ -335,7 +340,7 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
         </motion.div>
       )}
 
-      {/* PANEL CONVERSACIONAL GLASSMORPHISM (ABIERTO) */}
+      {/* DRAWER CONVERSACIONAL GLASSMORPHISM (ABIERTO) */}
       <AnimatePresence>
         {isOpen && (
           <motion.aside
@@ -343,11 +348,11 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
-            className={`${drawerPositionClass} rounded-2xl bg-slate-900/90 backdrop-blur-xl border border-cyan-500/40 shadow-[0_0_25px_rgba(6,182,212,0.25)] animate-border-pulse overflow-hidden flex flex-col font-['Inter'] ${
-              isMinimized ? 'h-auto' : 'h-[min(600px,calc(100dvh-7.5rem))] sm:h-[600px] sm:max-h-[84vh]'
+            className={`${drawerPositionClass} rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-cyan-500/40 shadow-[0_0_25px_rgba(6,182,212,0.25)] animate-border-pulse overflow-hidden flex flex-col font-['Inter'] ${
+              isMinimized ? 'h-auto' : 'h-[min(620px,calc(100dvh-7.5rem))] sm:h-[620px] sm:max-h-[85vh]'
             } ${className}`}
           >
-            {/* ENCABEZADO EJECUTIVO */}
+            {/* ENCABEZADO */}
             <div className="bg-slate-950/90 border-b border-cyan-500/25 px-4 py-3 flex items-center justify-between gap-2 shrink-0">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500/20 to-teal-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shrink-0 shadow-[0_0_12px_rgba(6,182,212,0.3)]">
@@ -364,7 +369,7 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
                   </div>
                   <span className="text-[10.5px] text-slate-400 flex items-center gap-1 truncate">
                     <ShieldCheck className="w-3 h-3 text-cyan-400 shrink-0" />
-                    <span className="truncate">CRM Automatizado y Soporte Nivel 1</span>
+                    <span className="truncate">Cotizador MXN, CRM y Soporte Nivel 1</span>
                   </span>
                 </div>
               </div>
@@ -402,8 +407,8 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
 
             {!isMinimized && (
               <div className="flex-1 flex flex-col min-h-0">
-                {/* BARRA PERSISTENTE DE ACCIONES RÁPIDAS EN ESPAÑOL */}
-                <div className="px-3 py-2 bg-slate-950/70 border-b border-cyan-500/20 shrink-0">
+                {/* CHIPS PERSISTENTES DE ACCIÓN RÁPIDA */}
+                <div className="px-3 py-2 bg-slate-950/75 border-b border-cyan-500/20 shrink-0">
                   <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
                     {PERSISTENT_QUICK_ACTIONS.map((action) => (
                       <button
@@ -411,7 +416,7 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
                         type="button"
                         disabled={isTyping}
                         onClick={() => void handleDispatchMessage(action.command, action.label)}
-                        className="px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-slate-800/80 border border-cyan-500/30 text-cyan-200 hover:bg-cyan-500/20 hover:border-cyan-400 hover:text-white transition-all whitespace-nowrap cursor-pointer disabled:opacity-40 shrink-0"
+                        className="px-2.5 py-1.5 rounded-lg text-[11px] font-medium bg-slate-800/85 border border-cyan-500/30 text-cyan-200 hover:bg-cyan-500/20 hover:border-cyan-400 hover:text-white transition-all whitespace-nowrap cursor-pointer disabled:opacity-40 shrink-0"
                       >
                         {action.label}
                       </button>
@@ -419,130 +424,232 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
                   </div>
                 </div>
 
-                {/* ÁREA DE CONVERSACIÓN */}
+                {/* CONVERSACIÓN */}
                 <div className="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-3.5 scrollbar-thin scrollbar-thumb-cyan-900/50 scrollbar-track-transparent">
-                  {messages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
-                    >
-                      <div className="flex items-center gap-1.5 mb-1 px-1">
-                        <span className="text-[10px] font-['JetBrains_Mono'] text-slate-400">
-                          {msg.sender === 'user' ? 'Tú' : 'Asistente MRCA'}
-                        </span>
-                        <span className="text-[9.5px] text-slate-500">{msg.timestamp}</span>
-                      </div>
-
-                      {/* Badge visual de confirmación de acción Supabase */}
-                      {msg.badge && (
-                        <div
-                          className={`mb-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border flex items-center gap-1.5 shadow-sm ${
-                            msg.badge.tone === 'emerald'
-                              ? 'bg-emerald-500/15 border-emerald-400/50 text-emerald-300'
-                              : msg.badge.tone === 'amber'
-                              ? 'bg-amber-500/15 border-amber-400/50 text-amber-300'
-                              : 'bg-cyan-500/15 border-cyan-400/50 text-cyan-300'
-                          }`}
-                        >
-                          <span>{msg.badge.text}</span>
-                        </div>
-                      )}
-
-                      {/* Burbuja de mensaje */}
+                  {messages.map((msg) => {
+                    const isLatest = msg.id === latestMessageId;
+                    return (
                       <div
-                        className={`max-w-[92%] rounded-2xl px-3.5 py-2.5 text-[12.5px] leading-relaxed ${
-                          msg.sender === 'user'
-                            ? 'bg-gradient-to-r from-cyan-500/20 to-teal-500/20 border border-cyan-400/40 text-cyan-50 rounded-tr-sm'
-                            : 'bg-slate-800/85 border border-slate-700/70 text-slate-200 rounded-tl-sm shadow-md'
-                        }`}
+                        key={msg.id}
+                        className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
                       >
-                        <div>{renderFormattedText(msg.text)}</div>
-                      </div>
-
-                      {/* Tarjeta ejecutiva de confirmación (Alta CRM / Resolución / Escalación) */}
-                      {msg.confirmationCard && (
-                        <div
-                          className={`mt-2 w-full max-w-[95%] rounded-xl p-3.5 border backdrop-blur-md flex flex-col gap-2.5 shadow-lg ${
-                            msg.confirmationCard.type === 'lead_accepted' ||
-                            msg.confirmationCard.type === 'ticket_resolved'
-                              ? 'bg-emerald-950/35 border-emerald-500/40'
-                              : msg.confirmationCard.type === 'ticket_escalated'
-                              ? 'bg-amber-950/35 border-amber-500/40'
-                              : 'bg-cyan-950/35 border-cyan-500/40'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex items-center gap-2">
-                              <CheckCircle2
-                                className={`w-4 h-4 shrink-0 ${
-                                  msg.confirmationCard.type === 'ticket_escalated'
-                                    ? 'text-amber-400'
-                                    : 'text-emerald-400'
-                                }`}
-                              />
-                              <div>
-                                <div className="font-['Space_Grotesk'] text-[12.5px] font-bold text-white leading-tight">
-                                  {msg.confirmationCard.title}
-                                </div>
-                                <div className="text-[11px] text-slate-300 leading-snug mt-0.5">
-                                  {msg.confirmationCard.subtitle}
-                                </div>
-                              </div>
-                            </div>
-                            <span className="font-['JetBrains_Mono'] text-[9.5px] px-1.5 py-0.5 rounded bg-slate-950/80 border border-white/10 text-cyan-300 shrink-0">
-                              #{msg.confirmationCard.folio}
-                            </span>
-                          </div>
-
-                          <div className="grid grid-cols-1 gap-1 pt-2 border-t border-white/10 text-[11px]">
-                            {msg.confirmationCard.details.map((d, i) => (
-                              <div key={i} className="flex items-center justify-between gap-2">
-                                <span className="text-slate-400">{d.label}:</span>
-                                <span className="text-white font-medium text-right truncate">
-                                  {d.value}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-
-                          {msg.confirmationCard.ctaLabel && (
-                            <button
-                              type="button"
-                              onClick={() => handleCardCta(msg.confirmationCard?.ctaAction)}
-                              className="mt-1 w-full py-2 px-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 font-['Space_Grotesk'] text-[12px] font-bold flex items-center justify-center gap-1.5 hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-[1.02] transition-all cursor-pointer"
-                            >
-                              <span>{msg.confirmationCard.ctaLabel}</span>
-                              <ArrowRight className="w-3.5 h-3.5" />
-                            </button>
-                          )}
+                        <div className="flex items-center gap-1.5 mb-1 px-1">
+                          <span className="text-[10px] font-['JetBrains_Mono'] text-slate-400">
+                            {msg.sender === 'user' ? 'Tú' : 'Asistente MRCA'}
+                          </span>
+                          <span className="text-[9.5px] text-slate-500">{msg.timestamp}</span>
                         </div>
-                      )}
 
-                      {/* Respuestas rápidas contextuales del último mensaje del bot */}
-                      {msg.sender === 'bot' &&
-                        msg.quickReplies &&
-                        msg.quickReplies.length > 0 &&
-                        msg.id === messages[messages.length - 1]?.id &&
-                        !isTyping && (
-                          <div className="mt-2 flex flex-wrap gap-1.5 max-w-[95%]">
-                            {msg.quickReplies.map((qr, idx) => (
-                              <button
-                                key={`${msg.id}_qr_${idx}`}
-                                type="button"
-                                onClick={() => void handleDispatchMessage(qr.value, qr.label)}
-                                className={`px-2.5 py-1.5 rounded-xl border text-[11px] font-medium transition-all cursor-pointer ${getQuickReplyButtonClass(
-                                  qr.variant
-                                )}`}
-                              >
-                                {qr.label}
-                              </button>
-                            ))}
+                        {/* Insignia visual de confirmación Supabase */}
+                        {msg.badge && (
+                          <div
+                            className={`mb-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border flex items-center gap-1.5 shadow-sm ${
+                              msg.badge.tone === 'emerald'
+                                ? 'bg-emerald-500/15 border-emerald-400/50 text-emerald-300'
+                                : msg.badge.tone === 'amber'
+                                ? 'bg-amber-500/15 border-amber-400/50 text-amber-300'
+                                : 'bg-cyan-500/15 border-cyan-400/50 text-cyan-300'
+                            }`}
+                          >
+                            <span>{msg.badge.text}</span>
                           </div>
                         )}
-                    </div>
-                  ))}
 
-                  {/* ANIMACIÓN NATURAL "ESCRIBIENDO..." (400ms-700ms) */}
+                        {/* Burbuja de texto */}
+                        <div
+                          className={`max-w-[93%] rounded-2xl px-3.5 py-2.5 text-[12.5px] leading-relaxed ${
+                            msg.sender === 'user'
+                              ? 'bg-gradient-to-r from-cyan-500/20 to-teal-500/20 border border-cyan-400/40 text-cyan-50 rounded-tr-sm'
+                              : 'bg-slate-800/85 border border-slate-700/70 text-slate-200 rounded-tl-sm shadow-md'
+                          }`}
+                        >
+                          <div>{renderFormattedText(msg.text)}</div>
+                        </div>
+
+                        {/* TARJETA DESTACADA DE COTIZACIÓN ESTIMADA (MXN) + AVISO OBLIGATORIO */}
+                        {msg.quoteCard && (
+                          <div className="mt-2.5 w-full rounded-2xl bg-gradient-to-br from-slate-950/95 via-[#0b1736]/95 to-slate-950/95 border border-cyan-400/50 p-4 shadow-[0_0_25px_rgba(6,182,212,0.2)] flex flex-col gap-3">
+                            {/* Header de tarjeta */}
+                            <div className="flex items-start justify-between gap-2 pb-2.5 border-b border-cyan-500/20">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <div className="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shrink-0">
+                                  <Calculator className="w-4 h-4" />
+                                </div>
+                                <div className="min-w-0">
+                                  <div className="font-['JetBrains_Mono'] text-[9.5px] uppercase tracking-wider text-cyan-400 font-bold">
+                                    Tarjeta de Cotización Estimada
+                                  </div>
+                                  <div className="font-['Space_Grotesk'] text-[13.5px] font-bold text-white truncate">
+                                    {msg.quoteCard.serviceType}
+                                  </div>
+                                </div>
+                              </div>
+                              <span className="px-2 py-0.5 rounded-lg bg-cyan-950/90 border border-cyan-500/40 font-['JetBrains_Mono'] text-[9.5px] text-cyan-200 font-bold shrink-0">
+                                {msg.quoteCard.projectScope}
+                              </span>
+                            </div>
+
+                            {/* Rango de inversión MXN destacado */}
+                            <div className="p-3 rounded-xl bg-slate-900/90 border border-emerald-500/35 flex flex-col gap-1">
+                              <span className="font-['JetBrains_Mono'] text-[10px] uppercase text-slate-400">
+                                Rango de Inversión Estimado
+                              </span>
+                              <div className="font-['Space_Grotesk'] text-[20px] font-bold text-emerald-400 tracking-tight leading-tight">
+                                {msg.quoteCard.formattedRange}
+                              </div>
+                              <span className="text-[10.5px] text-slate-400">
+                                {msg.quoteCard.summary}
+                              </span>
+                            </div>
+
+                            {/* Entrega y Esquema de Anticipo SPEI */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                              <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10 flex flex-col gap-0.5">
+                                <span className="font-['JetBrains_Mono'] text-[9.5px] uppercase text-slate-400 flex items-center gap-1">
+                                  <Clock className="w-3 h-3 text-cyan-400" />
+                                  <span>Entrega aproximada</span>
+                                </span>
+                                <span className="font-semibold text-white">
+                                  {msg.quoteCard.deliveryTime}
+                                </span>
+                              </div>
+                              <div className="p-2.5 rounded-xl bg-slate-900/80 border border-white/10 flex flex-col gap-0.5">
+                                <span className="font-['JetBrains_Mono'] text-[9.5px] uppercase text-slate-400">
+                                  Esquema de inicio
+                                </span>
+                                <span className="font-semibold text-cyan-300">
+                                  {msg.quoteCard.advanceLabel}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* AVISO OBLIGATORIO DE TRANSPARENCIA COMERCIAL (DESTACADO) */}
+                            <div className="p-3 rounded-xl bg-amber-500/12 border border-amber-400/45 flex items-start gap-2.5 shadow-inner">
+                              <Info className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
+                              <p className="text-[11px] leading-relaxed text-amber-100 font-medium">
+                                {msg.quoteCard.disclaimer}
+                              </p>
+                            </div>
+
+                            {/* Botones de acción directos de la tarjeta */}
+                            {isLatest && !isTyping && (
+                              <div className="flex flex-col gap-2 pt-1">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    void handleDispatchMessage(
+                                      '__ACCEPT_QUOTE__',
+                                      '✅ Aceptar Estimado y Registrar mi Proyecto'
+                                    )
+                                  }
+                                  className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 font-['Space_Grotesk'] text-[12px] font-bold flex items-center justify-center gap-1.5 shadow-[0_0_14px_rgba(6,182,212,0.45)] hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-[1.02] transition-all cursor-pointer"
+                                >
+                                  <span>✅ Aceptar Estimado y Registrar mi Proyecto</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    void handleDispatchMessage(
+                                      '__START_QUOTE__',
+                                      '🔄 Cotizar Otro Servicio'
+                                    )
+                                  }
+                                  className="w-full py-2 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-cyan-500/30 text-cyan-200 font-['Inter'] text-[11.5px] font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                                >
+                                  <RotateCcw className="w-3.5 h-3.5" />
+                                  <span>🔄 Cotizar Otro Servicio</span>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* TARJETA DE CONFIRMACIÓN (ALTA CRM / RESOLUCIÓN / ESCALACIÓN) */}
+                        {msg.confirmationCard && (
+                          <div
+                            className={`mt-2 w-full rounded-xl p-3.5 border backdrop-blur-md flex flex-col gap-2.5 shadow-lg ${
+                              msg.confirmationCard.type === 'lead_accepted' ||
+                              msg.confirmationCard.type === 'ticket_resolved'
+                                ? 'bg-emerald-950/35 border-emerald-500/40'
+                                : msg.confirmationCard.type === 'ticket_escalated'
+                                ? 'bg-amber-950/35 border-amber-500/40'
+                                : 'bg-cyan-950/35 border-cyan-500/40'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex items-center gap-2">
+                                <CheckCircle2
+                                  className={`w-4 h-4 shrink-0 ${
+                                    msg.confirmationCard.type === 'ticket_escalated'
+                                      ? 'text-amber-400'
+                                      : 'text-emerald-400'
+                                  }`}
+                                />
+                                <div>
+                                  <div className="font-['Space_Grotesk'] text-[12.5px] font-bold text-white leading-tight">
+                                    {msg.confirmationCard.title}
+                                  </div>
+                                  <div className="text-[11px] text-slate-300 leading-snug mt-0.5">
+                                    {msg.confirmationCard.subtitle}
+                                  </div>
+                                </div>
+                              </div>
+                              <span className="font-['JetBrains_Mono'] text-[9.5px] px-1.5 py-0.5 rounded bg-slate-950/80 border border-white/10 text-cyan-300 shrink-0">
+                                #{msg.confirmationCard.folio}
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-1 pt-2 border-t border-white/10 text-[11px]">
+                              {msg.confirmationCard.details.map((d, i) => (
+                                <div key={i} className="flex items-center justify-between gap-2">
+                                  <span className="text-slate-400">{d.label}:</span>
+                                  <span className="text-white font-medium text-right truncate">
+                                    {d.value}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+
+                            {msg.confirmationCard.ctaLabel && (
+                              <button
+                                type="button"
+                                onClick={() => handleCardCta(msg.confirmationCard?.ctaAction)}
+                                className="mt-1 w-full py-2 px-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-400 text-slate-950 font-['Space_Grotesk'] text-[12px] font-bold flex items-center justify-center gap-1.5 hover:shadow-[0_0_20px_rgba(6,182,212,0.8)] hover:scale-[1.02] transition-all cursor-pointer"
+                              >
+                                <span>{msg.confirmationCard.ctaLabel}</span>
+                                <ArrowRight className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Respuestas rápidas contextuales (se omiten si ya están en los botones de quoteCard) */}
+                        {msg.sender === 'bot' &&
+                          !msg.quoteCard &&
+                          msg.quickReplies &&
+                          msg.quickReplies.length > 0 &&
+                          isLatest &&
+                          !isTyping && (
+                            <div className="mt-2 flex flex-wrap gap-1.5 max-w-[96%]">
+                              {msg.quickReplies.map((qr, idx) => (
+                                <button
+                                  key={`${msg.id}_qr_${idx}`}
+                                  type="button"
+                                  onClick={() => void handleDispatchMessage(qr.value, qr.label)}
+                                  className={`px-2.5 py-1.5 rounded-xl border text-[11px] font-medium transition-all cursor-pointer ${getQuickReplyButtonClass(
+                                    qr.variant
+                                  )}`}
+                                >
+                                  {qr.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                      </div>
+                    );
+                  })}
+
+                  {/* ANIMACIÓN SUAVE "ESCRIBIENDO..." (400ms–650ms) */}
                   {isTyping && (
                     <div className="flex items-start">
                       <div className="px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-slate-800/85 border border-cyan-500/30 flex items-center gap-2 text-cyan-300 text-[11.5px]">
@@ -591,7 +698,7 @@ export const MrcaBotWidget: React.FC<MrcaBotWidgetProps> = ({
                 <div className="px-3.5 py-1.5 bg-slate-950 border-t border-white/5 flex items-center justify-between text-[10px] text-slate-500 shrink-0">
                   <span className="flex items-center gap-1">
                     <Sparkles className="w-3 h-3 text-cyan-400" />
-                    <span>Respuesta instantánea 24/7</span>
+                    <span>Cotización estimada y soporte 24/7</span>
                   </span>
                   <span className="font-['JetBrains_Mono'] text-emerald-400/90">
                     MRCA Solutions
